@@ -1,0 +1,78 @@
+{
+  "analysis_meta": {
+    "engine": "Langflow + Astra DB Hybrid Retrieval",
+    "model": "IBM watsonx.ai (Granite-13B / Llama-3)",
+    "timestamp": "2026-10-11T21:30:00Z",
+    "provenance_checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "findings": [
+    {
+      "change_id": "CHG-POJK-001",
+      "jenis_perubahan": "diubah",
+      "pasal_baru": {
+        "doc_id": "POJK-22-2023",
+        "pasal": "Pasal 12",
+        "ayat": "(1)",
+        "kutipan": "Batas maksimum pemberian pinjaman dana ... ditingkatkan menjadi paling banyak sebesar Rp50.000.000,00"
+      },
+      "pasal_lama": {
+        "doc_id": "POJK-77-2016",
+        "pasal": "Pasal 8",
+        "ayat": "(2)",
+        "kutipan": "Batas maksimum total pemberian pinjaman dana ... adalah sebesar Rp20.000.000,00"
+      },
+      "ringkasan": "Plafon batas pinjaman maksimum per nasabah dinaikkan dari Rp 20.000.000 menjadi Rp 50.000.000.",
+      "sitasi_valid": true,
+      "confidence": "tinggi",
+      "abstain": false,
+      "alasan_abstain": null,
+      "kandidat_kode": [
+        {
+          "path": "app/core/config.py",
+          "lokasi": "Baris 14 (konstanta MAX_LOAN_AMOUNT)",
+          "evidence": "MAX_LOAN_AMOUNT = 20_000_000",
+          "alasan": "Konstanta batas maksimum pinjaman legal perlu diperbarui dari 20_000_000 ke 50_000_000.",
+          "confidence": "tinggi",
+          "patch_status": "terverifikasi secara lokal",
+          "test_status": "lulus pengujian lokal",
+          "old_code": "MAX_LOAN_AMOUNT = 20_000_000",
+          "proposed_code": "MAX_LOAN_AMOUNT = 50_000_000"
+        }
+      ]
+    },
+    {
+      "change_id": "CHG-POJK-002",
+      "jenis_perubahan": "diubah",
+      "pasal_baru": {
+        "doc_id": "POJK-22-2023",
+        "pasal": "Pasal 12",
+        "ayat": "(2)",
+        "kutipan": "Batas maksimum suku bunga harian diturunkan menjadi paling tinggi sebesar 0,1% per hari"
+      },
+      "pasal_lama": {
+        "doc_id": "POJK-77-2016",
+        "pasal": "Pasal 8",
+        "ayat": "(3)",
+        "kutipan": "Tingkat suku bunga harian ... tidak melebihi 0,4% per hari"
+      },
+      "ringkasan": "Batas suku bunga harian maksimum diturunkan dari 0.4% menjadi 0.1% per hari.",
+      "sitasi_valid": true,
+      "confidence": "tinggi",
+      "abstain": false,
+      "alasan_abstain": null,
+      "kandidat_kode": [
+        {
+          "path": "app/core/config.py",
+          "lokasi": "Baris 17 (konstanta MAX_DAILY_INTEREST_RATE)",
+          "evidence": "MAX_DAILY_INTEREST_RATE = 0.004",
+          "alasan": "Ambang batas bunga harian legal diturunkan dari 0.004 (0.4%) ke 0.001 (0.1%).",
+          "confidence": "tinggi",
+          "patch_status": "terverifikasi secara lokal",
+          "test_status": "lulus pengujian lokal",
+          "old_code": "MAX_DAILY_INTEREST_RATE = 0.004",
+          "proposed_code": "MAX_DAILY_INTEREST_RATE = 0.001"
+        }
+      ]
+    }
+  ]
+}
