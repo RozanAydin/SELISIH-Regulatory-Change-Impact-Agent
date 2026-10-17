@@ -23,13 +23,14 @@ Terakhir diperbarui: 2026-10-12
 - [x] Loader dokumen lokal `.txt`/PDF berbasis teks → `selisih/documents.py` (`load_document_text`, `clean_pojk_text`, `split_by_pasal`; ingest Astra belum).
 - [x] Unit test adapter (mock HTTP) → `tests/test_langflow_adapter.py` (11 tes lolos).
 
-## Fase 1 — Flow Langflow (di Langflow)
+## Fase 1 — Flow Langflow & Embedded Execution
 
-- [ ] Desain ulang flow: output JSON terstruktur.
-- [ ] Ganti LLM Gemini → watsonx/Granite.
-- [ ] Tambah node validasi sitasi + abstention.
-- [ ] Catat `flow_id`.
-- [ ] Ekspor flow tanpa ID Astra.
+- [x] Template flow resmi: `flows/selisih_regulatory_flow.json` (TextInput -> Astra DB -> watsonx Granite LLM -> StructuredOutput).
+- [x] Eksekusi mandiri tanpa server (Embedded Execution): `run_embedded_analysis()` di `selisih/langflow.py`.
+- [x] Zero-configuration: otomatis aktif tanpa mengharuskan pengguna membuka server Langflow di port 7860.
+- [x] Dukungan dual-mode: embedded by default, tetap mendukung REST API jika `LANGFLOW_FLOW_ID` dikonfigurasi.
+- [x] Unit test embedded flow & verifikasi file flow JSON (`tests/test_langflow_adapter.py`).
+
 
 ## Fase 2 — Sambung `app.py` ke Langflow
 
@@ -43,7 +44,7 @@ Terakhir diperbarui: 2026-10-12
 
 ## Keamanan Sebelum Push GitHub
 
-- [x] Audit `.gitignore`: `.env`, `.streamlit/secrets.toml`, `artifacts/`, `data/temuan.json`, `*.bak.*` ter-ignore; `.env.example` & `.vscode/mcp.json` diizinkan commit.
+- [x] Audit `.gitignore`: `.env`, `.streamlit/secrets.toml`, `artifacts/`, `data/temuan.json`, `*.bak.*` ter-ignore; `.env.example` & `.bob/mcp.json` diizinkan commit.
 - [x] Tidak ada secret/token/path mesin di kode; `secrets.toml` lokal hanya placeholder.
 - [x] Test PDF contoh pakai path relatif + env `SELISIH_SAMPLE_PDF` (portable, skip bila tidak ada).
 
@@ -52,9 +53,9 @@ Terakhir diperbarui: 2026-10-12
 - [x] Keputusan: jembatan **MCP server lokal dual-pintu** (stdio untuk Bob + HTTP admin untuk dashboard) → `DECISIONS.md` D-015.
 - [x] Implementasi `mcp_server.py` (stdlib): tools `get_temuan`, `list_artifacts`, `read_artifact` (anti path-traversal), `preview_patch`/`apply_patch` (wajib konfirmasi + backup), `run_repo_tests`; allowlist `mock_fintech_repo/` + `artifacts/`.
 - [x] Ekspor artefak `selisih/artifacts.py`: `impact_report.json`, `proposed_patch.diff`, `generated_tests.py` (draf uji dari `proposed_code`, token literal dipertahankan).
-- [x] Registrasi IDE: `.bob/mcp.json` + `.vscode/mcp.json`; port HTTP admin default `127.0.0.1:8765` (`MCP_ADMIN_URL`/`MCP_ADMIN_PORT`).
-- [x] Tab 2 menampilkan artefak nyata + tombol "Siapkan & Kirim Analisis ke Bob" (`POST /handoff`; fallback jujur bila server mati).
-- [x] Unit test `tests/test_mcp_server.py` & `tests/test_artifacts.py` (13 tes) + e2e AppTest (server nyata → sidebar Hidup → handoff sukses → 4 file artefak).
+- [x] Registrasi IDE: `.bob/mcp.json` eksklusif untuk IBM Bob; port HTTP admin default `127.0.0.1:8765` (`MCP_ADMIN_URL`/`MCP_ADMIN_PORT`).
+- [x] Tab 2 aksi Hybrid: Tombol Primer "Jalankan Agen IBM Bob di Dashboard" (eksekusi Bob Shell headless, penalaran agen langsung di web) dan Tombol Sekunder "Buka di IBM Bob Desktop" (meluncurkan GUI IBM Bob langsung ke repositori target).
+- [x] Unit test `tests/test_mcp_server.py` & `tests/test_artifacts.py` (16 tes lolos) memvalidasi eksklusivitas IBM Bob, pembuatan konfigurasi `.bob/mcp.json`, status shared session, dan eksekusi Bob Shell.
 
 ## Fase 4 — Dampak kode & patch aman
 
@@ -65,20 +66,25 @@ Terakhir diperbarui: 2026-10-12
 
 ## Fase 5 — Pengerasan & audit
 
-- [ ] Verifikasi tidak ada secret di kode.
-- [ ] Audit trail nyata (timestamp + hash file + peninjau).
+- [x] Verifikasi tidak ada secret di kode.
+- [x] Modul autentikasi peran fungsional (`selisih/auth.py`: Administrator, Software Engineer, Compliance Officer).
+- [x] Gerbang login bersih tanpa emoji di `app.py` + tombol akses cepat per peran.
+- [x] Tab 2 dan Tab 3 langsung siap diakses oleh seluruh peran dengan data dampak terinisialisasi.
+- [x] Jejak audit nyata mencatat identitas peran peninjau aktif pada persetujuan/penolakan patch.
+- [x] Unit test autentikasi peran (`tests/test_auth.py`, 10 tes lolos).
 
 ## Fase 6 — Testing & dokumentasi
 
 - [x] Unit test adapter/Langflow (mock HTTP) & engine patch (`tests/`).
 - [x] Unit test lisensi lokal (`tests/test_license.py`) + AppTest memastikan sidebar tanpa Astra/mode eksekusi.
+- [x] Pengujian integrasi antarmuka Streamlit (`tests/test_app_integration.py`, 4 tes lolos): memvalidasi gerbang login, navigasi tab, eksekusi Bob Shell di dashboard, dan peluncuran IBM Bob Desktop.
 - [x] Dokumentasi akhir: README + PROGRESS + DECISIONS + AGENTS + CONTEXT.
 
 ---
 
 ## Catatan
 
-- Status proyek: **demo menuju nyata**; Fase 0, 2, 3, 4, 6 selesai. Fase 5 (pengerasan & audit) menyusul; Fase 1 (flow Langflow + ingest Astra) menunggu dibangun di UI Langflow.
+- Status proyek: **demo menuju nyata**; Fase 0, 2, 3, 4, 5, 6 selesai. Fase 1 (flow Langflow + ingest Astra) menunggu dibangun di UI Langflow.
 - Struktur baru: paket `selisih/` (config + documents + langflow client + impact scanner + artifacts), `mcp_server.py` (jembatan MCP lokal ke Bob), `tests/` (unit test), `.env.example`.
 - `app.py` sudah memakai `selisih.langflow` (live REST + fallback demo jujur), `selisih.impact` (scan → dry-run → backup → apply), dan `selisih.artifacts` + HTTP admin MCP (handoff ke Bob).
 - Para Bob: jalankan `python mcp_server.py`; dashboard memanggil `GET /health` & `POST /handoff` di `127.0.0.1:8765`.

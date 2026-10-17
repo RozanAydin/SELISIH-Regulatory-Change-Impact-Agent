@@ -22,6 +22,7 @@ except ImportError:  # pragma: no cover - hanya relevan saat streamlit terpasang
     st = None
 
 DEFAULTS = {
+    "LANGFLOW_MODE": "embedded",
     "LANGFLOW_API_URL": "http://localhost:7860",
     "LANGFLOW_FLOW_ID": "",
     "LANGFLOW_API_TOKEN": "",
@@ -64,6 +65,7 @@ def get_langflow_config() -> dict:
     """
     env_values = _env_values()
     return {
+        "mode": _resolve("LANGFLOW_MODE", env_values),
         "api_url": _resolve("LANGFLOW_API_URL", env_values).rstrip("/"),
         "flow_id": _resolve("LANGFLOW_FLOW_ID", env_values),
         "api_token": _resolve("LANGFLOW_API_TOKEN", env_values),

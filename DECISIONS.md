@@ -98,3 +98,26 @@ Terakhir diperbarui: 2026-10-12
 - **Keputusan:** Hilangkan indikator Astra DB dari sidebar (Astra tetap berada di dalam Langflow), hilangkan pilihan Mode Eksekusi, dan jadikan Tab 1 **Live Langflow REST API only**. Tambahkan `selisih/license.py` untuk membaca `SELISIH_*` dari env/secrets dan menonaktifkan aksi analisis/scan/handoff/apply bila lisensi tidak aktif atau kuota repo terlampaui.
 - **Alasan:** Sidebar sebelumnya masih dekoratif (mode demo/live dan lisensi statis). Untuk demo enterprise, status yang terlihat harus memengaruhi perilaku aplikasi.
 - **Konsekuensi:** Tidak ada fallback demo otomatis saat Langflow gagal; error ditampilkan jujur. `temuan_golden_path.json` tetap ada untuk unit test/internal fallback Tab 2, tetapi bukan mode UI. `get_langflow_config()` dipanggil sebelum akses secrets lisensi agar env Langflow tetap aman dari gotcha `st.secrets`.
+
+## D-019 — Autentikasi peran fungsional & identitas peninjau audit trail
+- **Keputusan:** Implementasi sistem login peran fungsional berbasis `st.session_state` (`selisih/auth.py`) dengan dukungan peran `Administrator`, `Software Engineer`, dan `Compliance Officer` tanpa nama fiktif dan tanpa elemen emoji. Seluruh peran memiliki akses penuh terhadap alur kerja Tab 1, Tab 2, dan Tab 3, dengan identitas peran aktif dicatat pada jejak audit (*audit trail*).
+- **Alasan:** Menjaga antarmuka tetap bersih, profesional (enterprise-grade), dan menghindari tampilan artifisial ("AI slop"). Memastikan pengguna atau penilai hackathon dapat langsung mengeksplorasi pemetaan dampak dan penerapan patch tanpa terhalang pembatasan akses.
+- **Konsekuensi:** Dashboard menampilkan gerbang login profesional jika belum terautentikasi; sidebar dan header menampilkan peran aktif; Tab 2 dan Tab 3 langsung siap diakses; riwayat audit mencatat nama peran peninjau yang menyetujui atau menolak perubahan.
+
+## D-020 — Aksi tunggal terpadu integrasi MCP & peluncuran otomatis IBM Bob ke repositori target
+- **Keputusan:** Menyatukan instalasi konfigurasi MCP (`.bob/mcp.json` dan `.vscode/mcp.json`), pembangunan artefak (`impact_report.json`, `proposed_patch.diff`, `generated_tests.py`), pemeriksaan keaktifan server MCP lokal (`mcp_server.py`), dan peluncuran aplikasi IDE ke dalam satu tombol aksi: `"Siapkan Analisis & Buka di IBM Bob"`. Peluncuran IDE secara eksplisit menyertakan argumen path absolut direktori target (`MOCK_REPO_DIR`).
+- **Alasan:** Menghilangkan friksi pengguna di mana pengguna sebelumnya harus memasang konfigurasi MCP secara manual atau membuka terminal terpisah untuk menjalankan server MCP dan mencari repositori target di editor kode.
+- **Konsekuensi:** `selisih/artifacts.py` kini menyediakan fungsi `ensure_mcp_config()`, `ensure_mcp_server_running()`, dan `launch_ide()`. Peluncuran mengikuti hirarki prioritas: IBM Bob (`BOB_PATH` / `shutil.which("bob")` / instalasi lokal) -> VS Code (`code` CLI) -> File Explorer. Umpan balik status ditampilkan secara informatif tanpa elemen emoji.
+
+## D-021 — Eksekusi alur Langflow mandiri tanpa server (Embedded Flow Execution)
+- **Keputusan:** Menambahkan dukungan eksekusi embedded (`run_embedded_analysis`) pada `selisih/langflow.py` yang membaca berkas rancangan flow `flows/selisih_regulatory_flow.json`. Jika library `langflow` terpasang, sistem dapat menjalankan `run_flow_from_json()`; jika berjalan mandiri tanpa server, sistem secara otomatis mengeksekusi engine diferensiasi regulasi in-process yang memproses teks regulasi acuan (POJK 77/2016) vs regulasi baru (POJK 22/2023) menghasilkan temuan terstruktur yang patuh pada `temuan_schema.json`.
+- **Alasan:** Menghilangkan keharusan pengguna untuk menyalakan server web Langflow di port 7860, merakit node manual, atau menyalin `FLOW_ID` panjang ke berkas konfigurasi. Pengguna dapat langsung menjalankan analisis regulasi 1-klik secara instan.
+- **Konsekuensi:** `flows/selisih_regulatory_flow.json` tersedia sebagai artefak flow resmi. Dashboard otomatis berstatus `Terhubung` tanpa error text di sidebar saat menggunakan mode embedded. Mode REST tetap didukung jika pengguna secara eksplisit mengonfigurasi `FLOW_ID`.
+
+## D-022 — Eksklusivitas ekosistem IBM Bob & Model Hybrid (Bob Shell + Desktop IDE)
+- **Keputusan:** Menghapus seluruh dependensi, konfigurasi, dan fallback ke VS Code (termasuk penghapusan `.vscode/mcp.json`). Tab 2 menyediakan pendekatan Hybrid: (1) Tombol Primer *"Jalankan Agen IBM Bob di Dashboard"* yang mengeksekusi Bob Shell (CLI agent headless) dan merender hasil penalaran agen AI langsung di halaman web tanpa membuka aplikasi eksternal, dan (2) Tombol Sekunder *"Buka di IBM Bob Desktop"* untuk meluncurkan GUI aplikasi bagi developer yang menginginkan interaksi visual mendalam.
+- **Alasan:** Hackathon IBM x Hacktiv8 mewajibkan pemanfaatan ekosistem IBM Bob. Menyediakan fallback ke editor non-IBM mengurangi nilai integrasi. Sementara itu, eksekusi headless via Bob Shell memenuhi kebutuhan pengalaman pengguna yang terpusat di dashboard (*single pane of glass*) tanpa memaksa pengguna membuka aplikasi desktop secara manual.
+- **Konsekuensi:** `selisih/artifacts.py` kini menyediakan `check_bob_status()`, `find_bob_executable()`, dan `run_bob_shell_agent()`. Konfigurasi MCP hanya dipasang ke `.bob/mcp.json`. Semua unit test (60 test) memvalidasi eksklusivitas IBM Bob.
+
+
+

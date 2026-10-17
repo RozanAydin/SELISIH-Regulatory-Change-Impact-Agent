@@ -59,8 +59,9 @@ htmlcov/
 # ==========================================
 # IDE & OS
 # ==========================================
-.vscode/*
-!.vscode/mcp.json
+.vscode/
+.bob/*
+!.bob/mcp.json
 .idea/
 *.swp
 *.swo
@@ -86,8 +87,12 @@ Thumbs.db
 # ==========================================
 data/temuan.json
 
-# Artefak handoff Bob (dibuat saat tombol "Siapkan & Kirim ke Bob")
+# Artefak handoff Bob (dibuat saat tombol "Siapkan Analisis & Buka di IBM Bob")
 artifacts/
+mock_fintech_repo/.bob/
+mock_fintech_repo/.vscode/
+mock_fintech_repo/SELISIH_INSTRUCTION.md
 
 # Backup patch (dibuat engine patch, `file.bak.<stamp>`)
 *.bak.*
+

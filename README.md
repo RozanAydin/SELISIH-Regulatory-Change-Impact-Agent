@@ -63,10 +63,13 @@ atau kuota repositori terlampaui.
    - Ringkasan perubahan, validitas sitasi, keyakinan, dan status abstention.
    - Inspeksi JSON: `data/temuan_schema.json` (kontrak), `data/temuan.json` (hasil live), `data/temuan_golden_path.json` (contoh).
 
-2. **Tab 2 — Pemetaan Dampak Kode & IBM Bob (MCP)**
+2. **Tab 2 — Pemetaan Dampak Kode & Integrasi IBM Bob (MCP / Bob Shell)**
    - Scanner deterministik dari `temuan.json` memetakan `kandidat_kode[].evidence` ke file & baris nyata di `mock_fintech_repo`.
    - Menampilkan diff lama → usulan per kandidat.
-   - Tombol **"Siapkan & Kirim Analisis ke Bob"** → ekspor `artifacts/` (diff, test draft, laporan) dan handoff ke MCP server lokal di `localhost`.
+   - Pendekatan **Hybrid**:
+     - **"Jalankan Agen IBM Bob di Dashboard"**: Menjalankan Bob Shell di latar belakang (*headless*), merender penalaran agen AI langsung di web.
+     - **"Buka di IBM Bob Desktop"**: Meluncurkan GUI IBM Bob langsung membuka repositori target.
+   - Ekspor artefak `artifacts/` (`impact_report.json`, `proposed_patch.diff`, `generated_tests.py`) dan handoff ke server MCP lokal di `localhost`.
 
 3. **Tab 3 — Tata Kelola & Tinjauan Manusia**
    - Jejak audit + prinsip *draft-only* (tanpa auto-deploy).
@@ -82,7 +85,7 @@ Jembatan yang aman: **dashboard → server MCP lokal → Bob**, semuanya di `loc
 python mcp_server.py          # stdio (untuk Bob) + HTTP admin /health & /handoff (untuk dashboard)
 ```
 
-- Registrasi server: lihat `.bob/mcp.json` (atau `.vscode/mcp.json`).
+- Registrasi server: eksklusif di `.bob/mcp.json`.
 - Tool untuk Bob: `get_temuan`, `list_artifacts`, `read_artifact`, `preview_patch`, `apply_patch`, `run_repo_tests`.
 - Akses di-allowlist ke `mock_fintech_repo/` + `artifacts/`; semua tulis lewat dry-run + backup.
 

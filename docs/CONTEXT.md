@@ -99,12 +99,12 @@ Dari demo → alur nyata. Urutan eksekusi disarankan: **0 → 2 → 4 → 6**, l
 - License Gateway lokal `selisih/license.py`: `SELISIH_*` mengatur organisasi, paket, status, dan kuota repo; analisis/scan/handoff/apply dinonaktifkan bila lisensi tidak aktif atau kuota terlampaui.
 - Tulis hasil live ke `data/temuan.json`.
 
-### Fase 3 — Integrasi IBM Bob — ✅ SELESAI (jembatan MCP lokal)
-- Arsitektur hybrid D-015: **MCP server lokal dual-pintu** (`mcp_server.py`, stdlib).
-  - stdio JSON-RPC untuk Bob (`.bob/mcp.json`, `.vscode/mcp.json`): `get_temuan`, `list_artifacts`, `read_artifact`, `preview_patch`/`apply_patch` (wajib konfirmasi + backup), `run_repo_tests`.
+### Fase 3 — Integrasi IBM Bob — ✅ SELESAI (jembatan MCP lokal & Bob Shell)
+- Arsitektur hybrid D-015 & D-022: **MCP server lokal dual-pintu** (`mcp_server.py`, stdlib) + **Bob Shell CLI Runner**.
+  - stdio JSON-RPC untuk Bob (`.bob/mcp.json` eksklusif): `get_temuan`, `list_artifacts`, `read_artifact`, `preview_patch`/`apply_patch` (wajib konfirmasi + backup), `run_repo_tests`.
   - HTTP admin `127.0.0.1:8765` (`MCP_ADMIN_PORT`; dashboard pakai `MCP_ADMIN_URL`): `GET /health`, `POST /handoff`.
 - Artefak nyata: `selisih/artifacts.py` → `artifacts/impact_report.json`, `proposed_patch.diff`, `generated_tests.py` (draf uji dari `proposed_code`, literal dipertahankan).
-- Tab 2: tombol **"Siapkan & Kirim Analisis ke Bob"** (build + `POST /handoff`, fallback jujur) + tampilan artefak.
+- Tab 2: tombol Hybrid **"Jalankan Agen IBM Bob di Dashboard"** (eksekusi Bob Shell headless) dan **"Buka di IBM Bob Desktop"** (meluncurkan GUI) + kartu status IBM Bob V2.
 - Allowlist akses: hanya `mock_fintech_repo/` + `artifacts/`; `artifacts/` di-gitignore.
 
 ### Fase 4 — Pemetaan dampak & patch aman — ✅ SELESAI
@@ -115,7 +115,8 @@ Dari demo → alur nyata. Urutan eksekusi disarankan: **0 → 2 → 4 → 6**, l
 
 ### Fase 5 — Pengerasan & audit
 - Verifikasi tidak ada secret di kode; redact flow saat ekspor.
-- Audit trail nyata (timestamp + hash file + peninjau).
+- Autentikasi peran fungsional (`selisih/auth.py`): Administrator, Software Engineer, dan Compliance Officer tanpa emoji artifisial.
+- Audit trail nyata (timestamp + hash file + nama & peran peninjau terautentikasi).
 
 ### Fase 6 — Testing & dokumentasi
 - Unit test adapter/Langflow (mock HTTP).

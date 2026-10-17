@@ -6,19 +6,28 @@ import unittest.mock as mock
 import pytest
 
 import selisih.config as config_mod
-from selisih.langflow import LangflowError, extract_findings, normalize_response, run_analysis
+from selisih.langflow import (
+    LangflowError,
+    extract_findings,
+    normalize_response,
+    run_analysis,
+    run_embedded_analysis,
+)
 
 
 def test_config_defaults(monkeypatch):
-    for key in ("LANGFLOW_API_URL", "LANGFLOW_FLOW_ID", "LANGFLOW_API_TOKEN"):
+    for key in ("LANGFLOW_MODE", "LANGFLOW_API_URL", "LANGFLOW_FLOW_ID", "LANGFLOW_API_TOKEN"):
         monkeypatch.delenv(key, raising=False)
     cfg = config_mod.get_langflow_config()
+    assert cfg["mode"] == "embedded"
     assert cfg["api_url"] == "http://localhost:7860"
     assert cfg["flow_id"] == ""
     assert cfg["api_token"] == ""
 
 
+
 def test_config_from_env(monkeypatch):
+    monkeypatch.setattr(config_mod, "st", None)
     monkeypatch.setenv("LANGFLOW_API_URL", "http://host:9999/")
     monkeypatch.setenv("LANGFLOW_FLOW_ID", "flow-abc")
     cfg = config_mod.get_langflow_config()
@@ -105,7 +114,8 @@ def test_extract_findings_alias():
 
 def test_run_analysis_missing_flow_id():
     with pytest.raises(LangflowError):
-        run_analysis("teks", {"api_url": "http://lf", "flow_id": "", "api_token": ""})
+        run_analysis("teks", {"mode": "rest", "api_url": "http://lf", "flow_id": "", "api_token": ""})
+
 
 
 def test_run_analysis_mocked_success():
@@ -151,3 +161,36 @@ def test_run_analysis_non_json_response():
         m_post.return_value = resp
         with pytest.raises(LangflowError, match="bukan JSON"):
             run_analysis("x", {"api_url": "http://lf", "flow_id": "f", "api_token": ""})
+
+
+def test_run_embedded_analysis_success():
+    sample_text = (
+        "POJK Nomor 22 Tahun 2023. Pasal 12 ayat (1) batas maksimum plafon pinjaman Rp 50.000.000. "
+        "Pasal 12 ayat (2) batas suku bunga harian diturunkan menjadi 0,1% per hari."
+    )
+    findings = run_embedded_analysis(sample_text)
+    assert len(findings) == 2
+    change_ids = [f["change_id"] for f in findings]
+    assert "CHG-POJK-001" in change_ids
+    assert "CHG-POJK-002" in change_ids
+    assert all(f["sitasi_valid"] is True for f in findings)
+
+
+def test_run_analysis_falls_back_to_embedded_when_no_flow_id(monkeypatch):
+    monkeypatch.delenv("LANGFLOW_FLOW_ID", raising=False)
+    sample_text = "Pasal 12 batas plafon pinjaman Rp 50.000.000 dan bunga harian 0.1% per hari."
+    findings = run_analysis(sample_text)
+    assert len(findings) >= 1
+    assert any("CHG-POJK" in f["change_id"] for f in findings)
+
+
+def test_flow_template_file_valid_json():
+    import os
+    flow_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "flows", "selisih_regulatory_flow.json"))
+    assert os.path.isfile(flow_file)
+    with open(flow_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert "name" in data
+    assert "nodes" in data["data"]
+    assert "edges" in data["data"]
+    assert len(data["data"]["nodes"]) >= 3

@@ -1,0 +1,100 @@
+{
+  "name": "SELISIH — Regulatory Diff Pipeline",
+  "description": "Pipeline analisis regulasi kepatuhan OJK: ingest regulasi baru, bandingkan terhadap basis data regulasi lama di Astra DB, ekstrak pasal terdampak, dan petakan evidence ke source code.",
+  "endpoint_name": "selisih-regulatory-diff",
+  "data": {
+    "nodes": [
+      {
+        "id": "TextInput-001",
+        "type": "TextInput",
+        "data": {
+          "node": {
+            "display_name": "Regulasi Baru (Input Teks / Dokumen)",
+            "description": "Menerima teks POJK pembaruan (contoh: POJK Nomor 22 Tahun 2023).",
+            "template": {
+              "input_value": {
+                "type": "str",
+                "required": true,
+                "value": "POJK Nomor 22 Tahun 2023 tentang Pelindungan Konsumen dan Masyarakat di Sektor Jasa Keuangan"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "AstraDB-001",
+        "type": "AstraDB",
+        "data": {
+          "node": {
+            "display_name": "Astra DB Vector Store (Regulasi Acuan)",
+            "description": "Koleksi klausul POJK terdahulu (POJK 77/2016) tersimpan sebagai embedding referensi.",
+            "template": {
+              "collection_name": {
+                "type": "str",
+                "value": "pojk_idx"
+              },
+              "search_type": {
+                "type": "str",
+                "value": "similarity"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "WatsonxGranite-001",
+        "type": "WatsonxLLM",
+        "data": {
+          "node": {
+            "display_name": "IBM watsonx.ai (Granite 13B / 20B)",
+            "description": "Model LLM fondasi untuk diferensiasi regulasi finansial dan verifikasi sitasi hukum.",
+            "template": {
+              "model_id": {
+                "type": "str",
+                "value": "ibm/granite-13b-chat-v2"
+              },
+              "temperature": {
+                "type": "float",
+                "value": 0.0
+              },
+              "system_prompt": {
+                "type": "str",
+                "value": "Anda adalah auditor kepatuhan perbankan & hukum finansial OJK. Bandingkan klausul baru terhadap klausul acuan di Astra DB. Ekstrak perubahan batasan statutori, hitung sitasi pasal secara presisi, dan petakan dampaknya ke variabel kode program."
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "StructuredOutput-001",
+        "type": "StructuredOutput",
+        "data": {
+          "node": {
+            "display_name": "Kontrak Temuan (temuan_schema.json)",
+            "description": "Memvalidasi keluaran model agar selalu patuh pada skema temuan.json.",
+            "template": {
+              "schema_file": {
+                "type": "str",
+                "value": "data/temuan_schema.json"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "TextInput-001",
+        "target": "WatsonxGranite-001"
+      },
+      {
+        "source": "AstraDB-001",
+        "target": "WatsonxGranite-001"
+      },
+      {
+        "source": "WatsonxGranite-001",
+        "target": "StructuredOutput-001"
+      }
+    ]
+  }
+}

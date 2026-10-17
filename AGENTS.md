@@ -23,14 +23,14 @@ Alur inti:
 - **Fase 2 (app → Langflow REST) SELESAI** — Tab 1 memanggil `run_analysis()` nyata,
   health check sidebar jujur, UI Live-only (tanpa mode demo di sidebar), hasil live → `data/temuan.json`,
   License Gateway lokal (`selisih/license.py`) menonaktifkan aksi bila lisensi/kuota invalid.
-- **Fase 3 (jembatan IBM Bob — MCP lokal) SELESAI** — `mcp_server.py` stdlib dual-pintu
+- **Fase 3 (jembatan IBM Bob — MCP lokal & Bob Shell) SELESAI** — `mcp_server.py` stdlib dual-pintu
   (stdio JSON-RPC untuk Bob + HTTP admin `127.0.0.1:8765` untuk dashboard), ekspor artefak
   `selisih/artifacts.py` (`impact_report.json`, `proposed_patch.diff`, `generated_tests.py`),
-  Tombol Tab 2 "Siapkan & Kirim Analisis ke Bob", registrasi `.bob/mcp.json` & `.vscode/mcp.json`.
+  Tombol Tab 2 Hybrid (eksekusi Bob Shell di dashboard + peluncuran IBM Bob Desktop), registrasi `.bob/mcp.json` eksklusif.
 - **Fase 4 (dampak kode & patch aman) SELESAI** — scanner deterministik `selisih/impact.py`
   (evidence → file+baris+diff), dry-run + backup `.bak.<ts>` + konfirmasi sebelum menulis,
   test via pytest output asli.
-- `flows/` **masih kosong** — Fase 1 (flow Langflow) belum dibangun; menunggu dikerjakan di aplikasi Langflow.
+- `flows/` **selisih_regulatory_flow.json** telah terintegrasi — mendukung eksekusi Embedded Langflow Engine mandiri maupun REST API.
 - Baca `PROGRESS.md` untuk status per fase dan `docs/CONTEXT.md` untuk konteks penuh.
 
 ## Struktur Repo
@@ -42,17 +42,18 @@ rcia-app/
 ├── selisih/                   # Paket inti (Fase 0 + 3 + 4)
 │   ├── config.py              # Loader konfigurasi (st.secrets → env → .env)
 │   ├── documents.py           # Loader regulasi TXT/PDF + cleanup + split_by_pasal (tanpa ingest Astra)
-│   ├── langflow.py            # Klien + normalizer respons Langflow
+│   ├── langflow.py            # Klien + normalizer respons Langflow (Embedded & REST)
 │   ├── license.py             # License Gateway lokal (status/kuota → gating aksi UI)
 │   ├── impact.py              # Scanner dampak & engine patch aman (dry-run + backup)
-│   └── artifacts.py           # Ekspor artefak Bob (impact_report.json, .diff, generated_tests.py)
+│   └── artifacts.py           # Ekspor artefak Bob & runner Bob Shell (impact_report.json, .diff, generated_tests.py)
 ├── tests/
-│   ├── test_langflow_adapter.py  # Unit test Fase 0 (mock HTTP)
+│   ├── test_langflow_adapter.py  # Unit test Fase 0 (mock HTTP & embedded)
 │   ├── test_documents.py         # Unit test Fase 0 (loader TXT/PDF + split pasal)
 │   ├── test_license.py           # Unit test Fase 2 (license gate lokal)
 │   ├── test_impact.py            # Unit test Fase 4 (scanner + patch)
 │   ├── test_artifacts.py         # Unit test Fase 3 (ekspor artefak + uji generatif)
-│   └── test_mcp_server.py        # Unit test Fase 3 (protokol JSON-RPC MCP lokal)
+│   ├── test_mcp_server.py        # Unit test Fase 3 (protokol JSON-RPC MCP lokal)
+│   └── test_app_integration.py   # Pengujian integrasi antarmuka Streamlit (AppTest)
 ├── data/
 │   ├── pojk_lama_77_2016.txt  # Teks regulasi acuan (publik)
 │   ├── pojk_baru_22_2023.txt  # Teks regulasi pembaruan (publik)
@@ -64,8 +65,7 @@ rcia-app/
 │   └── tests/test_compliance.py
 ├── artifacts/                 # Artefak handoff Bob (RUNTIME, di-gitignore)
 ├── .bob/mcp.json              # Registrasi MCP server untuk IBM Bob
-├── .vscode/mcp.json           # Registrasi MCP server untuk VS Code
-├── flows/                     # Ekspor flow Langflow (SAAT INI KOSONG)
+├── flows/                     # Ekspor flow Langflow (selisih_regulatory_flow.json)
 ├── docs/CONTEXT.md            # Konteks & rencana lengkap
 ├── PROGRESS.md                # Checklist fase
 ├── DECISIONS.md               # Log keputusan arsitektur
@@ -133,6 +133,6 @@ Lihat `DECISIONS.md`. Yang paling penting:
 - License Gateway lokal membaca `SELISIH_*` dari env/secrets. Karena `st.secrets` dapat menimpa env, app memanggil `_langflow_health()` sebelum `get_license_state(st.secrets)`.
 - Ekspor flow Langflow **memuat `org_id`/`database_id`/endpoint Astra DB** → redact sebelum commit (repo publik).
 - `mcp_server.py`: dashboards memanggil `GET /health` & `POST /handoff` di `127.0.0.1:8765` (`MCP_ADMIN_URL` di app; `MCP_ADMIN_PORT` di server). Setelah stdin EOF server tetap hidup (keep-alive) demi HTTP admin; hentikan manual (Ctrl-C/SIGTERM).
-- `artifacts/` = runtime (di-gitignore), dibuat oleh tombol Tab 2 atau `POST /handoff`.
-- `.gitignore` mem-ignore seluruh `.vscode/` **kecuali** `.vscode/mcp.json` (pola `.vscode/*` + `!.vscode/mcp.json`) — registrasi MCP boleh ikut commit.
+- `.gitignore` mem-ignore runtime artefacts, folder `.vscode/`, `.env`, dan database/token rahasia. Registrasi MCP eksklusif di `.bob/mcp.json`.
 - `tests/test_documents.py` mencari PDF contoh lewat env `SELISIH_SAMPLE_PDF` atau path relatif `../../NPL/SELISIH_demo_paket/RCIA/data/raw/`; test otomatis skip bila tidak ditemukan (portable lintas mesin).
+

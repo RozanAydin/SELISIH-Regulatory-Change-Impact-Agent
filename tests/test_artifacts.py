@@ -66,3 +66,64 @@ def test_generated_tests_pass_against_patched_repo(tmp_path):
         for backup in os.listdir(os.path.join(REPO, "app", "core")):
             if backup.startswith("config.py.bak."):
                 os.remove(os.path.join(REPO, "app", "core", backup))
+
+
+def test_ensure_mcp_config_creates_files(tmp_path):
+    server_script = os.path.join(ROOT, "mcp_server.py")
+    res = artifacts.ensure_mcp_config(str(tmp_path), server_script)
+
+    assert os.path.isfile(res["bob"])
+    assert os.path.isfile(res["instruction"])
+
+    bob_data = json.loads((tmp_path / ".bob" / "mcp.json").read_text(encoding="utf-8"))
+    assert "selisih-local" in bob_data["mcpServers"]
+    assert bob_data["mcpServers"]["selisih-local"]["args"][0].endswith("mcp_server.py")
+
+
+def test_launch_ide_priority_bob(tmp_path, monkeypatch):
+    launched_cmd = []
+
+    def fake_popen(cmd, **kwargs):
+        launched_cmd.append(cmd)
+        return None
+
+    monkeypatch.setattr(subprocess, "Popen", fake_popen)
+    monkeypatch.setenv("BOB_PATH", "C:/MockPath/bob.exe")
+
+    res = artifacts.launch_ide(str(tmp_path))
+    assert res["status"] == "launched"
+    assert res["app"] == "IBM Bob"
+    assert len(launched_cmd) == 1
+    assert launched_cmd[0][0] == "C:/MockPath/bob.exe"
+    assert launched_cmd[0][1] == str(tmp_path)
+
+
+def test_launch_ide_not_installed(tmp_path, monkeypatch):
+    monkeypatch.delenv("BOB_PATH", raising=False)
+    monkeypatch.setattr(artifacts.shutil, "which", lambda cmd: None)
+    monkeypatch.setattr(os.path, "isfile", lambda p: False)
+
+    res = artifacts.launch_ide(str(tmp_path))
+    assert res["status"] == "not_installed"
+    assert res["app"] == "IBM Bob"
+    assert "Aplikasi IBM Bob belum ditemukan" in res["message"]
+
+
+def test_check_bob_status(monkeypatch):
+    monkeypatch.setattr(artifacts, "find_bob_executable", lambda: "C:/MockPath/bobide.cmd")
+    monkeypatch.setattr(os.path, "isdir", lambda p: True)
+    monkeypatch.setattr(os.path, "exists", lambda p: True)
+
+    status = artifacts.check_bob_status()
+    assert status["installed"] is True
+    assert status["session_active"] is True
+    assert status["status_label"] == "Aktif & Terhubung"
+
+
+def test_run_bob_shell_agent(tmp_path):
+    findings = _golden()
+    result = artifacts.run_bob_shell_agent(REPO, findings)
+    assert result["status"] == "success"
+    assert "IBM Bob Shell" in result["engine"]
+    assert len(result["reasoning_steps"]) >= 3
+    assert result["patchable_count"] == 2
