@@ -59,7 +59,8 @@ htmlcov/
 # ==========================================
 # IDE & OS
 # ==========================================
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 .idea/
 *.swp
 *.swo
@@ -79,3 +80,14 @@ Thumbs.db
 # ==========================================
 *.zip
 *.tar.gz
+
+# ==========================================
+# Artefak Runtime (mode Live)
+# ==========================================
+data/temuan.json
+
+# Artefak handoff Bob (dibuat saat tombol "Siapkan & Kirim ke Bob")
+artifacts/
+
+# Backup patch (dibuat engine patch, `file.bak.<stamp>`)
+*.bak.*

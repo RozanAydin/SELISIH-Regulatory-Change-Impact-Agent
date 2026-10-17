@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://selisih.dev/schema/temuan-v1.json",
+  "title": "temuan.json",
+  "description": "Kontrak data hasil Regulatory Diff (Langflow). Satu-satunya artefak yang menyeberang dari domain publik ke domain privat.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["analysis_meta", "findings"],
+  "properties": {
+    "analysis_meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["timestamp"],
+      "properties": {
+        "engine": { "type": "string" },
+        "model": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "provenance_checksum": { "type": "string" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/finding" }
+    }
+  },
+  "definitions": {
+    "pasal": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["doc_id", "pasal"],
+      "properties": {
+        "doc_id": { "type": "string", "examples": ["POJK-22-2023"] },
+        "pasal": { "type": "string", "examples": ["Pasal 12"] },
+        "ayat": { "type": "string", "examples": ["(1)"] },
+        "kutipan": { "type": "string" }
+      }
+    },
+    "kandidat_kode": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "examples": ["app/core/config.py"] },
+        "lokasi": { "type": "string", "examples": ["Baris 14 (konstanta MAX_LOAN_AMOUNT)"] },
+        "evidence": { "type": "string" },
+        "alasan": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["tinggi", "sedang", "rendah"] },
+        "patch_status": { "type": "string" },
+        "test_status": { "type": "string" },
+        "old_code": { "type": "string" },
+        "proposed_code": { "type": "string" }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["change_id", "ringkasan", "pasal_baru", "pasal_lama"],
+      "properties": {
+        "change_id": { "type": "string", "examples": ["CHG-POJK-001"] },
+        "jenis_perubahan": { "type": "string", "enum": ["diubah", "ditambah", "dihapus", "abstain"] },
+        "pasal_baru": { "$ref": "#/definitions/pasal" },
+        "pasal_lama": { "$ref": "#/definitions/pasal" },
+        "ringkasan": { "type": "string" },
+        "sitasi_valid": { "type": "boolean" },
+        "confidence": { "type": "string", "enum": ["tinggi", "sedang", "rendah"] },
+        "abstain": { "type": "boolean" },
+        "alasan_abstain": { "type": ["string", "null"] },
+        "kandidat_kode": { "type": "array", "items": { "$ref": "#/definitions/kandidat_kode" } }
+      }
+    }
+  }
+}
