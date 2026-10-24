@@ -196,13 +196,11 @@ Terakhir diperbarui: 2026-10-12
 - **Alasan:** Menghilangkan kebingungan pengguna atas tampilan lisensi yang sebelumnya bersifat dekoratif/statis, menyederhanakan alur kerja B2B multi-organisasi tanpa perlu membangun sistem autentikasi/login yang membebani alur demo, serta memungkinkan demonstrasi skenario pembatasan lisensi (*license gating*) secara langsung dan interaktif dalam 1-klik.
 - **Konsekuensi:** Panel Lisensi di sidebar dan header utama beroperasi 100% dinamis dan reaktif; bilah persentase kuota bergerak akurat sesuai rasio pemakaian repositori; pendaftaran repositori dilakukan secara aman dan privat di lingkungan lokal; serta Tab 3 terlindungi oleh kebijakan kuota lisensi secara konsisten.
 
-## D-037 — Eliminasi Tombol Cepat Standar Tab 1, Guard Eksekusi IBM Bob Tab 2, dan Penyederhanaan Tombol Repositori Sidebar
-- **Keputusan:** Tiga penyesuaian alur antarmuka:
-  1. Menghapus panel preset *"Mulai cepat dengan kasus acuan standar perbankan/fintech"* di Tab 1 agar pengguna murni menggunakan menu pilihan dokumen regulasi acuan dan pembaruan dari katalog JDIH OJK secara eksplisit.
-  2. Memperketat *guard* eksekusi agen IBM Bob di Tab 2: tombol *"Jalankan IBM Bob"* dikunci menjadi nonaktif (*disabled* dengan pesan *"Menunggu Analisis Tab 1"*) jika analisis di Tab 1 belum dijalankan pada sesi aktif (`!hasRunAnalysis`), regulasi belum dipilih, atau data temuan kosong, serta menyelaraskan indikator konteks input temuan regulasi menjadi status tunggu.
-  3. Menyederhanakan tombol repositori di sidebar dengan menghapus tautan teks *"Kelola Repo"* di header panel Langganan & Lisensi dan mempertahankan tombol aksi tunggal *"Kelola Repositori ({active_repos})"* di bagian bawah panel.
-- **Alasan:** Menghilangkan kebingungan alur di mana agen IBM Bob sebelumnya masih dapat dipicu meskipun regulasi di Tab 1 belum dianalisis, memperkuat integritas alur *human-in-the-loop*, serta menjaga kebersihan dan konsistensi antarmuka sidebar.
-- **Konsekuensi:** Agen IBM Bob terlindungi dari eksekusi tanpa masukan klausul statutori yang valid; Tab 1 memiliki tampilan yang lebih bersih dan profesional; dan antarmuka sidebar bebas dari duplikasi tombol.
+## D-038 — Konsolidasi Arsitektur Web Enterprise Murni & Pembersihan Streamlit Legacy
+- **Keputusan:** Mengeliminasi seluruh komponen Streamlit monolitik lama (`app.py`, `run_app.bat`, `.streamlit/`, dan `tests/test_app_integration.py`), memutakhirkan `requirements.txt` dengan dependensi produksi backend riil (`fastapi`, `uvicorn`, `pydantic`, `chromadb`, `beautifulsoup4`, `httpx`), menyederhanakan loader konfigurasi (`selisih/config.py`) agar murni berbasis environment variable tanpa `st.secrets`, dan menyediakan skrip peluncur 1-klik terpadu `run_all.bat`.
+- **Alasan:** Menghilangkan tumpang tindih antara prototipe lama dengan platform web enterprise Next.js 15 + FastAPI yang sudah matang dan beroperasi penuh, merampingkan dependensi Python saat instalasi, serta memastikan repositori berstandar industri dan bebas dari artefak duplikasi saat dinilai oleh dewan juri hackathon.
+- **Konsekuensi:** Repositori 100% terfokus pada stack modern (FastAPI + Next.js App Router + MCP), ukuran instalasi lebih ringan, suite pengujian pytest lebih cepat dan bersih (71 unit test lolos), dan alur eksekusi aplikasi menjadi 1-klik melalui `run_all.bat`.
+
 
 
 

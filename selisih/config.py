@@ -1,11 +1,4 @@
-"""Konfigurasi SELISIH: dibaca dari env, file `.env`, atau secrets Streamlit.
-
-Urutan prioritas nilai (tertinggi dulu):
-1. `st.secrets` (runtime streamlit, dari `.streamlit/secrets.toml`)
-2. Environment variable (termasuk yang dimuat dari file `.env`)
-
-Gunakan modul ini supaya tidak ada secret yang ditulis langsung di kode.
-"""
+"""Konfigurasi SELISIH: dibaca dari environment variables atau file `.env`."""
 
 import os
 
@@ -13,13 +6,11 @@ try:
     from dotenv import load_dotenv
 
     load_dotenv()
-except ImportError:  # pragma: no cover - python-dotenv ada di requirements
+except ImportError:
     load_dotenv = None
 
-try:
-    import streamlit as st
-except ImportError:  # pragma: no cover - hanya relevan saat streamlit terpasang
-    st = None
+# st disediakan sebagai None demi kompatibilitas pengujian tanpa runtime Streamlit
+st = None
 
 DEFAULTS = {
     "LANGFLOW_MODE": "embedded",
@@ -30,43 +21,15 @@ DEFAULTS = {
 
 
 def _get(name: str) -> str:
-    """Versi sederhana untuk pembacaan satu kunci (urutan: secrets non-kosong, lalu env)."""
-    env_value = os.getenv(name, DEFAULTS[name])
-    if st is not None:
-        try:
-            if name in st.secrets and st.secrets[name]:
-                return str(st.secrets[name])
-        except Exception:
-            pass
-    return env_value
-
-
-def _env_values() -> dict:
-    return {name: os.getenv(name, DEFAULTS[name]) for name in DEFAULTS}
-
-
-def _resolve(name: str, env_values: dict) -> str:
-    if st is not None:
-        try:
-            if name in st.secrets and st.secrets[name]:
-                return str(st.secrets[name])
-        except Exception:  # pragma: no cover - runtime tertentu tanpa secrets
-            pass
-    return env_values[name]
+    """Pembacaan nilai konfigurasi dari environment variable."""
+    return os.getenv(name, DEFAULTS.get(name, ""))
 
 
 def get_langflow_config() -> dict:
-    """Kembalikan konfigurasi Langflow sebagai dict siap pakai.
-
-    Nilai env disnapshot lebih dulu: di mode tanpa runtime streamlit, akses
-    ``st.secrets`` bisa menimpa ``os.environ`` untuk semua kunci sekaligus
-    (lihat sekret kosong di ``.streamlit/secrets.toml``). Env yang tidak
-    tertimpa sekalipun tetap terbaca lewat snapshot.
-    """
-    env_values = _env_values()
+    """Kembalikan konfigurasi Langflow sebagai dict siap pakai."""
     return {
-        "mode": _resolve("LANGFLOW_MODE", env_values),
-        "api_url": _resolve("LANGFLOW_API_URL", env_values).rstrip("/"),
-        "flow_id": _resolve("LANGFLOW_FLOW_ID", env_values),
-        "api_token": _resolve("LANGFLOW_API_TOKEN", env_values),
+        "mode": os.getenv("LANGFLOW_MODE", DEFAULTS["LANGFLOW_MODE"]),
+        "api_url": os.getenv("LANGFLOW_API_URL", DEFAULTS["LANGFLOW_API_URL"]).rstrip("/"),
+        "flow_id": os.getenv("LANGFLOW_FLOW_ID", DEFAULTS["LANGFLOW_FLOW_ID"]),
+        "api_token": os.getenv("LANGFLOW_API_TOKEN", DEFAULTS["LANGFLOW_API_TOKEN"]),
     }

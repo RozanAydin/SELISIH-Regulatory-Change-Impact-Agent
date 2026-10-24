@@ -59,23 +59,23 @@ Jangan ubah skema tanpa memperbarui ketiganya. Schema resmi: `data/temuan_schema
 ## 4. Arsitektur & Batas Kepercayaan
 
 ```
-[Publik/cloud]            [Batas]            [Privat/lokal]
-POJK + Astra DB  ──temuan.json──▶  app.py ──temuan.json──▶ IBM Bob + source code
-+ Langflow (diff)                   │                        + patch + unit test
-                                    ▼
-                              Human Review (no auto-deploy)
+[Publik/cloud]                 [Batas]                 [Privat/lokal]
+POJK + ChromaDB        ──temuan.json──▶  FastAPI / Next.js  ──temuan.json──▶ IBM Bob + source code
++ Langflow/Granite                        │                                   + patch + unit test
+                                          ▼
+                                    Human Review (no auto-deploy)
 ```
 
-- Astra DB **di dalam Langflow**; `app.py` tidak butuh kredensial Astra.
+- ChromaDB dan model fondasi berada di domain publik/pipeline Langflow; kode sumber tidak pernah dikirim ke luar.
 - **IBM Bob = MCP client**, tidak bisa dipanggil via REST. Jembatan nyata: **MCP server lokal** `mcp_server.py` (stdio ke Bob + HTTP admin `127.0.0.1:8765` ke dashboard).
 
-## 5. Rencana Perbaikan (6 Fase)
+## 5. Rencana Perbaikan (8 Fase)
 
-Dari demo → alur nyata. Urutan eksekusi disarankan: **0 → 2 → 4 → 6**, lalu **1 → 3**.
+Dari demo -> arsitektur Web Enterprise produksi.
 
 ### Fase 0 — Fondasi: kontrak data & konfigurasi — SELESAI
 - JSON Schema `temuan.json` -> `data/temuan_schema.json`.
-- Endpoint/`flow_id`/token Langflow -> `.env` + `.streamlit/secrets.toml` (loader `selisih/config.py`, priority: secrets->env->.env).
+- Endpoint/`flow_id`/token Langflow -> `.env` (loader `selisih/config.py`).
 - `.env.example`.
 - Loader dokumen regulasi TXT/PDF -> `selisih/documents.py`:
   - `load_document_text()` membaca `.txt` dan PDF berbasis teks (`pypdf`).

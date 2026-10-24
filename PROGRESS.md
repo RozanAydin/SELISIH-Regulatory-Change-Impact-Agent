@@ -77,8 +77,10 @@ Terakhir diperbarui: 2026-10-24
 
 - [x] Unit test adapter/Langflow (mock HTTP) & engine patch (`tests/`).
 - [x] Unit test lisensi lokal (`tests/test_license.py`) + AppTest memastikan sidebar tanpa Astra/mode eksekusi.
-- [x] Pengujian integrasi antarmuka Streamlit (`tests/test_app_integration.py`, 4 tes lolos): memvalidasi gerbang login, navigasi tab, eksekusi Bob Shell di dashboard, dan peluncuran IBM Bob Desktop.
+- [x] Pengujian modul backend & integrasi bisnis (`tests/`, 71 unit test lolos): memvalidasi FastAPI endpoints, JDIH OJK sync, ChromaDB, lisensi B2B, eksekusi Bob Shell, scanner dampak, dan rollback patch.
 - [x] Dokumentasi akhir: README + PROGRESS + DECISIONS + AGENTS + CONTEXT.
+- [x] Pembersihan menyeluruh artefak Streamlit legacy (`app.py`, `run_app.bat`, `.streamlit/`) dan penambahan skrip peluncur 1-klik terpadu `run_all.bat`.
+
 
 ## Fase 7 — Platform Web Enterprise & Sinkronisasi Live OJK (Branch `feat/enterprise-web`)
 
@@ -136,4 +138,5 @@ Terakhir diperbarui: 2026-10-24
 - Template flow resmi: `flows/selisih_regulatory_flow.json` mengintegrasikan node TextInput, Chroma vector store, PromptTemplate komparasi, model LLM watsonx Granite, dan StructuredOutput.
 - Jembatan IBM Bob: `mcp_server.py` aktif melayani stdio JSON-RPC untuk IBM Bob IDE dan HTTP admin di `127.0.0.1:8765` untuk web console.
 - Backup patch `.bak.<timestamp>` dibuat otomatis sebelum setiap mutasi kode; fitur pemulihan (*rollback*) 1-klik siap digunakan di Tab 3.
-- Total 78 pengujian unit test (`pytest`): 77 passed, 1 portable skip (100% green). Frontend Next.js lulus verifikasi build production tanpa error.
+- Total 71 pengujian unit test (`pytest`): 70 passed, 1 portable skip (100% green). Frontend Next.js lulus verifikasi build production tanpa error.
+

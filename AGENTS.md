@@ -47,10 +47,9 @@ rcia-app/
 │   ├── src/app/               # App Router Next.js (page.tsx, layout.tsx, globals.css)
 │   ├── src/components/        # Komponen Tab 1-4, Sidebar, Header, Modal Dialog
 │   └── src/lib/               # Klien API typed & utilitas frontend
-├── app.py                     # Dashboard Streamlit monolitik (legacy baseline)
 ├── mcp_server.py              # Jembatan MCP lokal ke Bob: stdio JSON-RPC + HTTP admin 127.0.0.1:8765
 ├── selisih/                   # Paket inti Python
-│   ├── config.py              # Loader konfigurasi (st.secrets -> env -> .env)
+│   ├── config.py              # Loader konfigurasi (env -> .env)
 │   ├── documents.py           # Loader regulasi TXT/PDF + cleanup + split_by_pasal
 │   ├── langflow.py            # Klien + normalizer respons Langflow (Embedded & REST)
 │   ├── license.py             # License Gateway & B2B Profile Manager (status/kuota)
@@ -67,8 +66,7 @@ rcia-app/
 │   ├── test_license.py           # Unit test license gateway lokal
 │   ├── test_impact.py            # Unit test scanner dampak, patch, & rollback
 │   ├── test_artifacts.py         # Unit test ekspor artefak Bob & runner Bob Shell
-│   ├── test_mcp_server.py        # Unit test protokol JSON-RPC MCP lokal
-│   └── test_app_integration.py   # Pengujian integrasi antarmuka Streamlit
+│   └── test_mcp_server.py        # Unit test protokol JSON-RPC MCP lokal
 ├── data/
 │   ├── pojk_lama_77_2016.txt  # Teks regulasi acuan (publik)
 │   ├── pojk_baru_22_2023.txt  # Teks regulasi pembaruan (publik)
@@ -86,30 +84,28 @@ rcia-app/
 ├── DECISIONS.md               # Log keputusan arsitektur
 ├── .env.example               # Templat konfigurasi (salini sebagai .env)
 ├── requirements.txt
+├── run_all.bat                # Peluncur 1-klik terpadu (FastAPI + Next.js + Browser)
 ├── run_api.bat                # Script peluncur FastAPI backend port 8000
-├── run_web.bat                # Script peluncur Web Enterprise port 3000
-├── run_app.bat                # Script peluncur Streamlit baseline port 8501
-└── .streamlit/config.toml     # Tema Streamlit (secrets.toml TIDAK di-commit)
+└── run_web.bat                # Script peluncur Web Enterprise port 3000
 ```
 
 ## Cara Menjalankan
 
-### Platform Web Enterprise (Utama)
+### Peluncur 1-Klik Terpadu (Direkomendasikan)
+```bash
+run_all.bat
+```
+Secara otomatis menyalakan Backend FastAPI (port 8000), Frontend Next.js (port 3000), dan membuka peramban web di `http://localhost:3000`.
+
+### Eksekusi Manual
 ```bash
 # Terminal 1: Backend FastAPI
 run_api.bat
-# atau: python -m uvicorn api:app --host 127.0.0.1 --port 8000
+# atau: python -m uvicorn api:app --host 127.0.0.1 --port 8000 --reload
 
 # Terminal 2: Frontend Web
 run_web.bat
 # atau: cd frontend && npm run start
-```
-Buka peramban di `http://localhost:3000`.
-
-### Dashboard Streamlit (Legacy Baseline)
-```bash
-pip install -r requirements.txt
-streamlit run app.py
 ```
 
 Jalankan unit test repo mock:

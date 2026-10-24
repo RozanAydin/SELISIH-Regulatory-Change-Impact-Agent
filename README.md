@@ -2,50 +2,79 @@
 
 Platform Enterprise Kepatuhan Regulasi untuk Hackathon **IBM x Hacktiv8 (IT-Finance)**.
 Menjembatani **dokumen regulasi OJK** dengan **repositori kode perbankan dan fintech**, lalu memetakan
-dampak perubahannya secara *human-in-the-loop* menggunakan teknologi IBM watsonx Granite dan IBM Bob.
+dampak perubahannya secara *human-in-the-loop* menggunakan orkestrasi **Langflow**, kecerdasan **IBM watsonx Granite**, dan agen coding lokal **IBM Bob**.
 
-Alur inti: **Sinkronisasi JDIH OJK / Ingest Vector DB (ChromaDB Lokal / Langflow)** -> **Regulatory Diff (watsonx Granite Framework)**
--> **Code Impact (IBM Bob & MCP Server Lokal)** -> **Human Review (Dry-run, Patch Aman, Rollback, Real Pytest)**.
+---
+
+## Diagram Alur Arsitektur End-to-End
+
+```mermaid
+flowchart TD
+    subgraph DataIngestion ["1. Sinkronisasi & Pengetahuan Regulasi"]
+        OJK["Portal JDIH OJK (Tab 4)\njdih.ojk.go.id"] --> Corpus["Korpus Statutori OJK"]
+        Corpus --> Chroma["ChromaDB Local Vector Store\n(data/chroma_db/)"]
+    end
+
+    subgraph LangflowOrchestrator ["2. Langflow Pipeline (flows/selisih_regulatory_flow.json)"]
+        TextInput["TextInput Node\n(Regulasi Pembaruan)"] --> Prompt["PromptTemplate Node\n(Komparasi Statutori Dua Arah)"]
+        Chroma --> Prompt
+        Prompt --> Granite["IBM watsonx.ai Granite LLM\n(ibm/granite-13b-chat-v2)"]
+        Granite --> Structured["StructuredOutput Node\n(Kontrak temuan.json)"]
+    end
+
+    subgraph LocalTrustBoundary ["3. Domain Privat Perusahaan (Batas Kepercayaan Lokal)"]
+        Structured --> Handoff["data/temuan.json\n(Turunan Regulasi Publik)"]
+        Handoff --> MCPServer["MCP Server Lokal (Port 8765)\n(mcp_server.py)"]
+        MCPServer --> BobConsole["Konsol IBM Bob Shell (Tab 2)\n(SSE Streaming Real-Time)"]
+        BobConsole --> Repo["mock_fintech_repo/\n(Source Code Lokal)"]
+        Repo --> Review["Tab 3: Human Review\n(Dry-Run, Backup .bak, Pytest)"]
+    end
+```
 
 ---
 
 ## Arsitektur Platform
 
-Platform SELISIH terdiri atas arsitektur dual-stack modern:
+Platform SELISIH beroperasi dengan arsitektur web modern mandiri:
 1. **Frontend**: Next.js 15 (React 19, TypeScript, Tailwind CSS, Lucide Icons) di port `3000`.
-2. **Backend**: FastAPI REST & Server-Sent Events (SSE) Streaming di port `8000`.
-3. **Local MCP Server**: Python stdlib JSON-RPC dual-pintu di port `8765` untuk IBM Bob.
-4. **Vector Store**: ChromaDB lokal offline tersimpan di `data/chroma_db/`.
-5. **Dashboard Legacy**: Streamlit monolitik di port `8501` (`app.py`).
+2. **Backend**: FastAPI REST & Server-Sent Events (SSE) Streaming di port `8000` (`api.py`).
+3. **Pipeline Orchestrator**: Langflow REST API (`http://localhost:7860`) & Embedded Flow Engine (`flows/selisih_regulatory_flow.json`).
+4. **LLM Engine**: IBM watsonx Granite (`ibm/granite-13b-chat-v2`) untuk diferensiasi regulasi & verifikasi sitasi anti-halusinasi.
+5. **Local MCP Server**: Python stdlib JSON-RPC dual-pintu di port `8765` untuk integrasi IDE IBM Bob.
+6. **Vector Store**: ChromaDB lokal offline di `data/chroma_db/` tanpa ketergantungan cloud.
 
 ---
 
 ## Cara Menjalankan
 
-### Opsi 1: Platform Web Enterprise (Direkomendasikan)
+### Opsi 1: Peluncur 1-Klik Terpadu (Paling Cepat)
 
-1. Jalankan Backend FastAPI:
-   Klik ganda **`run_api.bat`** atau jalankan via terminal:
+Klik ganda berkas **`run_all.bat`**.
+Skrip ini akan secara otomatis:
+1. Menjalankan Backend FastAPI Server di port 8000 pada jendela terpisah.
+2. Membangun dan menjalankan Frontend Next.js di port 3000.
+3. Membuka peramban web ke `http://localhost:3000`.
+
+### Opsi 2: Manual Lewat Terminal
+
+1. **Instalasi Dependensi**:
    ```bash
-   python -m uvicorn api:app --host 127.0.0.1 --port 8000
+   pip install -r requirements.txt
+   cd frontend && npm install && cd ..
    ```
 
-2. Jalankan Frontend Next.js:
-   Klik ganda **`run_web.bat`** atau jalankan via terminal:
+2. **Jalankan Backend FastAPI (Terminal 1)**:
    ```bash
-   cd frontend
-   npm run start
-   # atau untuk mode pengembangan: npm run dev
+   run_api.bat
+   # atau: python -m uvicorn api:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+3. **Jalankan Frontend Next.js (Terminal 2)**:
+   ```bash
+   run_web.bat
+   # atau: cd frontend && npm run start
    ```
    Buka peramban di `http://localhost:3000`.
-
-### Opsi 2: Dashboard Streamlit (Legacy Baseline)
-
-Klik ganda **`run_app.bat`** atau jalankan:
-```bash
-streamlit run app.py
-```
-Buka peramban di `http://localhost:8501`.
 
 ---
 
@@ -53,7 +82,7 @@ Buka peramban di `http://localhost:8501`.
 
 1. **Tab 1 — Analisis Perubahan Regulasi (Diff)**
    - Pemilih regulasi acuan dan pembaruan dinamis dari katalog JDIH OJK.
-   - Komparasi dua arah berbasis watsonx Granite Framework.
+   - Komparasi dua arah berbasis orkestrasi Langflow & model IBM watsonx Granite.
    - 4 Metrik Validasi Kepatuhan: Klausul Terdampak, Validitas Sitasi (Anti-Halusinasi), Tingkat Keyakinan, dan Status Abstention.
    - Kartu perbandingan berdampingan (*side-by-side*) antara klausul acuan dan usulan pembaruan beserta kandidat kode terdampak.
 
