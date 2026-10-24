@@ -19,7 +19,7 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
@@ -59,16 +59,78 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-memory audit trail state
-_AUDIT_LOGS: List[Dict[str, Any]] = [
-    {
-        "id": "AUDIT-INIT-001",
+# In-memory & Persistent audit trail state
+AUDIT_FILE = os.path.join(DATA_DIR, "audit_trail.jsonl")
+
+
+def _load_persisted_audit_logs() -> List[Dict[str, Any]]:
+    logs = [
+        {
+            "id": "AUDIT-INIT-001",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "action": "SYSTEM_STARTUP",
+            "actor": "System",
+            "details": "Sistem SELISIH Enterprise API diinisialisasi.",
+        }
+    ]
+    if os.path.exists(AUDIT_FILE):
+        try:
+            with open(AUDIT_FILE, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        logs.append(json.loads(line))
+        except Exception:
+            pass
+    return logs
+
+
+_AUDIT_LOGS: List[Dict[str, Any]] = _load_persisted_audit_logs()
+
+
+def log_audit_event(
+    action: str,
+    actor: str,
+    details: str,
+    note: Optional[str] = None,
+    backups: Optional[list] = None,
+    restored: Optional[list] = None,
+) -> Dict[str, Any]:
+    entry: Dict[str, Any] = {
+        "id": f"AUDIT-{int(time.time() * 1000)}",
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "action": "SYSTEM_STARTUP",
-        "actor": "Administrator",
-        "details": "Sistem SELISIH Enterprise API diinisialisasi.",
+        "action": action,
+        "actor": actor,
+        "details": details,
     }
-]
+    if note is not None:
+        entry["note"] = note
+    if backups is not None:
+        entry["backups"] = backups
+    if restored is not None:
+        entry["restored"] = restored
+
+    _AUDIT_LOGS.append(entry)
+    try:
+        os.makedirs(DATA_DIR, exist_ok=True)
+        with open(AUDIT_FILE, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+    return entry
+
+
+def verify_compliance_role(x_user_role: Optional[str] = Header(None, alias="X-User-Role")) -> str:
+    """Memverifikasi bahwa aksi mutasi kode hanya dapat dilakukan oleh peran yang berwenang."""
+    allowed_roles = {"Compliance Officer", "Admin", "Administrator", "Lead Developer", "Software Engineer"}
+    role = x_user_role or "Compliance Officer"
+    if role not in allowed_roles:
+        raise HTTPException(
+            status_code=403,
+            detail=f"Akses ditolak: Peran '{role}' tidak memiliki wewenang untuk memutasi repositori bank.",
+        )
+    return role
+
 
 
 # ==========================================
@@ -210,7 +272,7 @@ def select_company(req: SelectCompanyRequest):
 
 
 @app.post("/api/license/add-repo")
-def add_company_repo(req: AddRepoRequest):
+def add_company_repo(req: AddRepoRequest, authorized_role: str = Depends(verify_compliance_role)):
     """Mendaftarkan repositori baru ke entitas perusahaan dengan validasi kuota."""
     res = add_repository_to_company(req.company_id or "", req.name, req.path)
     if not res.get("success"):
@@ -479,13 +541,11 @@ def run_regulatory_analysis(req: AnalysisRunRequest):
         with open(LIVE_RESULT_FILE, "w", encoding="utf-8") as f:
             json.dump(saved_payload, f, ensure_ascii=False, indent=2)
 
-        _AUDIT_LOGS.append({
-            "id": f"AUDIT-DIFF-{int(time.time())}",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "action": "RUN_REGULATORY_DIFF",
-            "actor": "System",
-            "details": f"Analisis regulasi acuan POJK {selected_acuan.get('nomor', '')} vs pembaruan POJK {selected_ojk.get('nomor', '')}/{selected_ojk.get('tahun', '')} berhasil diproses dengan engine {engine_name} ({len(findings)} temuan).",
-        })
+        log_audit_event(
+            action="RUN_REGULATORY_DIFF",
+            actor="System",
+            details=f"Analisis regulasi acuan POJK {selected_acuan.get('nomor', '')} vs pembaruan POJK {selected_ojk.get('nomor', '')}/{selected_ojk.get('tahun', '')} berhasil diproses dengan engine {engine_name} ({len(findings)} temuan).",
+        )
 
         return {
             "status": "success",
@@ -623,7 +683,7 @@ def get_patch_dry_run():
 
 
 @app.post("/api/impact/apply")
-def apply_patch(req: PatchApplyRequest):
+def apply_patch(req: PatchApplyRequest, authorized_role: str = Depends(verify_compliance_role)):
     """Menerapkan patch kepatuhan dengan backup otomatis dan audit logging."""
     lic = get_license_state()
     if not lic["can_run"]:
@@ -636,16 +696,14 @@ def apply_patch(req: PatchApplyRequest):
     applied_count = sum(1 for r in results if r.get("status") == "applied")
     backups = [r.get("backup_path") for r in results if r.get("backup_path")]
 
-    # Catat ke Jejak Audit
-    _AUDIT_LOGS.append({
-        "id": f"AUDIT-PATCH-{int(time.time())}",
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "action": "APPLY_COMPLIANCE_PATCH",
-        "actor": req.reviewer_role,
-        "details": f"Patch kepatuhan diterapkan pada {applied_count} berkas oleh {req.reviewer_role}.",
-        "note": req.reviewer_note,
-        "backups": backups,
-    })
+    # Catat ke Jejak Audit (in-memory dan disk)
+    log_audit_event(
+        action="APPLY_COMPLIANCE_PATCH",
+        actor=req.reviewer_role or authorized_role,
+        details=f"Patch kepatuhan diterapkan pada {applied_count} berkas oleh {req.reviewer_role or authorized_role}.",
+        note=req.reviewer_note,
+        backups=backups,
+    )
 
     return {
         "success": True,
@@ -655,18 +713,16 @@ def apply_patch(req: PatchApplyRequest):
 
 
 @app.post("/api/impact/rollback")
-def rollback_compliance_patch():
+def rollback_compliance_patch(authorized_role: str = Depends(verify_compliance_role)):
     """Mengembalikan berkas repositori mock ke cadangan .bak terbaru."""
     res = impact.rollback_last_backup(MOCK_REPO_DIR)
     if res.get("status") == "success":
-        _AUDIT_LOGS.append({
-            "id": f"AUDIT-ROLLBACK-{int(time.time())}",
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "action": "ROLLBACK_COMPLIANCE_PATCH",
-            "actor": "Compliance Officer",
-            "details": f"Memulihkan {res.get('count', 0)} berkas dari salinan cadangan (.bak) terbaru.",
-            "restored": res.get("restored", []),
-        })
+        log_audit_event(
+            action="ROLLBACK_COMPLIANCE_PATCH",
+            actor=authorized_role,
+            details=f"Memulihkan {res.get('count', 0)} berkas dari salinan cadangan (.bak) terbaru.",
+            restored=res.get("restored", []),
+        )
     return res
 
 

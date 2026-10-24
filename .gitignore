@@ -86,6 +86,7 @@ Thumbs.db
 # Artefak Runtime (mode Live)
 # ==========================================
 data/temuan.json
+data/audit_trail.jsonl
 data/chroma_db/
 tests/test_chroma_db/
 

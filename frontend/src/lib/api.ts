@@ -310,7 +310,10 @@ export async function fetchImpactDryRun(): Promise<DryRunResponse> {
 export async function applyPatch(reviewerRole: string, reviewerNote: string): Promise<ApplyPatchResponse> {
   const res = await fetch(`${API_BASE}/api/impact/apply`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-User-Role": reviewerRole || "Compliance Officer",
+    },
     body: JSON.stringify({
       reviewer_role: reviewerRole,
       reviewer_note: reviewerNote,
@@ -324,13 +327,19 @@ export async function applyPatch(reviewerRole: string, reviewerNote: string): Pr
   return res.json();
 }
 
-export async function rollbackPatch(): Promise<{
+export async function rollbackPatch(role: string = "Compliance Officer"): Promise<{
   status: string;
   count: number;
   message: string;
   restored: Array<{ target: string; backup_source: string }>;
 }> {
-  const res = await fetch(`${API_BASE}/api/impact/rollback`, { method: "POST" });
+  const res = await fetch(`${API_BASE}/api/impact/rollback`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-User-Role": role,
+    },
+  });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || "Gagal memulihkan cadangan patch");

@@ -138,5 +138,6 @@ Terakhir diperbarui: 2026-10-24
 - Template flow resmi: `flows/selisih_regulatory_flow.json` mengintegrasikan node TextInput, Chroma vector store, PromptTemplate komparasi, model LLM watsonx Granite, dan StructuredOutput.
 - Jembatan IBM Bob: `mcp_server.py` aktif melayani stdio JSON-RPC untuk IBM Bob IDE dan HTTP admin di `127.0.0.1:8765` untuk web console.
 - Backup patch `.bak.<timestamp>` dibuat otomatis sebelum setiap mutasi kode; fitur pemulihan (*rollback*) 1-klik siap digunakan di Tab 3.
-- Total 71 pengujian unit test (`pytest`): 70 passed, 1 portable skip (100% green). Frontend Next.js lulus verifikasi build production tanpa error.
+- Total 72 pengujian unit test (`pytest`): 71 passed, 1 portable skip (100% green). Frontend Next.js lulus verifikasi build production tanpa error.
+- Pengerasan pasca-audit evaluasi (D-039): peluncur `run_all.bat` mandiri fresh-clone (`npm install` otomatis), mesin vektor fallback NumPy anti-crash Python 3.13, persistensi jejak audit ke `data/audit_trail.jsonl`, dan guard RBAC `X-User-Role`.
 

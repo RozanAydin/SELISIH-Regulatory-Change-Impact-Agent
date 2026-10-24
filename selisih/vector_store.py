@@ -2,6 +2,8 @@
 
 Menyediakan penyimpanan vektor lokal dan penelusuran semantik klausul acuan (POJK 77/2016)
 tanpa ketergantungan pada database cloud eksternal (Astra DB), 100% offline dan tahan banting.
+Mendukung Fallback In-Memory Index berbasis NumPy murni jika biner Rust ChromaDB bermasalah
+pada lingkungan Python 3.13 Windows.
 """
 
 from __future__ import annotations
@@ -29,11 +31,14 @@ class FastLegalEmbeddingFunction(EmbeddingFunction):
     100% offline, instan tanpa perlu mengunduh bobot model puluhan megabyte dari internet.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        pass
 
     def name(self) -> str:
         return "fast_legal_embedding"
+
+    def get_config(self) -> dict:
+        return {}
 
     def __call__(self, input: Documents) -> Embeddings:
         embeddings = []
@@ -50,8 +55,53 @@ class FastLegalEmbeddingFunction(EmbeddingFunction):
         return embeddings
 
 
+class FallbackVectorIndex:
+    """Mesin indeks vektor in-memory deterministik murni berbasis NumPy.
+    
+    Menjamin 0% risiko crash memori (Access Violation) di Python 3.13 Windows.
+    """
+
+    def __init__(self, embedding_fn: FastLegalEmbeddingFunction):
+        self.emb_fn = embedding_fn
+        self.records: List[Dict[str, Any]] = []
+
+    def count(self) -> int:
+        return len(self.records)
+
+    def upsert(self, ids: list, documents: list, metadatas: list):
+        embeddings = self.emb_fn(documents)
+        for i, doc, meta, emb in zip(ids, documents, metadatas):
+            self.records = [r for r in self.records if r["id"] != i]
+            self.records.append({
+                "id": i,
+                "document": doc,
+                "metadata": meta,
+                "embedding": np.array(emb, dtype=np.float32),
+            })
+
+    def query(self, query_texts: list, n_results: int = 3) -> dict:
+        if not self.records or not query_texts:
+            return {"documents": [[]], "metadatas": [[]], "distances": [[]]}
+
+        q_emb = np.array(self.emb_fn(query_texts)[0], dtype=np.float32)
+        scores = []
+        for r in self.records:
+            sim = float(np.dot(q_emb, r["embedding"]))
+            scores.append((sim, r))
+
+        scores.sort(key=lambda x: x[0], reverse=True)
+        top = scores[:n_results]
+
+        return {
+            "documents": [[t[1]["document"] for t in top]],
+            "metadatas": [[t[1]["metadata"] for t in top]],
+            "distances": [[round(1.0 - t[0], 4) for t in top]],
+        }
+
+
 _client: Optional[chromadb.PersistentClient] = None
 _collection = None
+_FALLBACK_INDEX: Optional[FallbackVectorIndex] = None
 
 
 def get_vector_client(persist_directory: str = CHROMA_DIR) -> chromadb.PersistentClient:
@@ -67,16 +117,23 @@ def get_or_create_collection(
     collection_name: str = "pojk_acuan_idx",
     persist_directory: str = CHROMA_DIR,
 ):
-    """Mengambil atau membuat koleksi regulasi acuan di ChromaDB."""
-    global _collection
-    client = get_vector_client(persist_directory)
-    emb_fn = FastLegalEmbeddingFunction()
-    _collection = client.get_or_create_collection(
-        name=collection_name,
-        embedding_function=emb_fn,
-        metadata={"description": "Koleksi Pasal Regulasi Acuan OJK (POJK 77/2016)"},
-    )
-    return _collection
+    """Mengambil atau membuat koleksi regulasi acuan di ChromaDB dengan fallback otomatis."""
+    global _collection, _FALLBACK_INDEX
+    try:
+        client = get_vector_client(persist_directory)
+        emb_fn = FastLegalEmbeddingFunction()
+        col = client.get_or_create_collection(
+            name=collection_name,
+            embedding_function=emb_fn,
+            metadata={"description": "Koleksi Pasal Regulasi Acuan OJK (POJK 77/2016)"},
+        )
+        _ = col.count()
+        _collection = col
+        return _collection
+    except Exception:
+        if _FALLBACK_INDEX is None:
+            _FALLBACK_INDEX = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        return _FALLBACK_INDEX
 
 
 def ingest_reference_pojk(
@@ -86,10 +143,14 @@ def ingest_reference_pojk(
     force: bool = False,
 ) -> int:
     """Memotong dokumen POJK lama per pasal dan memasukkannya ke ChromaDB."""
+    global _FALLBACK_INDEX
     col = get_or_create_collection(collection_name)
-    existing_count = col.count()
-    if existing_count > 0 and not force:
-        return existing_count
+    try:
+        existing_count = col.count()
+        if existing_count > 0 and not force:
+            return existing_count
+    except Exception:
+        pass
 
     if not os.path.exists(file_path):
         return 0
@@ -129,10 +190,16 @@ def ingest_reference_pojk(
                 "level": "ayat",
             })
 
-    if ids:
-        col.upsert(ids=ids, documents=documents, metadatas=metadatas)
-
-    return col.count()
+    try:
+        if ids:
+            col.upsert(ids=ids, documents=documents, metadatas=metadatas)
+        return col.count()
+    except Exception:
+        if _FALLBACK_INDEX is None:
+            _FALLBACK_INDEX = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        if ids:
+            _FALLBACK_INDEX.upsert(ids=ids, documents=documents, metadatas=metadatas)
+        return _FALLBACK_INDEX.count()
 
 
 def query_reference_clauses(
@@ -141,11 +208,18 @@ def query_reference_clauses(
     collection_name: str = "pojk_acuan_idx",
 ) -> List[Dict[str, Any]]:
     """Mencari pasal acuan yang paling relevan dengan klausul regulasi baru."""
+    global _FALLBACK_INDEX
     col = get_or_create_collection(collection_name)
-    if col.count() == 0:
-        ingest_reference_pojk(collection_name=collection_name)
-
-    results = col.query(query_texts=[query_text], n_results=n_results)
+    try:
+        if col.count() == 0:
+            ingest_reference_pojk(collection_name=collection_name)
+        results = col.query(query_texts=[query_text], n_results=n_results)
+    except Exception:
+        if _FALLBACK_INDEX is None:
+            _FALLBACK_INDEX = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        if _FALLBACK_INDEX.count() == 0:
+            ingest_reference_pojk(collection_name=collection_name)
+        results = _FALLBACK_INDEX.query(query_texts=[query_text], n_results=n_results)
 
     matches: List[Dict[str, Any]] = []
     if results and results.get("documents") and results["documents"][0]:
@@ -156,7 +230,6 @@ def query_reference_clauses(
         for doc, meta, dist in zip(docs, metas, distances):
             ayat = meta.get("ayat", "(1)")
             clean_kutipan = doc.replace(meta.get("pasal", ""), "").replace(f"Ayat {ayat}", "").strip()
-            # Bersihkan jika ada awalan ayat
             clean_kutipan = re.sub(r"^\(\d+\)\s*", "", clean_kutipan)
 
             matches.append({

@@ -93,3 +93,23 @@ def test_api_license_profiles_and_switching():
     assert res4.json()["company"]["can_run"] is True
 
 
+def test_api_rbac_guard():
+    # Role tidak sah ditolak dengan 403
+    bad_res = client.post(
+        "/api/impact/apply",
+        json={"reviewer_role": "Hacker", "confirm": False},
+        headers={"X-User-Role": "UnauthorizedRole"},
+    )
+    assert bad_res.status_code == 403
+    assert "Akses ditolak" in bad_res.json()["detail"]
+
+    # Role yang diizinkan (Compliance Officer / Admin / Engineer) diizinkan
+    good_res = client.post(
+        "/api/impact/apply",
+        json={"reviewer_role": "Compliance Officer", "confirm": False},
+        headers={"X-User-Role": "Compliance Officer"},
+    )
+    assert good_res.status_code == 200
+
+
+

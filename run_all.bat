@@ -6,17 +6,23 @@ echo  SELISIH — Regulatory Change & Code Impact System
 echo  Peluncur 1-Klik Platform Enterprise (Next.js + FastAPI)
 echo ========================================================
 
-echo [1/2] Menjalankan Backend FastAPI Server di port 8000...
+echo [1/3] Menjalankan Backend FastAPI Server di port 8000...
 start "SELISIH - FastAPI Server" cmd /k "python -m uvicorn api:app --host 127.0.0.1 --port 8000 --reload"
 
-timeout /t 3 >nul
+timeout /t 2 >nul
 
-echo [2/2] Membuka Frontend Next.js di http://localhost:3000...
+echo [2/3] Memeriksa dependensi dan artefak Frontend Next.js...
 cd frontend
+if not exist "node_modules" (
+    echo Paket dependensi frontend belum terpasang. Menjalankan npm install...
+    call npm.cmd install
+)
+
 if not exist ".next" (
     echo Membangun artefak produksi Next.js...
     call npm.cmd run build
 )
 
+echo [3/3] Membuka Frontend Next.js di http://localhost:3000...
 start http://localhost:3000
 npm.cmd run start
