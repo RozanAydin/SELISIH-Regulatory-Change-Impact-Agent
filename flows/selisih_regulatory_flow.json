@@ -1,6 +1,6 @@
 {
   "name": "SELISIH — Regulatory Diff Pipeline",
-  "description": "Pipeline analisis regulasi kepatuhan OJK: ingest regulasi baru, bandingkan terhadap basis data regulasi lama di Astra DB, ekstrak pasal terdampak, dan petakan evidence ke source code.",
+  "description": "Pipeline analisis regulasi kepatuhan OJK: ingest regulasi baru, bandingkan terhadap basis data regulasi acuan di ChromaDB lokal, ekstrak pasal terdampak, dan petakan evidence ke source code.",
   "endpoint_name": "selisih-regulatory-diff",
   "data": {
     "nodes": [
@@ -9,8 +9,8 @@
         "type": "TextInput",
         "data": {
           "node": {
-            "display_name": "Regulasi Baru (Input Teks / Dokumen)",
-            "description": "Menerima teks POJK pembaruan (contoh: POJK Nomor 22 Tahun 2023).",
+            "display_name": "Regulasi Baru OJK (Input Teks / Dokumen)",
+            "description": "Menerima teks POJK pembaruan hasil ekstraksi JDIH OJK (contoh: POJK Nomor 22 Tahun 2023).",
             "template": {
               "input_value": {
                 "type": "str",
@@ -22,20 +22,40 @@
         }
       },
       {
-        "id": "AstraDB-001",
-        "type": "AstraDB",
+        "id": "ChromaDB-001",
+        "type": "Chroma",
         "data": {
           "node": {
-            "display_name": "Astra DB Vector Store (Regulasi Acuan)",
-            "description": "Koleksi klausul POJK terdahulu (POJK 77/2016) tersimpan sebagai embedding referensi.",
+            "display_name": "ChromaDB Local Vector Store (Regulasi Acuan)",
+            "description": "Penyimpanan vektor lokal klausul POJK terdahulu (POJK 77/2016) tersimpan secara offline di data/chroma_db/.",
             "template": {
               "collection_name": {
                 "type": "str",
-                "value": "pojk_idx"
+                "value": "pojk_acuan_idx"
+              },
+              "persist_directory": {
+                "type": "str",
+                "value": "data/chroma_db"
               },
               "search_type": {
                 "type": "str",
                 "value": "similarity"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "PromptTemplate-001",
+        "type": "PromptTemplate",
+        "data": {
+          "node": {
+            "display_name": "Prompt Template Komparasi Regulasi",
+            "description": "Menghubungkan teks pasal regulasi baru dengan pasal acuan dari ChromaDB.",
+            "template": {
+              "template": {
+                "type": "str",
+                "value": "Anda adalah auditor kepatuhan hukum finansial OJK. Bandingkan klausul baru {klausul_baru} terhadap klausul acuan dari ChromaDB {klausul_acuan}. Identifikasi perubahan angka statutori dan petakan dampaknya ke variabel kode program sesuai skema temuan.json."
               }
             }
           }
@@ -47,7 +67,7 @@
         "data": {
           "node": {
             "display_name": "IBM watsonx.ai (Granite 13B / 20B)",
-            "description": "Model LLM fondasi untuk diferensiasi regulasi finansial dan verifikasi sitasi hukum.",
+            "description": "Model LLM fondasi untuk diferensiasi regulasi finansial dan verifikasi sitasi hukum tanpa halusinasi.",
             "template": {
               "model_id": {
                 "type": "str",
@@ -56,10 +76,6 @@
               "temperature": {
                 "type": "float",
                 "value": 0.0
-              },
-              "system_prompt": {
-                "type": "str",
-                "value": "Anda adalah auditor kepatuhan perbankan & hukum finansial OJK. Bandingkan klausul baru terhadap klausul acuan di Astra DB. Ekstrak perubahan batasan statutori, hitung sitasi pasal secara presisi, dan petakan dampaknya ke variabel kode program."
               }
             }
           }
@@ -85,10 +101,14 @@
     "edges": [
       {
         "source": "TextInput-001",
-        "target": "WatsonxGranite-001"
+        "target": "PromptTemplate-001"
       },
       {
-        "source": "AstraDB-001",
+        "source": "ChromaDB-001",
+        "target": "PromptTemplate-001"
+      },
+      {
+        "source": "PromptTemplate-001",
         "target": "WatsonxGranite-001"
       },
       {

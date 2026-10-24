@@ -119,5 +119,95 @@ Terakhir diperbarui: 2026-10-12
 - **Alasan:** Hackathon IBM x Hacktiv8 mewajibkan pemanfaatan ekosistem IBM Bob. Menyediakan fallback ke editor non-IBM mengurangi nilai integrasi. Sementara itu, eksekusi headless via Bob Shell memenuhi kebutuhan pengalaman pengguna yang terpusat di dashboard (*single pane of glass*) tanpa memaksa pengguna membuka aplikasi desktop secara manual.
 - **Konsekuensi:** `selisih/artifacts.py` kini menyediakan `check_bob_status()`, `find_bob_executable()`, dan `run_bob_shell_agent()`. Konfigurasi MCP hanya dipasang ke `.bob/mcp.json`. Semua unit test (60 test) memvalidasi eksklusivitas IBM Bob.
 
+## D-023 — Arsitektur Monorepo Enterprise (FastAPI Backend + Next.js App Router)
+- **Keputusan:** Membangun platform antarmuka enterprise modern menggunakan Next.js 15 (React 19, TypeScript, Tailwind CSS, Lucide) di folder `frontend/` dan server backend FastAPI (`api.py`) di root repositori. Streamlit lama (`app.py`) tetap dipertahankan sebagai cadangan runtime.
+- **Alasan:** Streamlit memiliki keterbatasan siklus rerun penuh (*full-script rerun*) yang membatasi interaktivitas UI tingkat enterprise (seperti streaming log terminal real-time dan pengalaman tata kelola kepatuhan human-in-the-loop yang mulus).
+- **Konsekuensi:** Backend FastAPI mengekspos REST API dan Server-Sent Events (SSE) dengan middleware CORS. Pengguna dapat menjalankan platform enterprise via `run_web.bat`.
+
+## D-024 — Integrasi Modul Sinkronisasi Regulasi Otomatis JDIH OJK
+- **Keputusan:** Mengimplementasikan modul `selisih/ojk.py` yang terhubung langsung ke portal JDIH OJK (`jdih.ojk.go.id`) untuk memindai regulasi POJK baru secara otomatis di sektor Inovasi Teknologi Sektor Keuangan (ITSK), LPBBTI (P2P Lending), dan Pelindungan Konsumen.
+- **Alasan:** Menghilangkan keharusan input regulasi statis/demo manual dan memberikan kemampuan pemantauan regulasi berkelanjutan (*continuous regulatory compliance monitoring*).
+- **Konsekuensi:** Data POJK langsung ditarik beserta nomor, tahun, tanggal keberlakuan, status, tautan resmi, dan riwayat pencabutan. Tersedia unit test `tests/test_ojk.py`.
+
+## D-025 — Konsol Interaktif Streaming Eksekusi Agen IBM Bob Shell via SSE
+- **Keputusan:** Menyediakan konsol terminal interaktif di frontend yang menerima stream Server-Sent Events (`/api/bob/stream`) dari agen Bob Shell, menampilkan langkah penalaran AI (*reasoning*), pemanggilan tool MCP (`get_temuan`, `scan_impact`, `build_artifacts`), dan inspektur artefak handoff (`impact_report.json`, `proposed_patch.diff`, `generated_tests.py`).
+- **Alasan:** Mempermudah juri/penilai hackathon menguji alur IBM Bob secara langsung di browser tanpa mengharuskan instalasi aplikasi desktop eksternal.
+- **Konsekuensi:** Konsol terintegrasi di Tab 3 dengan penampil artefak instan dan aksi penyalinan.
+
+## D-026 — Penggantian Astra DB Cloud dengan ChromaDB Local Persistent Vector Store
+- **Keputusan:** Mengganti ketergantungan Astra DB cloud pada node Langflow dan runtime lokal dengan ChromaDB lokal (`selisih/vector_store.py`) yang tersimpan di `data/chroma_db/`. Dokumen regulasi acuan (POJK 77/2016) di-ingest per pasal dan ayat secara mandiri.
+- **Alasan:** Astra DB bukan kewajiban pada hackathon IBM x Hacktiv8. Menggunakan ChromaDB lokal menghilangkan risiko kebocoran token rahasia di repo publik, bebas dari biaya/kuota cloud pihak ketiga, dan memungkinkan pipeline Langflow berjalan 100% offline secara instan tanpa latensi jaringan.
+- **Konsekuensi:** Node `flows/selisih_regulatory_flow.json` diperbarui ke node `Chroma`. Tersedia unit test `tests/test_vector_store.py`.
+
+## D-027 — Integrasi End-to-End Pemilihan Regulasi OJK JDIH ke Engine Diff Kepatuhan
+- **Keputusan:** Menghubungkan aksi tombol *"Analisis Dampak"* pada tabel regulasi live OJK di Tab 1 langsung ke endpoint `POST /api/ojk/analyze`. Sistem secara otomatis menginisialisasi teks regulasi yang dipilih, mengeksekusi komparasi semantik terhadap pasal acuan di ChromaDB, dan memindahkan pengguna ke Tab 2 dengan hasil temuan baru yang sudah termuat.
+- **Alasan:** Menghilangkan status dekoratif Tab 1 dan menciptakan alur kerja terpadu dari penelusuran regulasi publik OJK hingga tata kelola kode fintech.
+- **Konsekuensi:** Pengguna dapat mengeksplorasi regulasi OJK mana pun dari feed live JDIH secara interaktif dan langsung melihat klausul kepatuhan yang terdampak.
+
+## D-028 — Identifikasi Komposit Regulasi OJK (getRegKey) Berbasis Nomor dan Tahun
+- **Keputusan:** Mengubah mekanisme identifikasi kesamaan dokumen regulasi acuan dan pembaruan dari pencocokan nomor tunggal (`selectedReference.nomor === selectedRegulation.nomor`) menjadi komposit kunci regulasi berbasis `id` atau format `${nomor}_${tahun}` (`getRegKey`).
+- **Alasan:** Penomoran regulasi OJK bersifat berulang per tahun kalender (misalnya POJK 41/2024 dan POJK 41/2025). Menguji kesamaan hanya dengan string nomor menghasilkan *false positive* yang memblokir perbandingan dua regulasi yang sebenarnya berbeda tahun penerbitannya.
+- **Konsekuensi:** Frontend dapat memvalidasi dan membedakan dokumen lintas tahun secara akurat, mencegah munculnya peringatan duplikasi yang salah saat pengguna memilih nomor yang sama pada tahun berbeda.
+
+## D-029 — Eksekusi Analisis Diferensiasi Regulasi Berbasis Pemicu Eksplisit (On-Demand Execution)
+- **Keputusan:** Mengubah alur antarmuka Tab 1 sehingga catatan analisis selesai, metrik kepatuhan, dan daftar perubahan pasal tidak langsung muncul saat awal membuka aplikasi. Tampilan awal menampilkan status siap analisis (*ready state*), dan hasil analisis hanya dirender setelah pengguna secara eksplisit menekan tombol *"Jalankan Analisis"*. Setiap pergantian regulasi acuan atau pembaruan akan mereset tampilan hasil ke status siap analisis.
+- **Alasan:** Mencegah disorientasi pengguna di mana data hasil analisis lama terlihat seolah-olah sudah mencerminkan regulasi baru yang baru saja dipilih di dropdown sebelum tombol analisis dijalankan.
+- **Konsekuensi:** Siklus analisis menjadi jelas, terprediksi, dan interaktif secara *human-in-the-loop*.
+
+## D-030 — Pemetaan Nomor Baris Dinamis pada Tinjauan Dampak Kode (Tab 3)
+- **Keputusan:** Memperbarui modul scanner dampak (`selisih/impact.py`) agar mengembalikan daftar nomor baris target (`lines`) dan nomor baris utama (`line`) pada setiap berkas kode yang terdampak berdasarkan pencocokan konteks AST/evidence, serta menyinkronkan properti `returncode` dan `code` pada eksekusi pytest. Frontend Tab 3 menampilkan badge nomor baris spesifik (misal: `Baris 15`, `Baris 18`) pada header berkas.
+- **Alasan:** Menghilangkan kebingungan developer dalam meninjau lokasi perubahan kode serta memastikan indikator keberhasilan pengujian unit otomatis akurat.
+- **Konsekuensi:** Antarmuka tinjauan kode memberikan transparansi penuh mengenai lokasi berkas dan nomor baris yang terkena dampak sebelum patch diterapkan.
+
+## D-031 — State Inisialisasi Kosong (Unselected Initial State) pada Pemilih Regulasi Tab 1
+- **Keputusan:** Mengubah inisialisasi state pemilihan regulasi acuan (`selectedReference`) dan regulasi pembaruan (`selectedRegulation`) di Tab 1 dari nilai default terisi (POJK 77 & POJK 22) menjadi bernilai kosong (`null`), dilengkapi opsi default `-- Pilih Regulasi --` pada menu dropdown, kartu placeholder informatif saat belum ada pilihan, tombol aksi analisis berstatus nonaktif jika salah satu belum dipilih, dan tombol akses cepat *"Muat Kasus Acuan Standar"*.
+- **Alasan:** Membuka dashboard dengan formulir yang sudah langsung terpilih menimbulkan kesan artifisial seolah analisis telah selesai tanpa keterlibatan pengguna. Memulai dengan pilihan kosong memperkuat alur *human-in-the-loop*, di mana peninjau kepatuhan secara sadar menentukan dokumen acuan dan dokumen target yang ingin dikomparasikan.
+- **Konsekuensi:** Pengguna disambut antarmuka yang bersih dan interaktif; kartu perbandingan menampilkan petunjuk yang memandu pengguna; tombol analisis terlindungi dari eksekusi tanpa dokumen yang valid; serta tersedia pintasan 1-klik untuk kemudahan demo.
+
+## D-032 — Peningkatan UX & Status Dinamis Konsol Agen IBM Bob Shell (Tab 2)
+- **Keputusan:** Memperbarui antarmuka Tab 2: (1) Menyederhanakan penamaan tombol aksi menjadi *"Jalankan IBM Bob"*; (2) Mengubah indikator status server MCP di header terminal menjadi dinamis membaca keaktifan riil port 8765 dengan label ringkas `MCP Server Terhubung` (hijau) atau `MCP Server Terputus` (merah); (3) Menerapkan *guarded state* yang menampilkan peringatan dan menonaktifkan tombol eksekusi bila data temuan Tab 1 belum tersedia; (4) Menambahkan tombol aksi lanjutan *"Lanjut ke Tab 3: Tata Kelola & Tinjauan"* saat handoff selesai; (5) Menambahkan tombol pembersih log terminal (*Bersihkan Log*); (6) Menghadirkan *syntax highlighting* pada penampil berkas `proposed_patch.diff`; serta (7) Menambahkan tombol *"Unduh Berkas"* pada penampil artefak.
+- **Alasan:** Menghilangkan elemen teks dekoratif/statis yang tidak mencerminkan status sistem riil, memperjelas alur kerja linear dari Tab 2 ke Tab 3, serta meningkatkan kenyamanan developer dalam menginspeksi berkas patch kepatuhan.
+- **Konsekuensi:** Terminal Bob Shell lebih informatif, artefak diff lebih mudah dibaca, dan transisi kerja antar tab menjadi mulus dan terpandu.
+
+## D-033 — Guard Siklus Eksekusi Artefak Handoff IBM Bob (Session Execution Guard)
+- **Keputusan:** Menambahkan guard state sesi `hasRunBob` (default: `false`) untuk mengontrol penayangan paket artefak handoff (`proposed_patch.diff`, `generated_tests.py`, `impact_report.json`) di Tab 2. Saat pertama kali membuka aplikasi, penampil artefak menampilkan kartu placeholder panduan berstatus *"Menunggu Eksekusi IBM Bob"*. Berkas artefak fisik hanya dimuat dan ditampilkan setelah pengguna secara eksplisit menekan tombol *"Jalankan IBM Bob"* dan proses SSE selesai. Jika pengguna mengganti regulasi di Tab 1, state `hasRunBob` secara otomatis di-reset menjadi `false`.
+- **Alasan:** Menghilangkan kebingungan pengguna di mana berkas artefak dari eksekusi/pengujian sebelumnya langsung muncul di awal sebelum tombol agen IBM Bob ditekan.
+- **Konsekuensi:** Alur kerja menjadi terprediksi dan konsisten dengan prinsip *human-in-the-loop*, di mana output hanya dihasilkan berdasarkan tindakan nyata pengguna pada sesi aktif.
+
+## D-034 — Modal Konfirmasi In-App, Pemulihan Cadangan (Rollback), dan Keterlacakan Audit di Tab 3
+- **Keputusan:** Memperbarui arsitektur antarmuka dan alur kerja Tab 3: (1) Mengganti dialog browser bawaan (`window.confirm` dan `window.alert`) dengan modal dialog in-app terpadu yang menampilkan rincian peran peninjau, target berkas, catatan kepatuhan, dan status simulasi dry-run; (2) Menerapkan tombol tindakan bertahap (Progressive Workflow) di mana tombol "Jalankan Simulasi (Dry-Run)" ditonjolkan terlebih dahulu sebelum tombol penerapan patch aktif dengan label jelas; (3) Mengembangkan fitur pemulihan cadangan berkas (*Rollback*) via endpoint `POST /api/impact/rollback` dan fungsi `selisih.impact.rollback_last_backup()` yang memulihkan berkas dari salinan `.bak.<timestamp>` terbaru dan mencatatnya ke jejak audit; (4) Menambahkan tautan langsung "Lihat Entri di Jejak Audit" pada banner keberhasilan penerapan dan pemulihan patch; (5) Memperbarui badge status berkas secara dinamis menjadi "Telah Disesuaikan & Patuh" dengan warna hijau solid pasca-patch; serta (6) Menambahkan banner konteks regulasi dinamis yang menampilkan judul regulasi acuan dan regulasi pembaruan yang sedang ditinjau.
+- **Alasan:** Menghilangkan pengalaman pengguna yang kaku dari dialog browser bawaan, memberikan jaminan keselamatan penuh melalui kemampuan pembatalan/pemulihan (rollback) atas mutasi kode, dan memastikan keterlacakan audit (*audit trail transparency*) yang dapat diverifikasi langsung oleh petugas kepatuhan.
+- **Konsekuensi:** Pengguna memiliki kendali penuh dan transparan terhadap modifikasi kode di repositori lokal dengan jaminan zero-risk berkat pencadangan otomatis, simulasi dry-run, dan pemulihan 1-klik yang tercatat di jejak audit enterprise.
+
+## D-035 — Guard Penjaga Alur Kerja Sesi & Kartu Tunggu Dinamis di Tab 3 (Human-in-the-Loop Workflow Guard)
+- **Keputusan:** Memperbarui antarmuka Tab 3 dengan mekanisme *session workflow guard* berbasis status eksekusi hulu (`hasRunAnalysis` dan `hasRunBob`). Ketika aplikasi pertama kali dibuka atau ketika regulasi di Tab 1 diubah, Tab 3 tidak lagi langsung merender daftar baris kode terdampak dari berkas disk lampau, melainkan menampilkan status tunggu terpandu:
+  1. Jika analisis Tab 1 belum dijalankan (`!hasRunAnalysis`): menampilkan kartu placeholder *Langkah 1 Belum Dilakukan* dengan tombol pintasan *"Menuju Tab 1: Analisis Diferensiasi Regulasi"*.
+  2. Jika analisis Tab 1 selesai namun pemetaan IBM Bob di Tab 2 belum dijalankan (`hasRunAnalysis && !hasRunBob`): menampilkan kartu placeholder *Langkah 2 Belum Dilakukan* dengan tombol pintasan *"Menuju Tab 2: Konsol IBM Bob Shell"*.
+  3. Hanya setelah kedua langkah hulu selesai pada sesi aktif (`hasRunAnalysis && hasRunBob`), antarmuka penuh tata kelola, kandidat baris kode terdampak, peninjauan *diff*, tombol *dry-run*, penerapan patch, dan runner *pytest* ditampilkan.
+- **Alasan:** Menghilangkan kebingungan pengguna di mana kode terdampak dari pemindaian masa lalu langsung tampil di Tab 3 padahal Tab 1 dan Tab 2 belum dijalankan pada sesi aktif, serta menegakkan prinsip *human-in-the-loop* yang menuntut alur kerja linier, sadar, dan teratur.
+- **Konsekuensi:** Alur kerja aplikasi konsisten dari Tab 1 sampai Tab 3; pengguna dipandu secara intuitif melalui kartu placeholder dan tombol navigasi; dan repositori target terlindungi dari peninjauan kode yang belum terverifikasi oleh sesi aktif.
+
+## D-036 — Sistem Profil Entitas Perusahaan, Lisensi Dinamis, dan Manajer Repositori Terpadu
+- **Keputusan:** Mengganti dropdown peran teknis di bagian atas sidebar dengan pemilih **Entitas Perusahaan (B2B License Switcher)** menggunakan format `[Nama Perusahaan] ([Nama Plan])` dengan 3 profil terpadu:
+  1. `PT Bank Digital Nusantara (Enterprise Plan)`: kuota tidak terbatas, status aktif, akses patch penuh.
+  2. `PT Dana Mandiri Fintech (Professional Plan)`: kuota 25 repositori (terpakai 18), status aktif.
+  3. `PT Pinjaman Kilat Indonesia (Starter Plan)`: kuota 5 repositori (terpakai 5/5, kuota penuh/dibatasi), memicu *license gating* di mana tombol penerapan patch di Tab 3 dinonaktifkan secara otomatis dan menolak mutasi disk dengan HTTP 403.
+  Selain itu, menambahkan komponen modal **Manajer Repositori Terpadu (`RepoManagerModal`)** yang dapat diakses langsung dari tombol *"Kelola Repositori"* di sidebar untuk mendaftarkan repositori mikroservis baru via folder lokal dengan validasi kuota paket otomatis.
+- **Alasan:** Menghilangkan kebingungan pengguna atas tampilan lisensi yang sebelumnya bersifat dekoratif/statis, menyederhanakan alur kerja B2B multi-organisasi tanpa perlu membangun sistem autentikasi/login yang membebani alur demo, serta memungkinkan demonstrasi skenario pembatasan lisensi (*license gating*) secara langsung dan interaktif dalam 1-klik.
+- **Konsekuensi:** Panel Lisensi di sidebar dan header utama beroperasi 100% dinamis dan reaktif; bilah persentase kuota bergerak akurat sesuai rasio pemakaian repositori; pendaftaran repositori dilakukan secara aman dan privat di lingkungan lokal; serta Tab 3 terlindungi oleh kebijakan kuota lisensi secara konsisten.
+
+## D-037 — Eliminasi Tombol Cepat Standar Tab 1, Guard Eksekusi IBM Bob Tab 2, dan Penyederhanaan Tombol Repositori Sidebar
+- **Keputusan:** Tiga penyesuaian alur antarmuka:
+  1. Menghapus panel preset *"Mulai cepat dengan kasus acuan standar perbankan/fintech"* di Tab 1 agar pengguna murni menggunakan menu pilihan dokumen regulasi acuan dan pembaruan dari katalog JDIH OJK secara eksplisit.
+  2. Memperketat *guard* eksekusi agen IBM Bob di Tab 2: tombol *"Jalankan IBM Bob"* dikunci menjadi nonaktif (*disabled* dengan pesan *"Menunggu Analisis Tab 1"*) jika analisis di Tab 1 belum dijalankan pada sesi aktif (`!hasRunAnalysis`), regulasi belum dipilih, atau data temuan kosong, serta menyelaraskan indikator konteks input temuan regulasi menjadi status tunggu.
+  3. Menyederhanakan tombol repositori di sidebar dengan menghapus tautan teks *"Kelola Repo"* di header panel Langganan & Lisensi dan mempertahankan tombol aksi tunggal *"Kelola Repositori ({active_repos})"* di bagian bawah panel.
+- **Alasan:** Menghilangkan kebingungan alur di mana agen IBM Bob sebelumnya masih dapat dipicu meskipun regulasi di Tab 1 belum dianalisis, memperkuat integritas alur *human-in-the-loop*, serta menjaga kebersihan dan konsistensi antarmuka sidebar.
+- **Konsekuensi:** Agen IBM Bob terlindungi dari eksekusi tanpa masukan klausul statutori yang valid; Tab 1 memiliki tampilan yang lebih bersih dan profesional; dan antarmuka sidebar bebas dari duplikasi tombol.
+
+
+
+
+
+
 
 

@@ -3,7 +3,7 @@
 Checklist status pekerjaan. Update setelah tiap tugas selesai.
 Legenda: `[ ]` belum, `[~]` sedang dikerjakan, `[x]` selesai.
 
-Terakhir diperbarui: 2026-10-12
+Terakhir diperbarui: 2026-10-24
 
 ---
 
@@ -80,14 +80,60 @@ Terakhir diperbarui: 2026-10-12
 - [x] Pengujian integrasi antarmuka Streamlit (`tests/test_app_integration.py`, 4 tes lolos): memvalidasi gerbang login, navigasi tab, eksekusi Bob Shell di dashboard, dan peluncuran IBM Bob Desktop.
 - [x] Dokumentasi akhir: README + PROGRESS + DECISIONS + AGENTS + CONTEXT.
 
+## Fase 7 — Platform Web Enterprise & Sinkronisasi Live OJK (Branch `feat/enterprise-web`)
+
+- [x] Modul crawler & sinkronisasi otomatis JDIH OJK (`selisih/ojk.py`): pemantauan POJK sektor Fintech/ITSK, P2P Lending, dan Pelindungan Konsumen langsung dari portal resmi `jdih.ojk.go.id`.
+- [x] Unit test sinkronisasi OJK (`tests/test_ojk.py`, 3 tes lolos).
+- [x] Server Backend FastAPI (`api.py`): endpoints RESTful + Server-Sent Events (SSE) streaming penalaran Bob Shell.
+- [x] Unit test FastAPI (`tests/test_api.py`, 6 tes lolos).
+- [x] Penggantian Astra DB dengan ChromaDB Lokal (`selisih/vector_store.py`): persistensi lokal di `data/chroma_db/`, ingest pasal/ayat POJK 77/2016 secara otomatis, zero-cloud dependency.
+- [x] Pembaruan rancangan flow Langflow: `flows/selisih_regulatory_flow.json` mengadopsi node `Chroma` dan `PromptTemplate`.
+- [x] Unit test vector store lokal (`tests/test_vector_store.py`, 2 tes lolos). Total pengujian unit kini mencapai 75 tes (74 passed, 1 skipped).
+- [x] Integrasi End-to-End Tab 1 (OJK Live JDIH) ke Tab 2 (Regulatory Diff): tombol *"Analisis Dampak"* memicu pipeline analisis regulasi terpilih secara dinamis.
+- [x] Frontend Next.js 15 (React 19, TypeScript, Tailwind CSS, Lucide):
+  - Tab 1: Pemantau Regulasi OJK (Live JDIH OJK sync & filter).
+  - Tab 2: Analisis Komparasi Regulasi (watsonx Granite diff, 4 metrik kepatuhan).
+  - Tab 3: Konsol Agen IBM Bob Shell (Terminal interaktif, SSE live streaming, viewer artefak handoff).
+  - Tab 4: Tata Kelola & Tinjauan Dampak (Dry-run preview, human-in-the-loop review dengan backup `.bak.<ts>`, real pytest runner).
+  - Jejak Audit Enterprise Modal (`AuditTrailModal`).
+- [x] Script eksekusi mandiri 1-klik: `run_api.bat` (Backend Port 8000) dan `run_web.bat` (Full-stack Web Platform).
+
+## Fase 8 — Penyempurnaan UX & Pemetaan Dampak Presisi
+
+- [x] Deteksi nomor baris terdampak nyata secara dinamis di Tab 3 (`selisih/impact.py` -> `lines` & `line`, header `Baris 15` / `Baris 18`).
+- [x] Sinkronisasi kode balikan pengujian pytest di Tab 3 (`returncode` & `code`) agar status pengujian lolos (3 passed) tampil presisi.
+- [x] Engine komparasi dual-regulasi dinamis (`POST /api/analysis/run` & `selisih/langflow.py`) menerima `acuan_info` & `ojk_info` untuk sitasi pasal acuan vs pembaruan yang akurat.
+- [x] Perbaikan identifikasi regulasi unik (`getRegKey`) menggunakan format komposit `${nomor}_${tahun}` atau `id` untuk mencegah false-positive error regulasi sama pada nomor identik beda tahun (misal: POJK 41/2024 vs POJK 41/2025).
+- [x] Alur tampilan analisis on-demand di Tab 1: menyembunyikan metrik dan daftar perubahan hingga pengguna secara eksplisit menekan tombol *"Jalankan Analisis"*, dan mereset status saat regulasi diganti.
+- [x] Inisialisasi pilihan regulasi kosong (*unselected state*) di Tab 1: opsi dropdown default `-- Pilih Regulasi --`, placeholder card informatif, tombol analisis nonaktif hingga kedua regulasi dipilih, dan tombol pintasan *"Muat Kasus Acuan Standar"*.
+- [x] Peningkatan UX Konsol IBM Bob Shell (Tab 2): penamaan tombol *"Jalankan IBM Bob"*, indikator status riil *"MCP Server Terhubung"* / *"MCP Server Terputus"*, *guarded state* saat temuan Tab 1 kosong, tombol *"Bersihkan Log"*, pewarnaan baris diff (+ hijau, - merah), tombol *"Unduh Berkas"* artefak, dan tombol navigasi *"Lanjut ke Tab 3"*.
+- [x] Session guard untuk paket artefak handoff IBM Bob (Tab 2): penayangan berkas diff/tests/json dikontrol oleh state `hasRunBob` (default: false dengan kartu placeholder), dan hanya tampil setelah tombol *"Jalankan IBM Bob"* dieksekusi pada sesi aktif.
+- [x] Integrasi status kesehatan komponen live pada Sidebar (Langflow Pipeline, ChromaDB Lokal, IBM Bob MCP) dari `GET /api/system/health`.
+- [x] Modal konfirmasi in-app terpadu untuk penerapan patch kepatuhan di Tab 3: menggantikan dialog browser bawaan (`window.confirm`/`window.alert`) dengan ringkasan peran peninjau, target berkas, catatan kepatuhan, dan status simulasi dry-run.
+- [x] Alur kerja bertahap (*Progressive Workflow*) di Tab 3: menonjolkan tombol *"Jalankan Simulasi (Dry-Run)"* sebelum tombol penerapan patch aktif untuk memastikan zero-risk.
+- [x] Fitur pemulihan cadangan berkas (*Rollback*) di Tab 3: tombol *"Pulihkan Cadangan (Rollback)"*, endpoint `POST /api/impact/rollback`, dan fungsi `selisih.impact.rollback_last_backup()` yang memulihkan berkas dari `.bak.<timestamp>` terbaru dan mencatatnya ke jejak audit.
+- [x] Tautan langsung ke jejak audit (*"Lihat Entri di Jejak Audit"*) pada banner keberhasilan penerapan dan pemulihan patch di Tab 3.
+- [x] Pembaruan status badge kode terdampak pasca-patch: berubah dinamis menjadi *"Telah Disesuaikan & Patuh"* berwarna hijau setelah patch diterapkan.
+- [x] Banner konteks regulasi dinamis di Tab 3: menampilkan perbandingan judul regulasi acuan vs regulasi pembaruan yang sedang ditinjau.
+- [x] Session guard dan kartu tunggu terpandu di Tab 3: menyembunyikan kandidat kode saat pertama kali membuka aplikasi sebelum Tab 1 (`hasRunAnalysis`) dan Tab 2 (`hasRunBob`) dijalankan, dilengkapi kartu panduan status tunggu Langkah 1 / Langkah 2 dan tombol navigasi cepat.
+- [x] Pemilih Entitas Perusahaan (B2B License Switcher) di sidebar dengan format `[Nama Perusahaan] ([Nama Plan])` (Bank Digital Nusantara - Enterprise, Dana Mandiri - Professional, Pinjaman Kilat - Starter).
+- [x] Panel Langganan & Lisensi 100% dinamis: sinkronisasi nama organisasi, badge status lisensi (Aktif vs Kuota Penuh), dan bilah persentase kuota (*progress bar*) riil.
+- [x] Modal Manajer Repositori Terpadu (`RepoManagerModal`): pemantauan repositori lokal terdaftar, pendaftaran repositori baru, dan validasi kuota paket otomatis.
+- [x] Penerapan License Gating di Tab 3: tombol *"Setujui & Terapkan Patch"* dinonaktifkan otomatis saat beralih ke entitas dengan kuota penuh/dibatasi (Starter Plan).
+- [x] Endpoint RESTful lisensi & repositori di FastAPI: `GET /api/license/profiles`, `POST /api/license/select`, `POST /api/license/add-repo`, serta unit test pendukung di `tests/test_api.py` (total 78 unit test: 77 passed, 1 skipped).
+- [x] Eliminasi panel preset *"Mulai cepat dengan kasus acuan standar perbankan/fintech"* di Tab 1 untuk alur seleksi regulasi yang murni berbasis katalog OJK.
+- [x] Pengetatan guard eksekusi agen IBM Bob di Tab 2: tombol *"Jalankan IBM Bob"* terkunci nonaktif (*"Menunggu Analisis Tab 1"*) dan status konteks input temuan regulasi berstatus tunggu jika analisis di Tab 1 belum dijalankan pada sesi aktif (`!hasRunAnalysis`).
+- [x] Penyederhanaan tombol repositori di sidebar: menghapus tombol teks kecil *"Kelola Repo"* di header panel Langganan & Lisensi dan menyisakan tombol aksi tunggal *"Kelola Repositori ({active_repos})"* di bagian bawah panel.
+- [x] Unit test rollback patch: `tests/test_impact.py::test_rollback_last_backup` dan `tests/test_api.py::test_api_impact_rollback`.
+
+
 ---
 
 ## Catatan
 
-- Status proyek: **demo menuju nyata**; Fase 0, 2, 3, 4, 5, 6 selesai. Fase 1 (flow Langflow + ingest Astra) menunggu dibangun di UI Langflow.
-- Struktur baru: paket `selisih/` (config + documents + langflow client + impact scanner + artifacts), `mcp_server.py` (jembatan MCP lokal ke Bob), `tests/` (unit test), `.env.example`.
-- `app.py` sudah memakai `selisih.langflow` (live REST + fallback demo jujur), `selisih.impact` (scan → dry-run → backup → apply), dan `selisih.artifacts` + HTTP admin MCP (handoff ke Bob).
-- Para Bob: jalankan `python mcp_server.py`; dashboard memanggil `GET /health` & `POST /handoff` di `127.0.0.1:8765`.
-- Backup patch `.bak.<ts>` dibuat otomatis; repo mock dikembalikan ke POJK 77/2016 sebagai baseline.
-- `flows/` **kosong** (target Fase 1, menunggu dibangun di Langflow).
-- Loader PDF sudah ada untuk PDF berbasis teks seperti `POJK_08_2023_APU_PPT_PPPSPM.pdf` / `POJK_12_2017_APU_PPT.pdf`, tetapi app masih memakai file default `data/pojk_baru_22_2023.txt` sampai konfigurasi/uploader dokumen ditambahkan.
+- Status proyek: **Enterprise Production Ready**; Fase 0, 1, 2, 3, 4, 5, 6, 7, 8 selesai secara menyeluruh.
+- Arsitektur Web Enterprise: Frontend Next.js 15 (`frontend/`), Backend FastAPI (`api.py`), Vector Store ChromaDB lokal (`data/chroma_db/`), dan Jembatan MCP Lokal IBM Bob (`mcp_server.py`).
+- Template flow resmi: `flows/selisih_regulatory_flow.json` mengintegrasikan node TextInput, Chroma vector store, PromptTemplate komparasi, model LLM watsonx Granite, dan StructuredOutput.
+- Jembatan IBM Bob: `mcp_server.py` aktif melayani stdio JSON-RPC untuk IBM Bob IDE dan HTTP admin di `127.0.0.1:8765` untuk web console.
+- Backup patch `.bak.<timestamp>` dibuat otomatis sebelum setiap mutasi kode; fitur pemulihan (*rollback*) 1-klik siap digunakan di Tab 3.
+- Total 78 pengujian unit test (`pytest`): 77 passed, 1 portable skip (100% green). Frontend Next.js lulus verifikasi build production tanpa error.

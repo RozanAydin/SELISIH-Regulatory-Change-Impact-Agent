@@ -112,3 +112,41 @@ def test_run_pytest_reports_result(tmp_path):
     result = impact.run_pytest(str(repo), "test_ok.py")
     assert result["returncode"] == 0
     assert "1 passed" in result["stdout"]
+
+
+def test_rollback_last_backup(tmp_path):
+    repo = _make_repo(tmp_path)
+    target = repo / "app" / "core" / "config.py"
+    original_text = target.read_text(encoding="utf-8")
+
+    records = impact.scan_impact(
+        {
+            "findings": [
+                {
+                    "change_id": "CHG-1",
+                    "kandidat_kode": [
+                        {
+                            "path": "app/core/config.py",
+                            "old_code": "MAX_LOAN_AMOUNT = 20_000_000",
+                            "proposed_code": "MAX_LOAN_AMOUNT = 50_000_000",
+                        }
+                    ],
+                }
+            ]
+        },
+        str(repo),
+    )
+    # Apply patch
+    impact.apply_patch(records, dry_run=False)
+    assert "MAX_LOAN_AMOUNT = 50_000_000" in target.read_text(encoding="utf-8")
+
+    # Rollback
+    res = impact.rollback_last_backup(str(repo))
+    assert res["status"] == "success"
+    assert res["count"] == 1
+    assert target.read_text(encoding="utf-8") == original_text
+
+    # Rollback again when no more backups
+    res2 = impact.rollback_last_backup(str(repo))
+    assert res2["status"] == "no_backups"
+    assert res2["count"] == 0

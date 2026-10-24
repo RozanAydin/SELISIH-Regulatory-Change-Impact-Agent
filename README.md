@@ -1,111 +1,121 @@
 # SELISIH — Regulatory Change & Code Impact System
 
-Aplikasi dashboard **Streamlit** untuk Hackathon **IBM x Hacktiv8 (IT-Finance)**.
-Menjembatani **dokumen regulasi OJK** dengan **repositori kode fintech**, lalu memetakan
-dampak perubahannya secara *human-in-the-loop*.
+Platform Enterprise Kepatuhan Regulasi untuk Hackathon **IBM x Hacktiv8 (IT-Finance)**.
+Menjembatani **dokumen regulasi OJK** dengan **repositori kode perbankan dan fintech**, lalu memetakan
+dampak perubahannya secara *human-in-the-loop* menggunakan teknologi IBM watsonx Granite dan IBM Bob.
 
-Alur inti: **Ingest & vector DB (Astra DB di dalam Langflow)** → **Regulatory Diff (Langflow)**
-→ **Code Impact (scanner deterministik / IBM Bob)** → **Human Review (tanpa auto-deploy)**.
+Alur inti: **Sinkronisasi JDIH OJK / Ingest Vector DB (ChromaDB Lokal / Langflow)** -> **Regulatory Diff (watsonx Granite Framework)**
+-> **Code Impact (IBM Bob & MCP Server Lokal)** -> **Human Review (Dry-run, Patch Aman, Rollback, Real Pytest)**.
+
+---
+
+## Arsitektur Platform
+
+Platform SELISIH terdiri atas arsitektur dual-stack modern:
+1. **Frontend**: Next.js 15 (React 19, TypeScript, Tailwind CSS, Lucide Icons) di port `3000`.
+2. **Backend**: FastAPI REST & Server-Sent Events (SSE) Streaming di port `8000`.
+3. **Local MCP Server**: Python stdlib JSON-RPC dual-pintu di port `8765` untuk IBM Bob.
+4. **Vector Store**: ChromaDB lokal offline tersimpan di `data/chroma_db/`.
+5. **Dashboard Legacy**: Streamlit monolitik di port `8501` (`app.py`).
 
 ---
 
 ## Cara Menjalankan
 
-### Opsi 1: Klik Ganda
-Klik ganda file **`run_app.bat`**. Browser terbuka otomatis di `http://localhost:8501`.
+### Opsi 1: Platform Web Enterprise (Direkomendasikan)
 
-### Opsi 2: Lewat Terminal
+1. Jalankan Backend FastAPI:
+   Klik ganda **`run_api.bat`** atau jalankan via terminal:
+   ```bash
+   python -m uvicorn api:app --host 127.0.0.1 --port 8000
+   ```
+
+2. Jalankan Frontend Next.js:
+   Klik ganda **`run_web.bat`** atau jalankan via terminal:
+   ```bash
+   cd frontend
+   npm run start
+   # atau untuk mode pengembangan: npm run dev
+   ```
+   Buka peramban di `http://localhost:3000`.
+
+### Opsi 2: Dashboard Streamlit (Legacy Baseline)
+
+Klik ganda **`run_app.bat`** atau jalankan:
 ```bash
-pip install -r requirements.txt
 streamlit run app.py
 ```
+Buka peramban di `http://localhost:8501`.
 
-### Konfigurasi Langflow (opsional, untuk mode Live)
-Salin `.env.example` menjadi `.env`, atau isi `.streamlit/secrets.toml`:
+---
 
-| Variabel            | Keterangan                                  |
-|---------------------|---------------------------------------------|
-| `LANGFLOW_API_URL`  | Base URL Langflow (default `http://localhost:7860`) |
-| `LANGFLOW_FLOW_ID`  | ID flow analisis regulasi                   |
-| `LANGFLOW_API_TOKEN`| API key Langflow (bila memakai auth)        |
-| `MCP_ADMIN_PORT`    | Port HTTP admin `mcp_server.py` (default `8765`) |
-| `MCP_ADMIN_URL`     | Alamat yang dipakai dashboard (`http://127.0.0.1:8765`) |
-| `SELISIH_ORG_NAME`  | Nama organisasi pada License Gateway lokal  |
-| `SELISIH_PLAN`      | `starter`, `professional`, atau `enterprise` |
-| `SELISIH_LICENSE_STATUS` | `active`, `trial`, `expired`, atau `suspended` |
-| `SELISIH_ACTIVE_REPOS` | Jumlah repo aktif organisasi              |
-| `SELISIH_REPO_LIMIT` | Override kuota repo (opsional)             |
+## Modul Utama pada Platform Web
 
-> Saat dijalankan lewat `streamlit`, nilai sebaiknya ditaruh di `.streamlit/secrets.toml`
-> (bukan `.env`) karena `st.secrets` ikut menimpa environment variable.
+1. **Tab 1 — Analisis Perubahan Regulasi (Diff)**
+   - Pemilih regulasi acuan dan pembaruan dinamis dari katalog JDIH OJK.
+   - Komparasi dua arah berbasis watsonx Granite Framework.
+   - 4 Metrik Validasi Kepatuhan: Klausul Terdampak, Validitas Sitasi (Anti-Halusinasi), Tingkat Keyakinan, dan Status Abstention.
+   - Kartu perbandingan berdampingan (*side-by-side*) antara klausul acuan dan usulan pembaruan beserta kandidat kode terdampak.
 
-### Eksekusi Live
-Dashboard sekarang memakai **Live Langflow REST API** saja (tanpa pilihan mode di sidebar).
-Tab 1 memanggil `{api_url}/api/v1/run/{flow_id}` dengan teks `data/pojk_baru_22_2023.txt`;
-hasil ditulis ke `data/temuan.json`. Jika Langflow belum siap, aplikasi menampilkan error jujur
-dan tidak memakai fallback demo sebagai hasil analisis.
+2. **Tab 2 — Konsol Agen IBM Bob Shell & Integrasi MCP**
+   - Terminal interaktif IBM Bob Shell dengan streaming penalaran agen AI secara real-time via Server-Sent Events (SSE).
+   - Pengaman sesi (*session guard*): Tombol eksekusi terlindungi dan hanya aktif setelah analisis Tab 1 dijalankan pada sesi aktif.
+   - Penampil berkas artefak handoff (`proposed_patch.diff`, `generated_tests.py`, `impact_report.json`) dengan *syntax highlighting* dan fitur unduh berkas.
+   - Tombol peluncuran IBM Bob Desktop langsung ke repositori target lokal.
 
-### Lisensi Lokal
-Sidebar **Langganan & Lisensi** membaca konfigurasi `SELISIH_*` dan benar-benar menjadi gate:
-analisis, scan dampak, handoff Bob, dan apply patch dinonaktifkan bila status lisensi tidak aktif
-atau kuota repositori terlampaui.
+3. **Tab 3 — Tata Kelola & Tinjauan Dampak Kode (Human-in-the-Loop)**
+   - Alur kerja bertahap bebas risiko (*Progressive Workflow*): Simulasi Dry-Run -> Tinjauan Diff Baris Kode -> Konfirmasi Patch -> Pengujian Otomatis Pytest Asli.
+   - Deteksi nomor baris nyata secara dinamis (`selisih/impact.py`).
+   - Pencadangan berkas otomatis (`.bak.<timestamp>`) sebelum penulisan kode.
+   - Fitur Pemulihan Cadangan 1-Klik (*Rollback*) yang mencatat setiap tindakan ke Jejak Audit Enterprise.
+   - Penegakan lisensi paket (*License Gating*): otomatis menonaktifkan penerapan patch bila kuota repositori penuh.
 
-### Dukungan Dokumen Regulasi
-- Loader lokal `selisih/documents.py` dapat membaca `.txt` dan PDF berbasis teks (`pypdf`).
-- Cleanup dasar POJK menghapus noise nomor halaman dan merapikan whitespace.
-- `split_by_pasal()` menyiapkan chunk per `Pasal` untuk calon ingest Astra DB, tetapi integrasi ingest Langflow/Astra **belum dikerjakan**.
-- PDF hasil scan/foto butuh OCR terpisah; saat ini tidak termasuk.
+4. **Tab 4 — Katalog & Pemantau Regulasi OJK (JDIH)**
+   - Sinkronisasi langsung ke portal resmi JDIH OJK (`jdih.ojk.go.id`).
+   - Pemantauan POJK sektor Fintech (LPBBTI), Inovasi Teknologi (ITSK), dan Pelindungan Konsumen.
+   - Tombol aksi cepat *"Analisis Dampak"* yang mengintegrasikan dokumen terpilih langsung ke Tab 1.
 
-## Modul Utama pada Dashboard
+---
 
-1. **Tab 1 — Analisis Regulasi (Diff)**
-   - Membandingkan POJK 77/2016 vs POJK 22/2023 via Langflow (atau data demo terverifikasi).
-   - Ringkasan perubahan, validitas sitasi, keyakinan, dan status abstention.
-   - Inspeksi JSON: `data/temuan_schema.json` (kontrak), `data/temuan.json` (hasil live), `data/temuan_golden_path.json` (contoh).
+## Sistem Lisensi B2B & Manajemen Repositori
 
-2. **Tab 2 — Pemetaan Dampak Kode & Integrasi IBM Bob (MCP / Bob Shell)**
-   - Scanner deterministik dari `temuan.json` memetakan `kandidat_kode[].evidence` ke file & baris nyata di `mock_fintech_repo`.
-   - Menampilkan diff lama → usulan per kandidat.
-   - Pendekatan **Hybrid**:
-     - **"Jalankan Agen IBM Bob di Dashboard"**: Menjalankan Bob Shell di latar belakang (*headless*), merender penalaran agen AI langsung di web.
-     - **"Buka di IBM Bob Desktop"**: Meluncurkan GUI IBM Bob langsung membuka repositori target.
-   - Ekspor artefak `artifacts/` (`impact_report.json`, `proposed_patch.diff`, `generated_tests.py`) dan handoff ke server MCP lokal di `localhost`.
+Sidebar menyediakan pengalih profil entitas perusahaan secara langsung:
+- **PT Bank Digital Nusantara (Enterprise Plan)**: Kuota repositori tanpa batas, status lisensi aktif.
+- **PT Dana Mandiri Fintech (Professional Plan)**: Kuota 25 repositori (terpakai 18), status lisensi aktif.
+- **PT Pinjaman Kilat Indonesia (Starter Plan)**: Kuota 5 repositori (terpakai 5/5, kuota penuh), memicu *license gate* di mana tombol patch Tab 3 dikunci secara aman.
 
-3. **Tab 3 — Tata Kelola & Tinjauan Manusia**
-   - Jejak audit + prinsip *draft-only* (tanpa auto-deploy).
-   - **Dry-run** pratinjau patch → konfirmasi peninjau → penerapan dengan **backup otomatis** `.bak.<stamp>`.
-   - Eksekusi **unit test asli via `pytest`**; tombol tolak untuk mengembalikan catatan ke penelaahan.
+Modal **Manajer Repositori Terpadu** memungkinkan pendaftaran repositori lokal baru dengan verifikasi kuota paket secara instan.
 
-## IBM Bob (MCP) — alur privat
+---
 
-Bob adalah **MCP client** di IDE lokal (bukan service REST yang bisa dipanggil aplikasi).
-Jembatan yang aman: **dashboard → server MCP lokal → Bob**, semuanya di `localhost`.
+## IBM Bob & Jembatan MCP Lokal
+
+IBM Bob adalah *MCP client* di IDE lokal (bukan layanan REST eksternal). Jembatan komunikasi:
+**Dashboard -> Server MCP Lokal (`mcp_server.py`) -> IBM Bob**, seluruhnya berjalan privat di `localhost`.
 
 ```bash
-python mcp_server.py          # stdio (untuk Bob) + HTTP admin /health & /handoff (untuk dashboard)
+python mcp_server.py
 ```
+- Registrasi server: `.bob/mcp.json`.
+- Tools MCP: `get_temuan`, `list_artifacts`, `read_artifact`, `preview_patch`, `apply_patch`, `run_repo_tests`.
+- Keamanan: Akses dibatasi ketat (*allowlist*) ke `mock_fintech_repo/` dan `artifacts/`.
 
-- Registrasi server: eksklusif di `.bob/mcp.json`.
-- Tool untuk Bob: `get_temuan`, `list_artifacts`, `read_artifact`, `preview_patch`, `apply_patch`, `run_repo_tests`.
-- Akses di-allowlist ke `mock_fintech_repo/` + `artifacts/`; semua tulis lewat dry-run + backup.
+---
 
-## Menjalankan Unit Test
+## Menjalankan Pengujian Unit Test
 
 ```bash
-python -m pytest              # seluruh test (selisih/ + mock repo)
-python -m pytest mock_fintech_repo/tests   # hanya repo mock
+# Seluruh unit test (FastAPI, Langflow, Vector Store, License, OJK, Impact, MCP, Mock Repo)
+python -m pytest
+
+# Hanya pengujian kepatuhan repo mock
+python -m pytest mock_fintech_repo/tests
 ```
 
-## Arsitektur & Batas Kepercayaan
+---
 
-- **Domain publik (cloud):** teks POJK, Astra DB, Langflow — **tidak ada kode perusahaan**.
-- **Domain privat (lokal):** source code, IBM Bob, patch, unit test — **tidak pernah dikirim ke cloud**.
-- Satu-satunya artefak yang menyeberang: `data/temuan.json` (turunan regulasi publik).
-- Astra DB berada **di dalam Langflow**; aplikasi tidak memegang kredensial Astra.
+## Arsitektur Batas Kepercayaan (Trust Boundaries)
 
-## Status Fase
-
-Selesai: Fase 0 (kontrak, konfigurasi, loader dokumen TXT/PDF), Fase 2 (app → Langflow REST), Fase 3 (jembatan MCP lokal ke Bob), Fase 4 (dampak kode & patch aman), Fase 6 (testing & dokumentasi).
-Menunggu: Fase 1 (flow Langflow — dibangun di UI Langflow), Fase 5 (pengerasan & audit).
-
-Rincian di `PROGRESS.md` dan `docs/CONTEXT.md`.
+- **Domain Publik (Cloud):** Teks regulasi publik POJK, referensi hukum JDIH, Langflow/watsonx diff. **Kode perusahaan tidak pernah dikirim ke cloud.**
+- **Domain Privat (Lokal):** Repositori kode sumber, IBM Bob, patch aman, dan unit test berjalan 100% lokal di mesin perusahaan.
+- Satu-satunya artefak yang menyeberang adalah kontrak temuan regulasi publik (`data/temuan.json`).

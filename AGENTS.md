@@ -28,8 +28,13 @@ Alur inti:
   `selisih/artifacts.py` (`impact_report.json`, `proposed_patch.diff`, `generated_tests.py`),
   Tombol Tab 2 Hybrid (eksekusi Bob Shell di dashboard + peluncuran IBM Bob Desktop), registrasi `.bob/mcp.json` eksklusif.
 - **Fase 4 (dampak kode & patch aman) SELESAI** — scanner deterministik `selisih/impact.py`
-  (evidence → file+baris+diff), dry-run + backup `.bak.<ts>` + konfirmasi sebelum menulis,
+  (evidence -> file+baris+diff), dry-run + backup `.bak.<ts>` + konfirmasi sebelum menulis,
   test via pytest output asli.
+- **Fase 7 (platform web enterprise & sinkronisasi live OJK) SELESAI** — server FastAPI (`api.py`),
+  frontend Next.js 15 (`frontend/`), pemantau JDIH OJK (`selisih/ojk.py`), dan vector store lokal ChromaDB (`selisih/vector_store.py`).
+- **Fase 8 (UX presisi & lisensi B2B) SELESAI** — pemetaan baris dinamis, pemulihan rollback `.bak.<ts>`,
+  alur bertahap progressive review, B2B Multi-Company Licensing (Enterprise, Professional, Starter) dengan repo quota gating,
+  dan pengaman sesi antar-tab terpadu.
 - `flows/` **selisih_regulatory_flow.json** telah terintegrasi — mendukung eksekusi Embedded Langflow Engine mandiri maupun REST API.
 - Baca `PROGRESS.md` untuk status per fase dan `docs/CONTEXT.md` untuk konteks penuh.
 
@@ -37,23 +42,33 @@ Alur inti:
 
 ```
 rcia-app/
-├── app.py                     # Seluruh UI Streamlit + CSS (monolitik)
+├── api.py                     # Server backend FastAPI (REST & SSE streaming Bob Shell)
+├── frontend/                  # Dashboard Next.js 15 (React 19, TypeScript, Tailwind CSS)
+│   ├── src/app/               # App Router Next.js (page.tsx, layout.tsx, globals.css)
+│   ├── src/components/        # Komponen Tab 1-4, Sidebar, Header, Modal Dialog
+│   └── src/lib/               # Klien API typed & utilitas frontend
+├── app.py                     # Dashboard Streamlit monolitik (legacy baseline)
 ├── mcp_server.py              # Jembatan MCP lokal ke Bob: stdio JSON-RPC + HTTP admin 127.0.0.1:8765
-├── selisih/                   # Paket inti (Fase 0 + 3 + 4)
-│   ├── config.py              # Loader konfigurasi (st.secrets → env → .env)
-│   ├── documents.py           # Loader regulasi TXT/PDF + cleanup + split_by_pasal (tanpa ingest Astra)
+├── selisih/                   # Paket inti Python
+│   ├── config.py              # Loader konfigurasi (st.secrets -> env -> .env)
+│   ├── documents.py           # Loader regulasi TXT/PDF + cleanup + split_by_pasal
 │   ├── langflow.py            # Klien + normalizer respons Langflow (Embedded & REST)
-│   ├── license.py             # License Gateway lokal (status/kuota → gating aksi UI)
-│   ├── impact.py              # Scanner dampak & engine patch aman (dry-run + backup)
-│   └── artifacts.py           # Ekspor artefak Bob & runner Bob Shell (impact_report.json, .diff, generated_tests.py)
+│   ├── license.py             # License Gateway & B2B Profile Manager (status/kuota)
+│   ├── impact.py              # Scanner dampak, engine patch aman, & rollback backup
+│   ├── artifacts.py           # Ekspor artefak Bob & runner Bob Shell
+│   ├── ojk.py                 # Sinkronisasi & pemantau regulasi portal resmi JDIH OJK
+│   └── vector_store.py        # Vector store lokal ChromaDB untuk klausul acuan offline
 ├── tests/
-│   ├── test_langflow_adapter.py  # Unit test Fase 0 (mock HTTP & embedded)
-│   ├── test_documents.py         # Unit test Fase 0 (loader TXT/PDF + split pasal)
-│   ├── test_license.py           # Unit test Fase 2 (license gate lokal)
-│   ├── test_impact.py            # Unit test Fase 4 (scanner + patch)
-│   ├── test_artifacts.py         # Unit test Fase 3 (ekspor artefak + uji generatif)
-│   ├── test_mcp_server.py        # Unit test Fase 3 (protokol JSON-RPC MCP lokal)
-│   └── test_app_integration.py   # Pengujian integrasi antarmuka Streamlit (AppTest)
+│   ├── test_api.py               # Unit test RESTful FastAPI
+│   ├── test_ojk.py               # Unit test crawler/sinkronisasi JDIH OJK
+│   ├── test_vector_store.py      # Unit test ChromaDB lokal
+│   ├── test_langflow_adapter.py  # Unit test adapter Langflow (mock HTTP & embedded)
+│   ├── test_documents.py         # Unit test loader TXT/PDF + split pasal
+│   ├── test_license.py           # Unit test license gateway lokal
+│   ├── test_impact.py            # Unit test scanner dampak, patch, & rollback
+│   ├── test_artifacts.py         # Unit test ekspor artefak Bob & runner Bob Shell
+│   ├── test_mcp_server.py        # Unit test protokol JSON-RPC MCP lokal
+│   └── test_app_integration.py   # Pengujian integrasi antarmuka Streamlit
 ├── data/
 │   ├── pojk_lama_77_2016.txt  # Teks regulasi acuan (publik)
 │   ├── pojk_baru_22_2023.txt  # Teks regulasi pembaruan (publik)
@@ -71,12 +86,27 @@ rcia-app/
 ├── DECISIONS.md               # Log keputusan arsitektur
 ├── .env.example               # Templat konfigurasi (salini sebagai .env)
 ├── requirements.txt
-├── run_app.bat
-└── .streamlit/config.toml     # Tema (secrets.toml TIDAK di-commit)
+├── run_api.bat                # Script peluncur FastAPI backend port 8000
+├── run_web.bat                # Script peluncur Web Enterprise port 3000
+├── run_app.bat                # Script peluncur Streamlit baseline port 8501
+└── .streamlit/config.toml     # Tema Streamlit (secrets.toml TIDAK di-commit)
 ```
 
 ## Cara Menjalankan
 
+### Platform Web Enterprise (Utama)
+```bash
+# Terminal 1: Backend FastAPI
+run_api.bat
+# atau: python -m uvicorn api:app --host 127.0.0.1 --port 8000
+
+# Terminal 2: Frontend Web
+run_web.bat
+# atau: cd frontend && npm run start
+```
+Buka peramban di `http://localhost:3000`.
+
+### Dashboard Streamlit (Legacy Baseline)
 ```bash
 pip install -r requirements.txt
 streamlit run app.py

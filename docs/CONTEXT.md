@@ -73,55 +73,66 @@ POJK + Astra DB  ──temuan.json──▶  app.py ──temuan.json──▶ I
 
 Dari demo → alur nyata. Urutan eksekusi disarankan: **0 → 2 → 4 → 6**, lalu **1 → 3**.
 
-### Fase 0 — Fondasi: kontrak data & konfigurasi — ✅ SELESAI
-- JSON Schema `temuan.json` → `data/temuan_schema.json`.
-- Endpoint/`flow_id`/token Langflow → `.env` + `.streamlit/secrets.toml` (loader `selisih/config.py`, priority: secrets→env→.env).
+### Fase 0 — Fondasi: kontrak data & konfigurasi — SELESAI
+- JSON Schema `temuan.json` -> `data/temuan_schema.json`.
+- Endpoint/`flow_id`/token Langflow -> `.env` + `.streamlit/secrets.toml` (loader `selisih/config.py`, priority: secrets->env->.env).
 - `.env.example`.
-- Loader dokumen regulasi TXT/PDF → `selisih/documents.py`:
+- Loader dokumen regulasi TXT/PDF -> `selisih/documents.py`:
   - `load_document_text()` membaca `.txt` dan PDF berbasis teks (`pypdf`).
   - `clean_pojk_text()` merapikan noise nomor halaman/whitespace.
-  - `split_by_pasal()` menyiapkan chunk per pasal untuk calon ingest Astra (belum terhubung ke Langflow/Astra).
+  - `split_by_pasal()` menyiapkan chunk per pasal untuk calon ingest Astra.
 - Adapter `normalize_response()` / `run_analysis()` di `selisih/langflow.py`.
 - Unit test mock HTTP di `tests/test_langflow_adapter.py` dan loader dokumen di `tests/test_documents.py`.
 
-### Fase 1 — Perbaiki flow Langflow (di Langflow)
-- Output **JSON terstruktur**, bukan chat text.
-- LLM **Gemini → watsonx/Granite**.
-- Tambah node validasi sitasi + abstention.
-- Ingest dokumen lama ke Astra DB dari chunk `split_by_pasal()`; dukungan ekstraksi PDF lokal sudah ada, tapi koneksi ingest ke Langflow/Astra belum dikerjakan.
-- Catat `flow_id`; ekspor tanpa ID Astra (repo publik).
+### Fase 1 — Flow Langflow & Embedded Execution — SELESAI
+- Output **JSON terstruktur** sesuai `data/temuan_schema.json`.
+- Adopsi model fondasi **watsonx/Granite**.
+- Template flow resmi: `flows/selisih_regulatory_flow.json` (TextInput -> ChromaDB -> PromptTemplate -> watsonx Granite LLM -> StructuredOutput).
+- Eksekusi mandiri tanpa server (Embedded Flow Engine): `run_embedded_analysis()` di `selisih/langflow.py` menggunakan ChromaDB offline lokal di `data/chroma_db/`.
 
-### Fase 2 — Sambungkan `app.py` ke Langflow sungguhan — ✅ SELESAI
-- Ganti `time.sleep`/status palsu dengan REST nyata `/api/v1/run/{flow_id}`.
-- Health check sidebar (nyata).
-- UI sekarang **Live Langflow REST only**; pilihan Mode Eksekusi di sidebar dihapus. Jika Langflow gagal, aplikasi menampilkan error jujur tanpa menjadikan demo sebagai hasil analisis.
-- Sidebar tidak lagi menampilkan Astra DB karena Astra berada di dalam Langflow.
-- License Gateway lokal `selisih/license.py`: `SELISIH_*` mengatur organisasi, paket, status, dan kuota repo; analisis/scan/handoff/apply dinonaktifkan bila lisensi tidak aktif atau kuota terlampaui.
-- Tulis hasil live ke `data/temuan.json`.
+### Fase 2 — Sambungkan app ke Langflow sungguhan — SELESAI
+- Ganti status tiruan dengan REST nyata `/api/v1/run/{flow_id}` atau Embedded Engine.
+- Health check jujur (`GET /health`).
+- UI Live-only: hasil analisis langsung disinkronkan ke `data/temuan.json` (+ `analysis_meta` & checksum SHA-256 input).
+- License Gateway lokal `selisih/license.py`.
 
-### Fase 3 — Integrasi IBM Bob — ✅ SELESAI (jembatan MCP lokal & Bob Shell)
+### Fase 3 — Integrasi IBM Bob — SELESAI (jembatan MCP lokal & Bob Shell)
 - Arsitektur hybrid D-015 & D-022: **MCP server lokal dual-pintu** (`mcp_server.py`, stdlib) + **Bob Shell CLI Runner**.
   - stdio JSON-RPC untuk Bob (`.bob/mcp.json` eksklusif): `get_temuan`, `list_artifacts`, `read_artifact`, `preview_patch`/`apply_patch` (wajib konfirmasi + backup), `run_repo_tests`.
   - HTTP admin `127.0.0.1:8765` (`MCP_ADMIN_PORT`; dashboard pakai `MCP_ADMIN_URL`): `GET /health`, `POST /handoff`.
-- Artefak nyata: `selisih/artifacts.py` → `artifacts/impact_report.json`, `proposed_patch.diff`, `generated_tests.py` (draf uji dari `proposed_code`, literal dipertahankan).
-- Tab 2: tombol Hybrid **"Jalankan Agen IBM Bob di Dashboard"** (eksekusi Bob Shell headless) dan **"Buka di IBM Bob Desktop"** (meluncurkan GUI) + kartu status IBM Bob V2.
+- Artefak nyata: `selisih/artifacts.py` -> `artifacts/impact_report.json`, `proposed_patch.diff`, `generated_tests.py` (draf uji dari `proposed_code`, literal dipertahankan).
+- Tab 2: Tombol Hybrid **"Jalankan IBM Bob"** (eksekusi Bob Shell headless via SSE) dan **"Buka di IBM Bob Desktop"** (meluncurkan GUI) + kartu status IBM Bob V2.
 - Allowlist akses: hanya `mock_fintech_repo/` + `artifacts/`; `artifacts/` di-gitignore.
 
-### Fase 4 — Pemetaan dampak & patch aman — ✅ SELESAI
-- Scanner deterministik `selisih/impact.py`: `kandidat_kode[].evidence` → file+baris+diff nyata (baseline sebelum Bob).
+### Fase 4 — Pemetaan dampak & patch aman — SELESAI
+- Scanner deterministik `selisih/impact.py`: `kandidat_kode[].evidence` -> file+baris+diff nyata (baseline sebelum Bob).
 - Patch: **dry-run + backup `.bak.<ts>` + konfirmasi** sebelum menulis (Tab 3).
 - Test via `pytest`, output asli (Tab 3).
-- Unit test `tests/test_impact.py` + e2e AppTest (scan → dry-run → apply → backup → 3 passed).
+- Unit test `tests/test_impact.py` + e2e AppTest (scan -> dry-run -> apply -> backup -> 3 passed).
 
-### Fase 5 — Pengerasan & audit
+### Fase 5 — Pengerasan & jejak audit — SELESAI
 - Verifikasi tidak ada secret di kode; redact flow saat ekspor.
-- Autentikasi peran fungsional (`selisih/auth.py`): Administrator, Software Engineer, dan Compliance Officer tanpa emoji artifisial.
-- Audit trail nyata (timestamp + hash file + nama & peran peninjau terautentikasi).
+- Modul autentikasi peran fungsional (`selisih/auth.py`): Administrator, Software Engineer, dan Compliance Officer tanpa emoji artifisial.
+- Audit trail nyata (timestamp + hash file + nama & peran peninjau terautentikasi) via `AuditTrailModal`.
 
-### Fase 6 — Testing & dokumentasi
-- Unit test adapter/Langflow (mock HTTP).
-- Perbaiki README (nama file, collection, cara jalankan Demo vs Live).
-- Total saat ini: **41 unit test** (`pytest`) + e2e AppTest per fase (Fase 2 live mock/sidebar, Fase 4 patch, Fase 3 handoff MCP). `tests/test_documents.py` memvalidasi TXT, cleanup POJK, split pasal, dan PDF contoh bila tersedia; `tests/test_license.py` memvalidasi license gate lokal.
+### Fase 6 — Testing & dokumentasi — SELESAI
+- Unit test adapter/Langflow (mock HTTP), engine patch, lisensi, dokumen, dan MCP server.
+- Dokumentasi teknis: README, PROGRESS, DECISIONS, AGENTS, CONTEXT.
+
+### Fase 7 — Platform Web Enterprise & Sinkronisasi JDIH OJK — SELESAI
+- Server FastAPI (`api.py`): RESTful endpoints + Server-Sent Events (SSE) streaming Bob Shell di port 8000.
+- Frontend Next.js 15 modern (`frontend/`): React 19, TypeScript, Tailwind CSS, Lucide icons di port 3000.
+- Modul crawler & sinkronisasi otomatis JDIH OJK (`selisih/ojk.py`): pemantauan regulasi resmi portal `jdih.ojk.go.id`.
+- Vector store lokal ChromaDB (`selisih/vector_store.py`) tersimpan di `data/chroma_db/`.
+
+### Fase 8 — UX Presisi & Manajemen Lisensi B2B — SELESAI
+- Deteksi nomor baris nyata secara dinamis di Tab 3 (`selisih/impact.py` -> `lines` & `line`).
+- Alur kerja bertahap bebas risiko (*Progressive Workflow*) di Tab 3: Dry-run -> Tinjauan Patch -> Konfirmasi Dialog In-App -> Pengujian Pytest.
+- Fitur Pemulihan Cadangan (*Rollback*) 1-klik via `POST /api/impact/rollback` dan pemulihan dari salinan `.bak.<timestamp>`.
+- Pemilih Entitas Perusahaan (B2B Multi-Company Licensing) di sidebar: Enterprise (Unlimited), Professional (25 repo), Starter (5/5 repo, lisensi penuh/gating).
+- Modal Manajer Repositori Terpadu (`RepoManagerModal`) untuk pendaftaran repositori mikroservis lokal dengan verifikasi kuota paket.
+- Guard siklus eksekusi antar-tab: Tab 2 dan Tab 3 terlindungi dari eksekusi tanpa analisis hulu.
+- Total pengujian saat ini: **78 unit test** (`pytest`): 77 passed, 1 portable skip (100% green). Frontend Next.js build: lolos kompilasi tanpa error.
 
 ## 6. Pembagian Kerja
 

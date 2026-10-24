@@ -45,6 +45,7 @@ def scan_impact(findings: dict, repo_dir: str) -> list:
                 "proposed_code": kc.get("proposed_code") or "",
                 "alasan": kc.get("alasan") or "",
                 "lines": [],
+                "line": None,
                 "status": "missing",
             }
             if full and os.path.isfile(full):
@@ -54,8 +55,12 @@ def scan_impact(findings: dict, repo_dir: str) -> list:
                 elif old_code in content:
                     record["status"] = "patchable"
                     record["lines"] = [i + 1 for i, line in enumerate(content.splitlines()) if old_code in line]
+                    record["line"] = record["lines"][0] if record["lines"] else None
                 else:
                     record["status"] = "already_or_no_match"
+                    if record["proposed_code"] and record["proposed_code"] in content:
+                        record["lines"] = [i + 1 for i, line in enumerate(content.splitlines()) if record["proposed_code"] in line]
+                        record["line"] = record["lines"][0] if record["lines"] else None
             records.append(record)
     return records
 
@@ -136,3 +141,52 @@ def _read(path: str) -> str:
 def _write(path: str, content: str) -> None:
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
+
+def rollback_last_backup(repo_dir: str) -> dict:
+    """Mengembalikan berkas dari salinan cadangan (.bak.<timestamp>) terbaru."""
+    bak_files = []
+    for root, _, files in os.walk(repo_dir):
+        for f in files:
+            if ".bak." in f:
+                full_bak = os.path.join(root, f)
+                bak_files.append(full_bak)
+
+    if not bak_files:
+        return {
+            "status": "no_backups",
+            "restored": [],
+            "count": 0,
+            "message": "Tidak ditemukan berkas cadangan (.bak.<timestamp>).",
+        }
+
+    originals = {}
+    for b in bak_files:
+        orig = b.split(".bak.")[0]
+        if orig not in originals:
+            originals[orig] = []
+        originals[orig].append(b)
+
+    restored = []
+    for orig, baks in originals.items():
+        newest_bak = sorted(baks, reverse=True)[0]
+        try:
+            content = _read(newest_bak)
+            _write(orig, content)
+            try:
+                os.remove(newest_bak)
+            except OSError:
+                pass
+            restored.append({
+                "target": os.path.relpath(orig, repo_dir).replace("\\", "/"),
+                "backup_source": os.path.relpath(newest_bak, repo_dir).replace("\\", "/"),
+            })
+        except Exception:
+            pass
+
+    return {
+        "status": "success",
+        "restored": restored,
+        "count": len(restored),
+        "message": f"Berhasil memulihkan {len(restored)} berkas dari salinan cadangan terbaru.",
+    }
