@@ -15,6 +15,7 @@ export const ROLES = [
   "Compliance Officer",
   "Software Engineer",
   "Administrator",
+  "External Auditor (Read-Only)",
 ];
 
 export default function Header({ health, activeRole, onRoleChange, onOpenAudit }: HeaderProps) {

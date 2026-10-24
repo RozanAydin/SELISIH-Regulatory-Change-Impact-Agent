@@ -53,7 +53,10 @@ app = FastAPI(
 # Aktifkan CORS untuk Frontend Next.js
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -122,14 +125,24 @@ def log_audit_event(
 
 def verify_compliance_role(x_user_role: Optional[str] = Header(None, alias="X-User-Role")) -> str:
     """Memverifikasi bahwa aksi mutasi kode hanya dapat dilakukan oleh peran yang berwenang."""
-    allowed_roles = {"Compliance Officer", "Admin", "Administrator", "Lead Developer", "Software Engineer"}
-    role = x_user_role or "Compliance Officer"
-    if role not in allowed_roles:
+    if not x_user_role:
+        raise HTTPException(
+            status_code=401,
+            detail="Header otentikasi peran 'X-User-Role' wajib disertakan untuk aksi mutasi repositori bank.",
+        )
+    allowed_roles = {
+        "Compliance Officer",
+        "Admin",
+        "Administrator",
+        "Lead Developer",
+        "Software Engineer",
+    }
+    if x_user_role not in allowed_roles:
         raise HTTPException(
             status_code=403,
-            detail=f"Akses ditolak: Peran '{role}' tidak memiliki wewenang untuk memutasi repositori bank.",
+            detail=f"Akses ditolak: Peran '{x_user_role}' tidak memiliki wewenang untuk memutasi repositori bank.",
         )
-    return role
+    return x_user_role
 
 
 

@@ -57,7 +57,7 @@ def test_api_ojk_analyze():
     assert data["findings_count"] >= 1
 
 def test_api_impact_rollback():
-    res = client.post("/api/impact/rollback")
+    res = client.post("/api/impact/rollback", headers={"X-User-Role": "Compliance Officer"})
     assert res.status_code == 200
     data = res.json()
     assert "status" in data
@@ -84,7 +84,11 @@ def test_api_license_profiles_and_switching():
     assert res2.json()["company"]["can_run"] is False
 
     # 3. Upaya menambahkan repo baru saat kuota penuh (5/5) harus ditolak
-    res3 = client.post("/api/license/add-repo", json={"company_id": "pinjaman_kilat", "name": "new-svc", "path": "test"})
+    res3 = client.post(
+        "/api/license/add-repo",
+        json={"company_id": "pinjaman_kilat", "name": "new-svc", "path": "test"},
+        headers={"X-User-Role": "Administrator"},
+    )
     assert res3.status_code == 400
 
     # 4. Kembalikan ke Bank Digital Nusantara (Enterprise)
@@ -94,7 +98,23 @@ def test_api_license_profiles_and_switching():
 
 
 def test_api_rbac_guard():
-    # Role tidak sah ditolak dengan 403
+    # 1. Tanpa header X-User-Role ditolak dengan 401 Unauthorized
+    missing_header_res = client.post(
+        "/api/impact/apply",
+        json={"reviewer_role": "Compliance Officer", "confirm": False},
+    )
+    assert missing_header_res.status_code == 401
+    assert "X-User-Role" in missing_header_res.json()["detail"]
+
+    # 2. Role read-only / tidak sah ditolak dengan 403 Forbidden
+    read_only_res = client.post(
+        "/api/impact/apply",
+        json={"reviewer_role": "External Auditor (Read-Only)", "confirm": False},
+        headers={"X-User-Role": "External Auditor (Read-Only)"},
+    )
+    assert read_only_res.status_code == 403
+    assert "Akses ditolak" in read_only_res.json()["detail"]
+
     bad_res = client.post(
         "/api/impact/apply",
         json={"reviewer_role": "Hacker", "confirm": False},
@@ -103,7 +123,7 @@ def test_api_rbac_guard():
     assert bad_res.status_code == 403
     assert "Akses ditolak" in bad_res.json()["detail"]
 
-    # Role yang diizinkan (Compliance Officer / Admin / Engineer) diizinkan
+    # 3. Role yang diizinkan (Compliance Officer / Admin / Engineer) diizinkan (200 OK)
     good_res = client.post(
         "/api/impact/apply",
         json={"reviewer_role": "Compliance Officer", "confirm": False},

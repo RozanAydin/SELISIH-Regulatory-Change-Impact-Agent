@@ -128,6 +128,18 @@ Terakhir diperbarui: 2026-10-24
 - [x] Penyederhanaan tombol repositori di sidebar: menghapus tombol teks kecil *"Kelola Repo"* di header panel Langganan & Lisensi dan menyisakan tombol aksi tunggal *"Kelola Repositori ({active_repos})"* di bagian bawah panel.
 - [x] Unit test rollback patch: `tests/test_impact.py::test_rollback_last_backup` dan `tests/test_api.py::test_api_impact_rollback`.
 
+## Fase 9 — Hardening Keamanan, Ketahanan Runtime, & Pengujian RBAC (Audit Remediation)
+
+- [x] Deteksi proaktif lingkungan rentan crash Rust ChromaDB (`_is_unstable_chroma_environment` di `selisih/vector_store.py`) untuk mem-bypass crash memori pada Python 3.13 Windows.
+- [x] Perbaikan bug tuple unpacking pada `FallbackVectorIndex.upsert()` dengan menyertakan `embeddings` ke iterasi `zip(ids, documents, metadatas, embeddings)`.
+- [x] Deklarasi eksplisit dependensi `numpy>=1.26.0` di `requirements.txt`.
+- [x] Pengetatan konfigurasi CORS di `api.py`: membatasi `allow_origins` secara eksplisit ke `http://localhost:3000` dan `http://127.0.0.1:3000` dengan `allow_credentials=True`.
+- [x] Penguatan guard RBAC `verify_compliance_role` di `api.py`: mewajibkan header `X-User-Role` (HTTP 401 jika absen, HTTP 403 jika peran tidak berwenang).
+- [x] Opsi peran `"External Auditor (Read-Only)"` di `Header.tsx` dan integrasi dropdown selector peran interaktif di header utama canvas `frontend/src/app/page.tsx`.
+- [x] Penonaktifan aksi mutasi repositori (tombol *"Setujui & Terapkan Patch"* dan tombol pemulihan cadangan) di Tab 3 saat peran Read-Only aktif, disertai spanduk peringatan RBAC informatif.
+- [x] Pembaruan unit test RBAC di `tests/test_api.py` yang memvalidasi respons HTTP 401 (header kosong), HTTP 403 (unauthorized / read-only), dan HTTP 200 (authorized role).
+- [x] Verifikasi menyeluruh: 71 passed, 1 skipped dari 72 unit tests di `pytest` (100% lulus) dan Next.js production build sukses terkompilasi.
+
 
 ---
 

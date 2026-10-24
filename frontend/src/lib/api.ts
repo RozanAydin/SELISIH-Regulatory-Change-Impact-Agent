@@ -412,11 +412,15 @@ export async function selectCompanyProfile(companyId: string): Promise<CompanyPr
 export async function addCompanyRepo(
   companyId: string,
   name: string,
-  path: string
+  path: string,
+  role: string = "Administrator"
 ): Promise<{ success: boolean; repo: CompanyRepo; company: CompanyProfile }> {
   const res = await fetch(`${API_BASE}/api/license/add-repo`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-User-Role": role,
+    },
     body: JSON.stringify({ company_id: companyId, name, path }),
   });
   if (!res.ok) {

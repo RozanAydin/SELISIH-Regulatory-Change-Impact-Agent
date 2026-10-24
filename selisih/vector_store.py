@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
+import sys
 from typing import Any, Dict, List, Optional
 import numpy as np
 
@@ -70,7 +71,7 @@ class FallbackVectorIndex:
 
     def upsert(self, ids: list, documents: list, metadatas: list):
         embeddings = self.emb_fn(documents)
-        for i, doc, meta, emb in zip(ids, documents, metadatas):
+        for i, doc, meta, emb in zip(ids, documents, metadatas, embeddings):
             self.records = [r for r in self.records if r["id"] != i]
             self.records.append({
                 "id": i,
@@ -101,7 +102,16 @@ class FallbackVectorIndex:
 
 _client: Optional[chromadb.PersistentClient] = None
 _collection = None
-_FALLBACK_INDEX: Optional[FallbackVectorIndex] = None
+_FALLBACK_INDEXES: Dict[str, FallbackVectorIndex] = {}
+
+
+def _is_unstable_chroma_environment() -> bool:
+    """Mendeteksi runtime yang rentan fatal crash Rust biner ChromaDB (Python 3.13 Windows)."""
+    if os.getenv("SELISIH_USE_FALLBACK_VECTOR", "").lower() in ("1", "true", "yes"):
+        return True
+    if sys.platform == "win32" and sys.version_info >= (3, 13):
+        return True
+    return False
 
 
 def get_vector_client(persist_directory: str = CHROMA_DIR) -> chromadb.PersistentClient:
@@ -118,7 +128,14 @@ def get_or_create_collection(
     persist_directory: str = CHROMA_DIR,
 ):
     """Mengambil atau membuat koleksi regulasi acuan di ChromaDB dengan fallback otomatis."""
-    global _collection, _FALLBACK_INDEX
+    global _collection, _FALLBACK_INDEXES
+
+    # Rute ke Fallback Index langsung jika berada di lingkungan Python 3.13 Windows
+    if _is_unstable_chroma_environment():
+        if collection_name not in _FALLBACK_INDEXES:
+            _FALLBACK_INDEXES[collection_name] = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        return _FALLBACK_INDEXES[collection_name]
+
     try:
         client = get_vector_client(persist_directory)
         emb_fn = FastLegalEmbeddingFunction()
@@ -131,9 +148,9 @@ def get_or_create_collection(
         _collection = col
         return _collection
     except Exception:
-        if _FALLBACK_INDEX is None:
-            _FALLBACK_INDEX = FallbackVectorIndex(FastLegalEmbeddingFunction())
-        return _FALLBACK_INDEX
+        if collection_name not in _FALLBACK_INDEXES:
+            _FALLBACK_INDEXES[collection_name] = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        return _FALLBACK_INDEXES[collection_name]
 
 
 def ingest_reference_pojk(
@@ -143,7 +160,7 @@ def ingest_reference_pojk(
     force: bool = False,
 ) -> int:
     """Memotong dokumen POJK lama per pasal dan memasukkannya ke ChromaDB."""
-    global _FALLBACK_INDEX
+    global _FALLBACK_INDEXES
     col = get_or_create_collection(collection_name)
     try:
         existing_count = col.count()
@@ -195,11 +212,12 @@ def ingest_reference_pojk(
             col.upsert(ids=ids, documents=documents, metadatas=metadatas)
         return col.count()
     except Exception:
-        if _FALLBACK_INDEX is None:
-            _FALLBACK_INDEX = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        if collection_name not in _FALLBACK_INDEXES:
+            _FALLBACK_INDEXES[collection_name] = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        fallback_col = _FALLBACK_INDEXES[collection_name]
         if ids:
-            _FALLBACK_INDEX.upsert(ids=ids, documents=documents, metadatas=metadatas)
-        return _FALLBACK_INDEX.count()
+            fallback_col.upsert(ids=ids, documents=documents, metadatas=metadatas)
+        return fallback_col.count()
 
 
 def query_reference_clauses(
@@ -208,18 +226,19 @@ def query_reference_clauses(
     collection_name: str = "pojk_acuan_idx",
 ) -> List[Dict[str, Any]]:
     """Mencari pasal acuan yang paling relevan dengan klausul regulasi baru."""
-    global _FALLBACK_INDEX
+    global _FALLBACK_INDEXES
     col = get_or_create_collection(collection_name)
     try:
         if col.count() == 0:
             ingest_reference_pojk(collection_name=collection_name)
         results = col.query(query_texts=[query_text], n_results=n_results)
     except Exception:
-        if _FALLBACK_INDEX is None:
-            _FALLBACK_INDEX = FallbackVectorIndex(FastLegalEmbeddingFunction())
-        if _FALLBACK_INDEX.count() == 0:
+        if collection_name not in _FALLBACK_INDEXES:
+            _FALLBACK_INDEXES[collection_name] = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        fallback_col = _FALLBACK_INDEXES[collection_name]
+        if fallback_col.count() == 0:
             ingest_reference_pojk(collection_name=collection_name)
-        results = _FALLBACK_INDEX.query(query_texts=[query_text], n_results=n_results)
+        results = fallback_col.query(query_texts=[query_text], n_results=n_results)
 
     matches: List[Dict[str, Any]] = []
     if results and results.get("documents") and results["documents"][0]:

@@ -8,6 +8,7 @@ import BobShellConsoleTab from "@/components/BobShellConsoleTab";
 import ImpactReviewTab from "@/components/ImpactReviewTab";
 import AuditTrailModal from "@/components/AuditTrailModal";
 import RepoManagerModal from "@/components/RepoManagerModal";
+import { ROLES } from "@/components/Header";
 import {
   SystemHealth,
   OjkRegulation,
@@ -31,7 +32,7 @@ import {
   selectCompanyProfile,
   addCompanyRepo,
 } from "@/lib/api";
-import { GitCompare, Terminal, ShieldCheck, Globe } from "lucide-react";
+import { GitCompare, Terminal, ShieldCheck, Globe, KeyRound } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"diff" | "bob" | "review" | "ojk">("diff");
@@ -96,7 +97,7 @@ export default function Home() {
   };
 
   const handleAddRepo = async (name: string, path: string) => {
-    await addCompanyRepo(activeCompanyId, name, path);
+    await addCompanyRepo(activeCompanyId, name, path, activeRole);
     const h = await fetchSystemHealth();
     setHealth(h);
     loadLicenseProfiles();
@@ -229,25 +230,45 @@ export default function Home() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Main Canvas Header */}
         <header className="border-b border-[#DDD8CD] bg-[#FAF8F5] px-8 py-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-[#111110]">SELISIH</h1>
               <p className="text-xs text-[#4A4843] mt-0.5">
                 Regulatory Change & Code Impact System — IBM Hackathon IT-Finance
               </p>
             </div>
-            <div className="text-left sm:text-right">
-              <span className="text-xs font-bold text-[#111110]">Entitas Perusahaan</span>
-              <div>
-                <span className="inline-block mt-0.5 rounded bg-[#EFECE6] border border-[#C8C2B5] px-2.5 py-0.5 text-[11px] font-bold text-[#111110]">
-                  {health?.license?.organization || "PT Bank Digital Nusantara"}
-                </span>
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Role Selector (RBAC Demo) */}
+              <div className="flex items-center space-x-2 rounded border border-[#C8C2B5] bg-[#EFECE6] px-3 py-1.5 text-xs shadow-xs">
+                <KeyRound className="h-3.5 w-3.5 text-[#1A1917]" />
+                <span className="text-xs font-medium text-[#4A4843]">Peran (RBAC):</span>
+                <select
+                  value={activeRole}
+                  onChange={(e) => setActiveRole(e.target.value)}
+                  className="bg-transparent font-bold text-[#111110] focus:outline-none cursor-pointer"
+                >
+                  {ROLES.map((role) => (
+                    <option key={role} value={role} className="bg-[#FFFFFF] text-[#111110]">
+                      {role}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="text-[10px] text-[#8C887B] font-mono mt-0.5">
-                {health?.license?.plan || "Enterprise Plan"} •{" "}
-                <span className={health?.license?.is_valid !== false ? "text-[#0F5C2B] font-bold" : "text-[#C5221F] font-bold"}>
-                  {health?.license?.status_label || (health?.license?.is_valid !== false ? "Aktif" : "Dibatasi")}
-                </span>
+
+              {/* Entitas Perusahaan */}
+              <div className="text-left sm:text-right border-l border-[#DDD8CD] pl-4">
+                <span className="text-[11px] font-bold text-[#4A4843] block">Entitas Perusahaan</span>
+                <div>
+                  <span className="inline-block mt-0.5 rounded bg-[#EFECE6] border border-[#C8C2B5] px-2.5 py-0.5 text-[11px] font-bold text-[#111110]">
+                    {health?.license?.organization || "PT Bank Digital Nusantara"}
+                  </span>
+                </div>
+                <div className="text-[10px] text-[#8C887B] font-mono mt-0.5">
+                  {health?.license?.plan || "Enterprise Plan"} •{" "}
+                  <span className={health?.license?.is_valid !== false ? "text-[#0F5C2B] font-bold" : "text-[#C5221F] font-bold"}>
+                    {health?.license?.status_label || (health?.license?.is_valid !== false ? "Aktif" : "Dibatasi")}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -323,7 +344,7 @@ export default function Home() {
           {activeTab === "review" && (
             <ImpactReviewTab
               records={impactRecords}
-              activeRole={health?.license?.organization || "PT Bank Digital Nusantara"}
+              activeRole={activeRole}
               hasRunAnalysis={hasRunAnalysis}
               hasRunBob={hasRunBob}
               onNavigateToTab={(tab: "diff" | "bob") => setActiveTab(tab)}
@@ -331,13 +352,13 @@ export default function Home() {
               licenseMessage={health?.license?.message}
               onDryRun={fetchImpactDryRun}
               onApplyPatch={async (note) => {
-                const res = await applyPatch(health?.license?.organization || "PT Bank Digital Nusantara", note);
+                const res = await applyPatch(activeRole, note);
                 await loadImpact();
                 await loadArtifacts();
                 return res;
               }}
               onRollback={async () => {
-                const res = await rollbackPatch();
+                const res = await rollbackPatch(activeRole);
                 await loadImpact();
                 await loadArtifacts();
                 return res;

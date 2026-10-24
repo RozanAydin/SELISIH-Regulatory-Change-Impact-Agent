@@ -56,6 +56,7 @@ export default function ImpactReviewTab({
   canRunPatch = true,
   licenseMessage,
 }: ImpactReviewTabProps) {
+  const isReadOnlyRole = activeRole.includes("Read-Only");
   const meta = analysis?.analysis_meta;
   const acuanLabel = meta?.selected_acuan
     ? `POJK ${meta.selected_acuan.nomor || meta.selected_acuan.doc_id}`
@@ -104,6 +105,10 @@ export default function ImpactReviewTab({
   };
 
   const handleConfirmApply = async () => {
+    if (isReadOnlyRole) {
+      alert(`Akses ditolak: Peran '${activeRole}' tidak memiliki wewenang untuk memutasi repositori bank.`);
+      return;
+    }
     setShowConfirmModal(false);
     setApplyLoading(true);
     setRollbackSuccess(null);
@@ -118,7 +123,12 @@ export default function ImpactReviewTab({
   };
 
   const handleRollback = async () => {
-    if (!onRollback) return;
+    if (!onRollback || isReadOnlyRole) {
+      if (isReadOnlyRole) {
+        alert(`Akses ditolak: Peran '${activeRole}' tidak memiliki wewenang untuk memutasi repositori bank.`);
+      }
+      return;
+    }
     setRollbackLoading(true);
     try {
       const res = await onRollback();
@@ -292,23 +302,29 @@ export default function ImpactReviewTab({
             {/* Step 2: Apply Patch */}
             <button
               onClick={() => {
+                if (isReadOnlyRole) {
+                  alert(`Akses ditolak: Peran '${activeRole}' tidak memiliki wewenang untuk memutasi repositori bank.`);
+                  return;
+                }
                 if (canRunPatch === false) {
                   alert(`Aksi diblokir oleh lisensi: ${licenseMessage || "Kuota repositori terlampaui"}`);
                   return;
                 }
                 setShowConfirmModal(true);
               }}
-              disabled={applyLoading || canRunPatch === false}
+              disabled={applyLoading || canRunPatch === false || isReadOnlyRole}
               className={`flex items-center space-x-2 rounded px-4 py-2 text-xs font-bold transition-all shadow-sm ${
-                canRunPatch === false
+                canRunPatch === false || isReadOnlyRole
                   ? "bg-[#DDD8CD] text-[#8C887B] cursor-not-allowed border border-[#C8C2B5]"
                   : "bg-[#1A1917] hover:bg-[#2D2C28] disabled:opacity-50 text-white cursor-pointer"
               }`}
             >
-              <ShieldCheck className={`h-3.5 w-3.5 ${canRunPatch === false ? "text-[#8C887B]" : "text-[#A3D4B0]"}`} />
+              <ShieldCheck className={`h-3.5 w-3.5 ${canRunPatch === false || isReadOnlyRole ? "text-[#8C887B]" : "text-[#A3D4B0]"}`} />
               <span>
                 {applyLoading
                   ? "Menerapkan..."
+                  : isReadOnlyRole
+                  ? "2. Ditolak (Peran Read-Only)"
                   : canRunPatch === false
                   ? "2. Dibatasi Lisensi (Kuota Penuh)"
                   : "2. Setujui & Terapkan Patch"}
@@ -319,16 +335,33 @@ export default function ImpactReviewTab({
             {onRollback && hasAnyPatched && (
               <button
                 onClick={handleRollback}
-                disabled={rollbackLoading}
-                className="flex items-center space-x-1.5 rounded border border-[#C8C2B5] bg-[#FAF8F5] hover:bg-[#F3EFE8] disabled:opacity-50 px-3 py-2 text-xs font-bold text-[#4A4843] transition-all shadow-sm cursor-pointer"
-                title="Pulihkan file asli dari cadangan (.bak) terakhir"
+                disabled={rollbackLoading || isReadOnlyRole}
+                className={`flex items-center space-x-1.5 rounded border border-[#C8C2B5] px-3 py-2 text-xs font-bold transition-all shadow-sm ${
+                  isReadOnlyRole
+                    ? "bg-[#DDD8CD] text-[#8C887B] cursor-not-allowed"
+                    : "bg-[#FAF8F5] hover:bg-[#F3EFE8] disabled:opacity-50 text-[#4A4843] cursor-pointer"
+                }`}
+                title={isReadOnlyRole ? "Aksi dinonaktifkan untuk peran Read-Only" : "Pulihkan file asli dari cadangan (.bak) terakhir"}
               >
-                <RotateCcw className={`h-3.5 w-3.5 text-[#4A4843] ${rollbackLoading ? "animate-spin" : ""}`} />
+                <RotateCcw className={`h-3.5 w-3.5 ${isReadOnlyRole ? "text-[#8C887B]" : "text-[#4A4843]"} ${rollbackLoading ? "animate-spin" : ""}`} />
                 <span>{rollbackLoading ? "Memulihkan..." : "Pulihkan Cadangan (.bak)"}</span>
               </button>
             )}
           </div>
         </div>
+
+        {/* Read-Only Role Warning Banner */}
+        {isReadOnlyRole && (
+          <div className="mt-4 rounded-md border border-[#F4B3AE] bg-[#FCE8E6] p-3.5 text-xs text-[#C5221F] flex items-start space-x-2">
+            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold">Akses Ditolak (Otorisasi RBAC): </span>
+              <span>
+                Peran aktif saat ini adalah <strong>{activeRole}</strong>. Pengguna dengan peran ini hanya memiliki hak akses baca (*read-only*) dan tidak diperbolehkan menerapkan patch atau memulihkan berkas repositori bank.
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* License Gating Banner */}
         {canRunPatch === false && (

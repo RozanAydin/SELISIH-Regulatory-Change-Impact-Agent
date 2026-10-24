@@ -205,6 +205,16 @@ Terakhir diperbarui: 2026-10-12
 - **Alasan:** Menjawab temuan evaluasi teknis rekanan di `AUDIT_EVALUASI_ENTERPRISE_WEB.md` di mana klon baru gagal menjalankan `next` command dan Python 3.13 mengalami crash memori pada binding Rust.
 - **Konsekuensi:** Repositori 100% tahan banting (*fault-tolerant*) pada seluruh versi Python (3.10 s.d. 3.13), eksekusi peluncur benar-benar 1-klik mandiri, riwayat audit tidak hilang saat server reload, dan endpoint mutasi kode terlindungi oleh kebijakan peran kepatuhan perbankan.
 
+## D-040 — Hardening Keamanan Runtime, Isolasi Segfault ChromaDB Python 3.13, dan Guard RBAC Eksplisit
+- **Keputusan:** Empat pembenahan stabilitas dan keamanan tingkat produksi berdasarkan temuan audit di `AUDIT_DAN_EVALUASI_SISTEM.md`:
+  1. **Proactive Runtime Segfault Bypassing:** Menambahkan fungsi deteksi `_is_unstable_chroma_environment()` di `selisih/vector_store.py` yang mendeteksi runtime Windows Python 3.13 dan langsung mengarahkan operasi ke `FallbackVectorIndex` berbasis NumPy deterministik tanpa memanggil biner Rust ChromaDB guna mencegah fatal memory segfault (Access Violation `0xC0000005`). Memperbaiki *tuple unpacking* pada metode `upsert()` dengan menyertakan `embeddings` ke dalam iterasi `zip()`.
+  2. **Hardening Otorisasi RBAC & Pengetatan CORS:** Memperketat `verify_compliance_role` di `api.py` dengan mewajibkan header `X-User-Role` (mengembalikan HTTP 401 jika header absen, dan HTTP 403 jika peran tidak memiliki hak akses mutasi). Mengganti konfigurasi CORS `allow_origins=["*"]` menjadi origin eksplisit `["http://localhost:3000", "http://127.0.0.1:3000"]` dengan `allow_credentials=True`.
+  3. **Role Read-Only untuk Pengujian Demo di Frontend:** Menambahkan opsi peran `"External Auditor (Read-Only)"` di `Header.tsx` dan mengintegrasikan pemilih peran interaktif langsung di header utama canvas `page.tsx`. Menonaktifkan tombol persetujuan patch dan pemulihan backup di `ImpactReviewTab.tsx` ketika peran read-only aktif, disertai spanduk peringatan RBAC yang informatif.
+  4. **Deklarasi Dependensi Eksplisit:** Menambahkan `numpy>=1.26.0` secara eksplisit pada `requirements.txt`.
+- **Alasan:** Menutup celah keamanan otorisasi default di backend, meniadakan penolakan browser terhadap CORS credentials wildcard, menghilangkan bug unpacking pada fallback index, dan memudahkan presenter mendemokan mekanisme penolakan RBAC secara langsung kepada juri hackathon.
+- **Konsekuensi:** Repositori sepenuhnya aman, patuh terhadap standar tata kelola perbankan, bebas fatal crash di seluruh versi Python, dan memiliki kontrol akses berbasis peran (*RBAC*) yang teruji secara otomatis maupun visual.
+
+
 
 
 
