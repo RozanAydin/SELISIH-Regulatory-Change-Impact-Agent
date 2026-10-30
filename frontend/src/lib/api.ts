@@ -64,6 +64,34 @@ export const DEFAULT_POJK_77: OjkRegulation = {
   fetched_at: "2026-10-23T12:00:00Z",
 };
 
+export const DEFAULT_POJK_8: OjkRegulation = {
+  id: "pojk-8-2023",
+  nomor: "8",
+  tahun: "2023",
+  judul: "Peraturan Otoritas Jasa Keuangan Nomor 8 Tahun 2023 tentang Penerapan Program Anti Pencucian Uang, Pencegahan Pendanaan Terorisme, dan Pencegahan Pendanaan Proliferasi Senjata Pemusnah Massal di Sektor Jasa Keuangan (APU-PPT)",
+  sektor: "Perbankan dan Lembaga Jasa Keuangan",
+  sektor_id: "10",
+  jenis: "Peraturan OJK",
+  tanggal_berlaku: "14-06-2023",
+  status: "Berlaku (Pembaruan)",
+  detail_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-8-2023",
+  fetched_at: "2026-10-30T12:00:00Z",
+};
+
+export const DEFAULT_POJK_12: OjkRegulation = {
+  id: "pojk-12-2017",
+  nomor: "12/POJK.01/2017",
+  tahun: "2017",
+  judul: "Peraturan Otoritas Jasa Keuangan Nomor 12/POJK.01/2017 tentang Penerapan Program Anti Pencucian Uang dan Pencegahan Pendanaan Terorisme di Sektor Jasa Keuangan",
+  sektor: "Perbankan dan Lembaga Jasa Keuangan",
+  sektor_id: "10",
+  jenis: "Peraturan OJK",
+  tanggal_berlaku: "21-03-2017",
+  status: "Diubah / Terdahulu",
+  detail_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-12-2017",
+  fetched_at: "2026-10-30T12:00:00Z",
+};
+
 export const DEFAULT_POJK_22: OjkRegulation = {
   id: "pojk-22-2023",
   nomor: "22",
@@ -154,6 +182,7 @@ export interface Finding {
     kutipan: string;
   };
   ringkasan: string;
+  ringkasan_non_teknis?: string;
   sitasi_valid: boolean;
   confidence: string;
   abstain: boolean;
@@ -427,5 +456,38 @@ export async function addCompanyRepo(
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || "Gagal mendaftarkan repositori baru");
   }
+  return res.json();
+}
+
+export interface BenchmarkMetrics {
+  status: string;
+  overall_metrics: {
+    accuracy: number;
+    precision: number;
+    recall: number;
+    f1_score: number;
+  };
+  benchmark_meta: {
+    total_articles_evaluated: number;
+    statutory_corpus: string;
+    mechanical_citation_rate: number;
+    ai_hallucination_rate: number;
+  };
+  latency_benchmark: {
+    manual_legal_review_lead_time_days: number;
+    selisih_pipeline_lead_time_seconds: number;
+    lead_time_slashing_pct: number;
+  };
+  confusion_matrix: {
+    tp: number;
+    tn: number;
+    fp: number;
+    fn: number;
+  };
+}
+
+export async function fetchBenchmarkResults(): Promise<BenchmarkMetrics> {
+  const res = await fetch(`${API_BASE}/api/benchmark`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Gagal mengambil hasil benchmark akurasi");
   return res.json();
 }

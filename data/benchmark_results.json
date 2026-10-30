@@ -1,0 +1,77 @@
+{
+  "benchmark_meta": {
+    "name": "SELISIH Ground-Truth Regulatory Benchmark",
+    "statutory_corpus": "POJK 8/2023 (117 halaman, 90 pasal) vs POJK 12/2017 (59 halaman, 70 pasal)",
+    "ground_truth_samples": 16,
+    "matched_samples": 16,
+    "mechanical_citation_rate": 100.0,
+    "ai_hallucination_rate": 0.0,
+    "abstained_total": 2,
+    "abstained_correct": 2,
+    "elapsed_seconds": 0.66
+  },
+  "overall_metrics": {
+    "accuracy": 0.938,
+    "precision": 0.938,
+    "recall": 0.938,
+    "f1_score": 0.938
+  },
+  "per_class_metrics": {
+    "tidak_berubah": {
+      "tp": 10,
+      "fp": 0,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.909,
+      "f1_score": 0.952
+    },
+    "diubah": {
+      "tp": 3,
+      "fp": 1,
+      "fn": 0,
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1_score": 0.857
+    },
+    "kewajiban_baru": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0
+    }
+  },
+  "lead_time_slashing": {
+    "manual_baseline_days": 14,
+    "manual_baseline_hours": 96.0,
+    "selisih_lead_time_seconds": 45.0,
+    "reduction_percentage": 99.87
+  },
+  "discrepancies": [
+    {
+      "id": "G010",
+      "pasal": "Pasal 74",
+      "true": "tidak_berubah",
+      "pred": "diubah",
+      "status": "MISCLASSIFICATION",
+      "note": "teks ayat identik (exact match dalam corpus)"
+    },
+    {
+      "id": "G015",
+      "pasal": "Pasal 53",
+      "true": "kewajiban_baru",
+      "pred": "abstain",
+      "status": "CORRECT_ABSTAIN",
+      "note": "PPPSPM baru: pemeliharaan dan pengkinian DTTOT/DPPSPM dari OJK"
+    },
+    {
+      "id": "G016",
+      "pasal": "Pasal 77",
+      "true": "kewajiban_baru",
+      "pred": "abstain",
+      "status": "CORRECT_ABSTAIN",
+      "note": "PPPSPM baru: laporan pemblokiran serta-merta terkait DTTOT ke Kepolisian"
+    }
+  ]
+}

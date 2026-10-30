@@ -22,6 +22,7 @@ RAW_DIR = os.path.abspath(
 )
 _CANDIDATE_PDFS = [
     os.environ.get("SELISIH_SAMPLE_PDF", ""),
+    os.path.join(os.path.dirname(__file__), "..", "data", "POJK_08_2023_APU_PPT_PPPSPM.pdf"),
     os.path.join(RAW_DIR, "POJK_08_2023_APU_PPT_PPPSPM.pdf"),
 ]
 SAMPLE_PDF = next((p for p in _CANDIDATE_PDFS if p and os.path.exists(p)), "")

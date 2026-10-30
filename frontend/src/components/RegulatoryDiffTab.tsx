@@ -11,7 +11,7 @@ import {
   BookOpen,
   AlertCircle,
 } from "lucide-react";
-import { AnalysisResponse, OjkRegulation, DEFAULT_POJK_77, DEFAULT_POJK_22 } from "@/lib/api";
+import { AnalysisResponse, OjkRegulation, DEFAULT_POJK_77, DEFAULT_POJK_22, DEFAULT_POJK_8, DEFAULT_POJK_12 } from "@/lib/api";
 
 interface RegulatoryDiffTabProps {
   analysis: AnalysisResponse | null;
@@ -52,8 +52,14 @@ export default function RegulatoryDiffTab({
     if (!list.some((r) => r.id === DEFAULT_POJK_77.id || r.nomor.includes("77"))) {
       list.push(DEFAULT_POJK_77);
     }
+    if (!list.some((r) => r.id === DEFAULT_POJK_12.id || r.nomor.includes("12"))) {
+      list.push(DEFAULT_POJK_12);
+    }
     if (!list.some((r) => r.id === DEFAULT_POJK_22.id || r.nomor === "22")) {
       list.unshift(DEFAULT_POJK_22);
+    }
+    if (!list.some((r) => r.id === DEFAULT_POJK_8.id || r.nomor === "8")) {
+      list.unshift(DEFAULT_POJK_8);
     }
     return list;
   }, [regulations]);
@@ -540,9 +546,15 @@ export default function RegulatoryDiffTab({
                     </div>
 
                     <div className="flex items-center space-x-2 text-xs">
-                      <span className="flex items-center gap-1 rounded bg-[#E6F4EA] border border-[#A3D4B0] px-2 py-0.5 text-[11px] font-bold text-[#0F5C2B]">
-                        <CheckCircle2 className="h-3 w-3" /> Sitasi Valid
-                      </span>
+                      {item.sitasi_valid ? (
+                        <span className="flex items-center gap-1 rounded bg-[#E6F4EA] border border-[#A3D4B0] px-2 py-0.5 text-[11px] font-bold text-[#0F5C2B]">
+                          <CheckCircle2 className="h-3 w-3" /> Sitasi Terverifikasi (Zero Halusinasi)
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 rounded bg-[#FCE8E6] border border-[#F4B3AE] px-2 py-0.5 text-[11px] font-bold text-[#C5221F]">
+                          <AlertCircle className="h-3 w-3" /> Abstain (Kutipan Tidak Ditemukan)
+                        </span>
+                      )}
                       <span className="rounded bg-[#EFECE6] px-2 py-0.5 text-[11px] text-[#2D2C28] font-semibold border border-[#C8C2B5]">
                         Confidence: {item.confidence}
                       </span>
@@ -551,6 +563,25 @@ export default function RegulatoryDiffTab({
 
                   {/* Summary */}
                   <p className="text-xs text-[#1A1917] font-medium leading-relaxed">{item.ringkasan}</p>
+
+                  {/* Ringkasan Non-Teknis untuk Tim Legal */}
+                  {item.ringkasan_non_teknis && (
+                    <div className="rounded border border-[#C8C2B5] bg-[#FAF8F5] p-3 text-xs space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold text-[#111110]">
+                        <BookOpen className="h-3.5 w-3.5 text-[#0F5C2B]" />
+                        <span>Ringkasan Eksekutif Hukum (Legal & Compliance Summary):</span>
+                      </div>
+                      <p className="text-[#3C3A35] leading-relaxed">{item.ringkasan_non_teknis}</p>
+                    </div>
+                  )}
+
+                  {/* Warning jika Abstain */}
+                  {item.abstain && item.alasan_abstain && (
+                    <div className="rounded border border-[#F4B3AE] bg-[#FCE8E6] p-2.5 text-xs text-[#C5221F] flex items-start gap-1.5">
+                      <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                      <span><strong>Alasan Penolakan AI (Abstain):</strong> {item.alasan_abstain}</span>
+                    </div>
+                  )}
 
                   {/* Side-by-side comparison */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
