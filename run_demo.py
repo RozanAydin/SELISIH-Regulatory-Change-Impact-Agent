@@ -6,6 +6,14 @@ import urllib.request
 import webbrowser
 import socket
 
+# Safe stdout encoding for Windows cmd
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Root directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if os.path.isfile(os.path.join(BASE_DIR, "api.py")):
@@ -21,6 +29,7 @@ FRONTEND_DIR = os.path.join(REPO_DIR, "frontend")
 
 def is_port_in_use(port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.5)
         return s.connect_ex(("127.0.0.1", port)) == 0
 
 def free_port(port: int):
@@ -28,20 +37,20 @@ def free_port(port: int):
     if not is_port_in_use(port):
         return
     try:
-        # Find PID using netstat
         cmd = f'netstat -ano | findstr /R ":{port}\\>"'
-        output = subprocess.check_output(cmd, shell=True).decode()
+        output = subprocess.check_output(cmd, shell=True).decode(errors="ignore")
         for line in output.strip().splitlines():
             if "LISTENING" in line:
-                pid = line.strip().split()[-1]
+                parts = line.strip().split()
+                pid = parts[-1]
                 if pid and pid != "0":
-                    print(f"  [i] Membebaskan port {port} (menutup proses lama PID: {pid})...")
+                    print(f"  [i] Membebaskan port {port} (menutup PID lama: {pid})...")
                     subprocess.call(f"taskkill /F /PID {pid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(1)
     except Exception:
         pass
 
-def wait_for_url(url: str, name: str, max_wait=15) -> bool:
+def wait_for_url(url: str, name: str, max_wait=20) -> bool:
     start_time = time.time()
     while time.time() - start_time < max_wait:
         try:
@@ -49,7 +58,7 @@ def wait_for_url(url: str, name: str, max_wait=15) -> bool:
             with urllib.request.urlopen(req, timeout=2) as resp:
                 if resp.status in [200, 304]:
                     elapsed = round(time.time() - start_time, 1)
-                    print(f"  [✓] {name} siap dalam {elapsed}s: {url}")
+                    print(f"  [OK] {name} siap dalam {elapsed}s: {url}")
                     return True
         except Exception:
             pass
@@ -71,35 +80,34 @@ def main():
 
     # Step 2: Start Backend
     print("[2/4] Menjalankan Backend FastAPI di port 8000...")
+    backend_cmd = f'cmd.exe /k "title SELISIH - Backend FastAPI (Port 8000) && cd /d "{REPO_DIR}" && "{sys.executable}" -m uvicorn api:app --host 127.0.0.1 --port 8000"'
     backend_proc = subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", "api:app", "--host", "127.0.0.1", "--port", "8000"],
+        backend_cmd,
         cwd=REPO_DIR,
         creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == "win32" else 0
     )
 
     # Step 3: Start Frontend
     print("[3/4] Menjalankan Frontend Next.js di port 3000...")
-    # Check if npm is available
-    frontend_cmd = "npm.cmd run start" if sys.platform == "win32" else "npm run start"
+    frontend_cmd = f'cmd.exe /k "title SELISIH - Frontend Next.js (Port 3000) && cd /d "{FRONTEND_DIR}" && npm run start"'
     frontend_proc = subprocess.Popen(
         frontend_cmd,
         cwd=FRONTEND_DIR,
-        shell=True,
         creationflags=subprocess.CREATE_NEW_CONSOLE if sys.platform == "win32" else 0
     )
 
     # Step 4: Health check
     print("[4/4] Menunggu layanan online...")
-    backend_ok = wait_for_url("http://127.0.0.1:8000/api/system/health", "Backend FastAPI (Port 8000)", max_wait=15)
-    frontend_ok = wait_for_url("http://localhost:3000", "Frontend Next.js (Port 3000)", max_wait=15)
+    backend_ok = wait_for_url("http://127.0.0.1:8000/api/system/health", "Backend FastAPI (Port 8000)", max_wait=20)
+    frontend_ok = wait_for_url("http://localhost:3000", "Frontend Next.js (Port 3000)", max_wait=20)
 
     if backend_ok and frontend_ok:
         print()
         print("=======================================================================")
-        print("  🎉 SISTEM SELISIH BERHASIL BERJALAN PENUH!")
-        print("  👉 Dashboard Web : http://localhost:3000")
-        print("  👉 API Swagger   : http://127.0.0.1:8000/docs")
-        print("  👉 Benchmark API : http://127.0.0.1:8000/api/benchmark")
+        print("  [SUCCESS] SISTEM SELISIH BERHASIL BERJALAN PENUH!")
+        print("  [*] Dashboard Web : http://localhost:3000")
+        print("  [*] API Swagger   : http://127.0.0.1:8000/docs")
+        print("  [*] Benchmark API : http://127.0.0.1:8000/api/benchmark")
         print("=======================================================================")
         print("  Membuka browser otomatis...")
         try:
@@ -113,17 +121,29 @@ def main():
                 time.sleep(1)
         except KeyboardInterrupt:
             print("\n  Menghentikan layanan SELISIH...")
-            backend_proc.terminate()
-            frontend_proc.terminate()
+            try:
+                backend_proc.terminate()
+            except Exception:
+                pass
+            try:
+                frontend_proc.terminate()
+            except Exception:
+                pass
             free_port(8000)
             free_port(3000)
-            print("  Selesai.")
+            print("  Layanan telah dihentikan dengan aman.")
     else:
         print()
-        print("  [!] PERINGATAN: Salah satu layanan belum merespons tepat waktu.")
+        print("  [!] PERINGATAN: Salah satu layanan belum merespons dalam 20 detik.")
         print(f"      Backend Status : {'ONLINE' if backend_ok else 'GAGAL/MENUNGGU'}")
         print(f"      Frontend Status: {'ONLINE' if frontend_ok else 'GAGAL/MENUNGGU'}")
-        print("      Silakan periksa jendela konsol hitam yang terbuka untuk melihat log.")
+        print("      Silakan cek jendela konsol terpisah yang terbuka untuk detail error.")
+        print()
+        input("  Tekan Enter untuk keluar...")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"\n[ERROR] Terjadi kesalahan tak terduga: {e}")
+        input("Tekan Enter untuk keluar...")

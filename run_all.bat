@@ -8,20 +8,22 @@ echo   1-Click Enterprise Platform Launcher (FastAPI Backend + Next.js UI)
 echo =======================================================================
 echo.
 
-if exist "%~dp0run_demo.py" (
-    echo Menjalankan Smart Launcher (Auto Health-Check ^& Auto Browser)...
-    python "%~dp0run_demo.py"
-    pause
-    exit /b
-)
+if not exist "%~dp0run_demo.py" goto fallback
 
+echo Menjalankan Smart Launcher via Python...
+python "%~dp0run_demo.py"
+if %ERRORLEVEL% EQU 0 goto :eof
+
+echo.
+echo [!] Launcher Python keluar atau terhenti.
+echo.
+pause
+exit /b
+
+:fallback
 set TARGET_DIR=%~dp0repo_audit_latest
-if not exist "%TARGET_DIR%\api.py" (
-    set TARGET_DIR=%~dp0repo_enterprise_web
-)
-if not exist "%TARGET_DIR%\api.py" (
-    set TARGET_DIR=%~dp0
-)
+if not exist "%TARGET_DIR%\api.py" set TARGET_DIR=%~dp0repo_enterprise_web
+if not exist "%TARGET_DIR%\api.py" set TARGET_DIR=%~dp0
 
 echo [1/4] Direktori Kerja: %TARGET_DIR%...
 cd /d "%TARGET_DIR%"
@@ -50,3 +52,4 @@ echo =======================================================================
 echo.
 echo Membuka browser otomatis...
 start http://localhost:3000
+pause
