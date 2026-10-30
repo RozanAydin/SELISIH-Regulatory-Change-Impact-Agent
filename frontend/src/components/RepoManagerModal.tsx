@@ -122,10 +122,9 @@ export default function RepoManagerModal({
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#4A4843]">Penggunaan Kuota Repositori:</span>
                 <span className="font-bold text-[#111110]">
-                  {company.active_repos} /{" "}
                   {company.repo_limit < 0
-                    ? "Tidak Dibatasi"
-                    : `${company.repo_limit} Repositori`}
+                    ? `${company.active_repos}`
+                    : `${company.active_repos} / ${company.repo_limit} Repositori`}
                 </span>
               </div>
               <div className="w-full bg-[#DDD8CD] h-2 rounded-full overflow-hidden">

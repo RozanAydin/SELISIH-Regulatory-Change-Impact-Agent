@@ -55,6 +55,39 @@ def test_api_ojk_analyze():
     data = res.json()
     assert data["status"] == "success"
     assert data["findings_count"] >= 1
+    meta = data["data"]["analysis_meta"]
+    assert "company_id" in meta
+    assert "organization" in meta
+    assert "target_repository" in meta
+    assert meta["target_repository"]["path"] is not None
+
+
+def test_api_analysis_run_with_company_metadata():
+    req = {
+        "engine": "embedded",
+        "company_id": "dana_mandiri",
+        "target_repo": "mock_fintech_repo",
+        "ojk_info": {
+            "id": "pojk-22-2023",
+            "nomor": "22",
+            "tahun": "2023",
+            "doc_id": "POJK-22-2023",
+        },
+        "acuan_info": {
+            "id": "pojk-77-2016",
+            "nomor": "77/POJK.01/2016",
+            "tahun": "2016",
+            "doc_id": "POJK-77-2016",
+        },
+    }
+    res = client.post("/api/analysis/run", json=req)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "success"
+    meta = data["data"]["analysis_meta"]
+    assert meta["company_id"] == "dana_mandiri"
+    assert "target_repository" in meta
+    assert meta["target_repository"]["path"] == "mock_fintech_repo"
 
 def test_api_impact_rollback():
     res = client.post("/api/impact/rollback", headers={"X-User-Role": "Compliance Officer"})
@@ -130,6 +163,19 @@ def test_api_rbac_guard():
         headers={"X-User-Role": "Compliance Officer"},
     )
     assert good_res.status_code == 200
+
+
+def test_api_bob_stream():
+    import json
+    with client.stream("GET", "/api/bob/stream") as response:
+        assert response.status_code == 200
+        lines = [line for line in response.iter_lines() if line]
+        assert len(lines) > 0
+        events = [json.loads(line.replace("data: ", "")) for line in lines if line.startswith("data: ")]
+        types = [e.get("type") for e in events]
+        assert "init" in types
+        assert "success" in types
+
 
 
 

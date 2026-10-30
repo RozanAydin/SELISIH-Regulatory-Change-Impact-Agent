@@ -23,6 +23,7 @@ interface RegulatoryDiffTabProps {
   onSelectRegulation: (reg: OjkRegulation | null) => void;
   onRunAnalysis: () => void;
   hasRunAnalysis?: boolean;
+  onNavigateToBob?: () => void;
 }
 
 export default function RegulatoryDiffTab({
@@ -35,6 +36,7 @@ export default function RegulatoryDiffTab({
   onSelectRegulation,
   onRunAnalysis,
   hasRunAnalysis = false,
+  onNavigateToBob,
 }: RegulatoryDiffTabProps) {
   const metrics = analysis?.metrics || {
     total_findings: 2,
@@ -141,7 +143,7 @@ export default function RegulatoryDiffTab({
               <option value="">-- Pilih Regulasi Acuan (Terdahulu) --</option>
               {allRegulations.map((r) => (
                 <option key={`acuan-${getRegKey(r)}`} value={getRegKey(r)}>
-                  POJK {r.nomor}/{r.tahun || "-"} — {r.judul.length > 55 ? `${r.judul.slice(0, 55)}...` : r.judul}
+                  POJK {r.nomor.includes(r.tahun) ? r.nomor : `${r.nomor}/${r.tahun || "-"}`} — {r.judul.length > 55 ? `${r.judul.slice(0, 55)}...` : r.judul}
                 </option>
               ))}
             </select>
@@ -192,7 +194,7 @@ export default function RegulatoryDiffTab({
               <option value="">-- Pilih Regulasi Pembaruan (Terbaru) --</option>
               {allRegulations.map((r) => (
                 <option key={`pembaruan-${getRegKey(r)}`} value={getRegKey(r)}>
-                  POJK {r.nomor}/{r.tahun || "-"} — {r.judul.length > 55 ? `${r.judul.slice(0, 55)}...` : r.judul}
+                  POJK {r.nomor.includes(r.tahun) ? r.nomor : `${r.nomor}/${r.tahun || "-"}`} — {r.judul.length > 55 ? `${r.judul.slice(0, 55)}...` : r.judul}
                 </option>
               ))}
             </select>
@@ -248,7 +250,7 @@ export default function RegulatoryDiffTab({
             <div>
               <div className="flex items-center justify-between border-b border-[#DDD8CD] pb-2 mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#3C3A35]">
-                  Regulasi Acuan: POJK {selectedReference.nomor}
+                  Regulasi Acuan: POJK {selectedReference.nomor.includes(selectedReference.tahun) ? selectedReference.nomor : `${selectedReference.nomor}/${selectedReference.tahun || ""}`}
                 </span>
                 <span className="rounded bg-[#EFECE6] px-2 py-0.5 text-[10px] font-bold text-[#4A4843] border border-[#C8C2B5]">
                   Basis Terdahulu
@@ -258,7 +260,7 @@ export default function RegulatoryDiffTab({
               <div className="text-xs text-[#1A1917] space-y-2 leading-relaxed">
                 <div>
                   <strong className="text-sm font-bold text-[#111110]">
-                    POJK Nomor {selectedReference.nomor} {selectedReference.tahun ? `Tahun ${selectedReference.tahun}` : ""}
+                    POJK Nomor {selectedReference.nomor} {selectedReference.tahun && !selectedReference.nomor.includes(selectedReference.tahun) ? `Tahun ${selectedReference.tahun}` : ""}
                   </strong>
                   <div className="text-[#4A4843] line-clamp-2 mt-0.5 font-medium">
                     {selectedReference.judul}
@@ -336,7 +338,7 @@ export default function RegulatoryDiffTab({
             <div>
               <div className="flex items-center justify-between border-b border-[#DDD8CD] pb-2 mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#3C3A35]">
-                  Regulasi Pembaruan: POJK {selectedRegulation.nomor}/{selectedRegulation.tahun || ""}
+                  Regulasi Pembaruan: POJK {selectedRegulation.nomor.includes(selectedRegulation.tahun) ? selectedRegulation.nomor : `${selectedRegulation.nomor}/${selectedRegulation.tahun || ""}`}
                 </span>
                 <span className="rounded bg-[#E6F4EA] border border-[#A3D4B0] px-2 py-0.5 text-[10px] font-bold text-[#0F5C2B]">
                   {selectedRegulation.status || "Berlaku"}
@@ -346,7 +348,7 @@ export default function RegulatoryDiffTab({
               <div className="text-xs text-[#1A1917] space-y-2 leading-relaxed">
                 <div>
                   <strong className="text-sm font-bold text-[#111110]">
-                    POJK Nomor {selectedRegulation.nomor} {selectedRegulation.tahun ? `Tahun ${selectedRegulation.tahun}` : ""}
+                    POJK Nomor {selectedRegulation.nomor} {selectedRegulation.tahun && !selectedRegulation.nomor.includes(selectedRegulation.tahun) ? `Tahun ${selectedRegulation.tahun}` : ""}
                   </strong>
                   <div className="text-[#4A4843] line-clamp-2 mt-0.5 font-medium">
                     {selectedRegulation.judul}
@@ -426,7 +428,23 @@ export default function RegulatoryDiffTab({
       </div>
 
       {/* Conditionally Render Results Only After Analysis has been Run */}
-      {!hasRunAnalysis ? (
+      {loading ? (
+        <div className="rounded-md border border-[#A3D4B0] bg-[#E6F4EA] p-8 text-center space-y-4 shadow-sm">
+          <div className="flex justify-center">
+            <div className="h-10 w-10 rounded-full bg-[#FFFFFF] flex items-center justify-center text-[#0F5C2B] border border-[#A3D4B0] animate-spin">
+              <Play className="h-4 w-4 ml-0.5 text-[#0F5C2B]" />
+            </div>
+          </div>
+          <div className="space-y-1.5 max-w-md mx-auto">
+            <h3 className="text-sm font-bold text-[#0F5C2B]">
+              Pipeline Analisis Regulasi Sedang Berjalan...
+            </h3>
+            <p className="text-xs text-[#2D2C28] leading-relaxed">
+              Memeriksa cache SQLite, mengunduh dan mengekstrak berkas PDF dari JDIH OJK, memotong klausul per pasal, menyinkronkan vektor ChromaDB, dan mengevaluasi disparitas ketentuan statutori.
+            </p>
+          </div>
+        </div>
+      ) : !hasRunAnalysis ? (
         <div className="rounded-md border border-dashed border-[#DDD8CD] bg-[#FAF8F5] p-10 text-center space-y-3 shadow-sm">
           <div className="flex justify-center">
             <div className="h-10 w-10 rounded-full bg-[#EFECE6] flex items-center justify-center text-[#1A1917] border border-[#DDD8CD]">
@@ -466,6 +484,31 @@ export default function RegulatoryDiffTab({
                 <strong>POJK {selectedRegulation?.nomor || "Pembaruan"}{selectedRegulation?.tahun ? `/${selectedRegulation.tahun}` : ""}</strong>. Hasil telah
                 disinkronkan ke Tab 2 (IBM Bob) dan Tab 3 (Human Review).
               </p>
+            </div>
+          )}
+
+          {/* Pipeline Log Accordion */}
+          {analysis?.pipeline_log && analysis.pipeline_log.length > 0 && (
+            <div className="rounded-md border border-[#DDD8CD] bg-[#FDFCFB] p-3.5 text-xs shadow-xs">
+              <details className="group cursor-pointer">
+                <summary className="font-semibold text-[#3C3A35] flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-[#0F5C2B]"></span>
+                    Jejak Pipeline Eksekusi ({analysis.pipeline_log.length} langkah terselesaikan)
+                  </span>
+                  <span className="text-[11px] text-[#8C887B] group-open:rotate-180 transition-transform">▼</span>
+                </summary>
+                <div className="mt-2.5 pt-2 border-t border-[#DDD8CD] space-y-1.5 font-mono text-[11px] text-[#4A4843]">
+                  {analysis.pipeline_log.map((item, logIdx) => (
+                    <div key={logIdx} className="flex items-start gap-2">
+                      <span className="rounded bg-[#EFECE6] px-1.5 py-0.5 text-[10px] font-bold text-[#111110] uppercase">
+                        {item.step}
+                      </span>
+                      <span className="text-[#2D2C28]">{item.msg}</span>
+                    </div>
+                  ))}
+                </div>
+              </details>
             </div>
           )}
 
@@ -601,6 +644,18 @@ export default function RegulatoryDiffTab({
               ))
             )}
           </div>
+
+          {findings.length > 0 && onNavigateToBob && (
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={onNavigateToBob}
+                className="flex items-center space-x-2 rounded bg-[#1A1917] hover:bg-[#2D2C28] text-white px-5 py-2.5 text-xs font-bold transition-colors shadow-sm cursor-pointer"
+              >
+                <span>Lanjut ke Tab 2: Pemetaan Kode (IBM Bob)</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

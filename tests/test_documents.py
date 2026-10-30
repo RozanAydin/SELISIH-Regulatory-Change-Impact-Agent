@@ -7,6 +7,7 @@ import pytest
 from selisih.documents import (
     DocumentLoadError,
     clean_pojk_text,
+    extract_pdf_text_pdfplumber,
     infer_doc_id,
     load_document_text,
     split_by_pasal,
@@ -82,3 +83,22 @@ def test_extract_real_pojk_pdf_if_available():
     assert "NOMOR 8 TAHUN 2023" in text
     assert "Pasal 1" in text
     assert len(chunks) >= 80
+
+
+def test_split_by_pasal_case_insensitive():
+    chunks = split_by_pasal(
+        "Menimbang...\n\nPASAL 12\nIsi pasal dua belas.\n\nPasal 13A\nKetentuan tambahan.\n",
+        doc_id="POJK-TEST-UPPER",
+    )
+    assert len(chunks) == 2
+    assert chunks[0]["pasal"] == "Pasal 12"
+    assert chunks[1]["pasal"] == "Pasal 13A"
+
+
+def test_extract_pdf_text_pdfplumber_fallback_on_error(tmp_path):
+    dummy_pdf = tmp_path / "dummy.pdf"
+    dummy_pdf.write_bytes(b"%PDF-1.4 dummy corrupted")
+
+    with pytest.raises(DocumentLoadError):
+        extract_pdf_text_pdfplumber(str(dummy_pdf))
+

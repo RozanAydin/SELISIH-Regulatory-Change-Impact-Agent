@@ -28,6 +28,7 @@ from selisih import artifacts, auth, impact, ojk
 from selisih.config import get_langflow_config
 from selisih.documents import load_document_text
 from selisih.langflow import run_analysis, run_embedded_analysis
+from selisih.pipeline import run_full_pipeline
 from selisih.license import (
     get_license_state,
     get_company_profiles,
@@ -61,6 +62,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def startup_event():
+    """Memastikan MCP Server lokal aktif saat FastAPI menyala."""
+    try:
+        artifacts.ensure_mcp_server_running()
+    except Exception:
+        pass
 
 # In-memory & Persistent audit trail state
 AUDIT_FILE = os.path.join(DATA_DIR, "audit_trail.jsonl")
@@ -158,6 +168,8 @@ class AnalysisRunRequest(BaseModel):
     engine: Optional[str] = "embedded"  # 'embedded' atau 'rest'
     ojk_info: Optional[Dict[str, Any]] = None
     acuan_info: Optional[Dict[str, Any]] = None
+    company_id: Optional[str] = None
+    target_repo: Optional[str] = None
 
 
 class OjkAnalyzeRequest(BaseModel):
@@ -166,12 +178,15 @@ class OjkAnalyzeRequest(BaseModel):
     nomor: str
     tahun: str
     detail_url: Optional[str] = None
+    company_id: Optional[str] = None
+    target_repo: Optional[str] = None
 
 
 class PatchApplyRequest(BaseModel):
     reviewer_role: str = "Compliance Officer"
     reviewer_note: Optional[str] = "Persetujuan perubahan batasan kepatuhan POJK 22/2023."
     confirm: bool = True
+    selected_change_ids: Optional[List[str]] = None
 
 
 # ==========================================
@@ -214,7 +229,10 @@ def get_system_health():
         with urllib.request.urlopen(req, timeout=0.6) as resp:
             bob_connected = (resp.status == 200)
     except Exception:
-        bob_connected = False
+        try:
+            bob_connected = artifacts.ensure_mcp_server_running()
+        except Exception:
+            bob_connected = False
 
     return {
         "status": "healthy",
@@ -284,6 +302,38 @@ def select_company(req: SelectCompanyRequest):
     }
 
 
+class ClientLoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+@app.post("/api/auth/client-login")
+def client_login_endpoint(req: ClientLoginRequest):
+    """Autentikasi akun klien perusahaan: password dibuat sama dengan username."""
+    u = (req.username or "").strip().lower()
+    p = (req.password or "").strip()
+    if not u or not p:
+        raise HTTPException(status_code=400, detail="Username dan password wajib diisi.")
+    if u != p.lower():
+        raise HTTPException(
+            status_code=401,
+            detail="Kredensial tidak valid. Password harus sama dengan username.",
+        )
+
+    profiles = get_company_profiles()
+    target_id = "bank_digital"
+    for comp in profiles:
+        if comp["id"].lower() == u or comp["organization"].lower() == u:
+            target_id = comp["id"]
+            break
+
+    updated = set_active_company(target_id)
+    return {
+        "status": "success",
+        "company": updated,
+    }
+
+
 @app.post("/api/license/add-repo")
 def add_company_repo(req: AddRepoRequest, authorized_role: str = Depends(verify_compliance_role)):
     """Mendaftarkan repositori baru ke entitas perusahaan dengan validasi kuota."""
@@ -308,8 +358,8 @@ HISTORICAL_REGULATIONS: List[Dict[str, Any]] = [
         "jenis": "Peraturan OJK",
         "tanggal_berlaku": "28-12-2016",
         "status": "Diubah / Terdahulu",
-        "detail_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-77-2016",
-        "download_url": None,
+        "detail_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/DetailPeraturan/1748",
+        "download_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/DownloadFileRiwayat/1748",
         "fetched_at": datetime.now(timezone.utc).isoformat(),
     },
     {
@@ -322,8 +372,8 @@ HISTORICAL_REGULATIONS: List[Dict[str, Any]] = [
         "jenis": "Peraturan OJK",
         "tanggal_berlaku": "04-07-2022",
         "status": "Berlaku",
-        "detail_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-10-2022",
-        "download_url": None,
+        "detail_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/91b48459-4539-3f8d-d508-4377c0925d62/09/06",
+        "download_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/DownloadDokumen/55219e94-e8ff-3da1-b6a8-192cf4d5b114",
         "fetched_at": datetime.now(timezone.utc).isoformat(),
     },
     {
@@ -336,8 +386,8 @@ HISTORICAL_REGULATIONS: List[Dict[str, Any]] = [
         "jenis": "Peraturan OJK",
         "tanggal_berlaku": "20-12-2023",
         "status": "Berlaku",
-        "detail_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-22-2023",
-        "download_url": None,
+        "detail_url": "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/9e0724ba-dc51-cc94-da74-1a91af0201bb//06",
+        "download_url": "https://jdih.ojk.go.id/Download/1788/POJK-Nomor-22-Tahun-2023.pdf",
         "fetched_at": datetime.now(timezone.utc).isoformat(),
     },
 ]
@@ -384,6 +434,7 @@ def analyze_ojk_regulation(req: OjkAnalyzeRequest):
         "nomor": req.nomor,
         "tahun": req.tahun,
         "judul": req.judul,
+        "detail_url": req.detail_url,
         "doc_id": f"POJK-{req.nomor}-{req.tahun}" if req.tahun else f"POJK-{req.nomor}",
     }
     selected_acuan = {
@@ -394,33 +445,53 @@ def analyze_ojk_regulation(req: OjkAnalyzeRequest):
         "doc_id": "POJK-77-2016",
     }
 
-    # Tentukan teks regulasi
-    if req.nomor in ["22", "22/2023"] or "22" in req.judul:
-        text_target = load_document_text(POJK_BARU_FILE)
-    else:
-        text_target = f"PERATURAN OTORITAS JASA KEUANGAN NOMOR {req.nomor} TAHUN {req.tahun}\nTENTANG {req.judul}\n\n"
-        text_target += load_document_text(POJK_BARU_FILE)
-
-    text_acuan = load_document_text(POJK_LAMA_FILE)
-    findings = run_embedded_analysis(
-        text_target,
-        acuan_info=selected_acuan,
+    cfg = get_langflow_config()
+    pipeline_res = run_full_pipeline(
         ojk_info=selected_ojk,
-        acuan_text=text_acuan,
+        acuan_info=selected_acuan,
+        engine="embedded",
+        cfg=cfg,
     )
+    findings = pipeline_res["findings"]
+    text_target = pipeline_res["text_baru"]
+    text_acuan = pipeline_res["text_acuan"]
+    engine_name = pipeline_res["engine"]
+    pipeline_log = pipeline_res.get("pipeline_log", [])
+
+    # Ambil info perusahaan & repositori klien aktif
+    active_company_id = req.company_id or lic.get("id") or "bank_digital"
+    active_org = lic.get("organization") or "PT Bank Digital Nusantara"
+    active_repo = None
+    for r in lic.get("repositories", []):
+        if r.get("is_active"):
+            active_repo = r
+            break
+    if not active_repo and lic.get("repositories"):
+        active_repo = lic.get("repositories")[0]
+
+    target_repo_info = {
+        "id": active_repo.get("id", "repo-core") if active_repo else "repo-core",
+        "name": active_repo.get("name", "mock_fintech_repo") if active_repo else "mock_fintech_repo",
+        "path": req.target_repo or (active_repo.get("path") if active_repo else "mock_fintech_repo"),
+    }
 
     import hashlib
-    digest = hashlib.sha256(text_target.encode("utf-8")).hexdigest()
+    digest = hashlib.sha256(f"{text_acuan}::{text_target}".encode("utf-8")).hexdigest()
     saved_payload = {
         "analysis_meta": {
-            "engine": "Langflow Pipeline (ChromaDB Vector Store + watsonx Granite)",
+            "engine": engine_name,
             "model": "watsonx/Granite",
             "selected_acuan": selected_acuan,
             "selected_ojk": selected_ojk,
+            "company_id": active_company_id,
+            "organization": active_org,
+            "target_repository": target_repo_info,
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "provenance_checksum": f"sha256:{digest}",
+            "pipeline_sources": pipeline_res.get("sources", {}),
         },
         "findings": findings,
+        "pipeline_log": pipeline_log,
     }
     with open(LIVE_RESULT_FILE, "w", encoding="utf-8") as f:
         json.dump(saved_payload, f, ensure_ascii=False, indent=2)
@@ -436,6 +507,7 @@ def analyze_ojk_regulation(req: OjkAnalyzeRequest):
     return {
         "status": "success",
         "findings_count": len(findings),
+        "pipeline_log": pipeline_log,
         "data": saved_payload,
     }
 
@@ -467,6 +539,7 @@ def get_analysis_findings():
     return {
         "source": source,
         "analysis_meta": payload.get("analysis_meta", {}),
+        "pipeline_log": payload.get("pipeline_log", []),
         "metrics": {
             "total_findings": total,
             "valid_citations": valid,
@@ -501,41 +574,40 @@ def run_regulatory_analysis(req: AnalysisRunRequest):
         "doc_id": "POJK-22-2023",
     }
 
-    # Siapkan teks regulasi acuan
-    a_nomor = str(selected_acuan.get("nomor", ""))
-    a_id = str(selected_acuan.get("id", ""))
-    if a_nomor in ["77", "77/2016", "77/POJK.01/2016"] or "77" in a_nomor or "77" in a_id:
-        text_acuan = load_document_text(POJK_LAMA_FILE)
-    else:
-        text_acuan = f"PERATURAN OTORITAS JASA KEUANGAN NOMOR {a_nomor} TAHUN {selected_acuan.get('tahun', '')}\nTENTANG {selected_acuan.get('judul', '')}\n\n"
-        text_acuan += load_document_text(POJK_LAMA_FILE)
-
-    # Siapkan teks regulasi baru
-    if req.text_baru:
-        text_baru = req.text_baru
-    else:
-        b_nomor = str(selected_ojk.get("nomor", ""))
-        b_id = str(selected_ojk.get("id", ""))
-        if b_nomor in ["22", "22/2023"] or "22" in b_nomor or "22" in b_id:
-            text_baru = load_document_text(POJK_BARU_FILE)
-        else:
-            text_baru = f"PERATURAN OTORITAS JASA KEUANGAN NOMOR {b_nomor} TAHUN {selected_ojk.get('tahun', '')}\nTENTANG {selected_ojk.get('judul', '')}\n\n"
-            text_baru += load_document_text(POJK_BARU_FILE)
-
     cfg = get_langflow_config()
+    # Tentukan engine: otomatis gunakan 'rest' jika LANGFLOW_MODE=rest dan FLOW_ID terisi
+    engine_to_use = "rest" if (cfg.get("mode") == "rest" and cfg.get("flow_id")) else (req.engine or "embedded")
 
     try:
-        if req.engine == "rest" and cfg.get("flow_id"):
-            findings = run_analysis(text_baru, cfg)
-            engine_name = "Langflow REST API (watsonx Granite)"
-        else:
-            findings = run_embedded_analysis(
-                text_baru,
-                acuan_info=selected_acuan,
-                ojk_info=selected_ojk,
-                acuan_text=text_acuan,
-            )
-            engine_name = "Embedded Flow Engine (watsonx Granite Framework)"
+        pipeline_res = run_full_pipeline(
+            ojk_info=selected_ojk,
+            acuan_info=selected_acuan,
+            text_baru_override=req.text_baru,
+            engine=engine_to_use,
+            cfg=cfg,
+        )
+        findings = pipeline_res["findings"]
+        engine_name = pipeline_res["engine"]
+        text_acuan = pipeline_res["text_acuan"]
+        text_baru = pipeline_res["text_baru"]
+        pipeline_log = pipeline_res.get("pipeline_log", [])
+
+        # Ambil info perusahaan & repositori klien aktif
+        active_company_id = req.company_id or lic.get("id") or "bank_digital"
+        active_org = lic.get("organization") or "PT Bank Digital Nusantara"
+        active_repo = None
+        for r in lic.get("repositories", []):
+            if r.get("is_active"):
+                active_repo = r
+                break
+        if not active_repo and lic.get("repositories"):
+            active_repo = lic.get("repositories")[0]
+
+        target_repo_info = {
+            "id": active_repo.get("id", "repo-core") if active_repo else "repo-core",
+            "name": active_repo.get("name", "mock_fintech_repo") if active_repo else "mock_fintech_repo",
+            "path": req.target_repo or (active_repo.get("path") if active_repo else "mock_fintech_repo"),
+        }
 
         # Simpan ke data/temuan.json
         import hashlib
@@ -546,10 +618,15 @@ def run_regulatory_analysis(req: AnalysisRunRequest):
                 "model": "watsonx/Granite",
                 "selected_acuan": selected_acuan,
                 "selected_ojk": selected_ojk,
+                "company_id": active_company_id,
+                "organization": active_org,
+                "target_repository": target_repo_info,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "provenance_checksum": f"sha256:{digest}",
+                "pipeline_sources": pipeline_res.get("sources", {}),
             },
             "findings": findings,
+            "pipeline_log": pipeline_log,
         }
         with open(LIVE_RESULT_FILE, "w", encoding="utf-8") as f:
             json.dump(saved_payload, f, ensure_ascii=False, indent=2)
@@ -564,10 +641,23 @@ def run_regulatory_analysis(req: AnalysisRunRequest):
             "status": "success",
             "engine": engine_name,
             "findings_count": len(findings),
+            "pipeline_log": pipeline_log,
             "data": saved_payload,
         }
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+def _resolve_target_repo(payload: dict) -> str:
+    """Mengambil path absolut direktori repositori klien target dari metadata temuan."""
+    meta = payload.get("analysis_meta", {}) if isinstance(payload, dict) else {}
+    repo_info = meta.get("target_repository", {})
+    repo_path = repo_info.get("path")
+    if repo_path:
+        target_abs = os.path.abspath(repo_path) if os.path.isabs(repo_path) else os.path.normpath(os.path.join(BASE_DIR, repo_path))
+        if os.path.exists(target_abs):
+            return target_abs
+    return MOCK_REPO_DIR
 
 
 # ==========================================
@@ -580,19 +670,23 @@ async def stream_bob_agent():
     meta = payload.get("analysis_meta", {})
     selected_acuan = meta.get("selected_acuan", {})
     selected_ojk = meta.get("selected_ojk", {})
+    company_name = meta.get("organization") or meta.get("company_id") or "PT Bank Digital Nusantara"
+    target_repo_info = meta.get("target_repository", {})
+    target_repo_name = target_repo_info.get("name") or "mock_fintech_repo"
+    target_abs = _resolve_target_repo(payload)
 
     acuan_label = f"POJK {selected_acuan.get('nomor', '77/2016')}"
     pembaruan_label = f"POJK {selected_ojk.get('nomor', '22')}/{selected_ojk.get('tahun', '2023')}"
 
     findings = payload.get("findings", [])
-    records = impact.scan_impact(payload, MOCK_REPO_DIR)
+    records = impact.scan_impact(payload, target_abs)
     bob_info = artifacts.check_bob_status()
 
     bob_status = bob_info.get("status", "ready")
 
     async def event_generator():
         # 1. Inisialisasi
-        yield f"data: {json.dumps({'type': 'init', 'msg': f'[IBM Bob Shell] Memulai sesi interaktif agen AI di mock_fintech_repo (Bob Status: {bob_status})...'})}\n\n"
+        yield f"data: {json.dumps({'type': 'init', 'msg': f'[IBM Bob Shell] Memulai sesi interaktif agen AI untuk {company_name} di {target_repo_name} (Bob Status: {bob_status})...'})}\n\n"
         await asyncio.sleep(0.3)
 
         # 2. MCP Bridge
@@ -612,7 +706,7 @@ async def stream_bob_agent():
             await asyncio.sleep(0.35)
 
         # 5. Tool call scan_impact
-        yield f"data: {json.dumps({'type': 'tool_call', 'tool': 'scan_impact', 'msg': f'[Tool Call] scan_impact(target_repo=\"mock_fintech_repo\") -> Memindai kode sumber untuk kewajiban {pembaruan_label}...'})}\n\n"
+        yield f"data: {json.dumps({'type': 'tool_call', 'tool': 'scan_impact', 'msg': f'[Tool Call] scan_impact(target_repo=\"{target_repo_name}\") -> Memindai kode sumber untuk kewajiban {pembaruan_label}...'})}\n\n"
         await asyncio.sleep(0.3)
 
         # 6. Candidate matches found
@@ -629,8 +723,8 @@ async def stream_bob_agent():
         await asyncio.sleep(0.3)
 
         # Build real artifacts on disk
-        artifacts.ensure_mcp_config()
-        artifacts.build_artifacts_from_findings(findings, ARTIFACTS_DIR)
+        artifacts.ensure_mcp_config(target_abs)
+        artifacts.build_artifacts(payload, target_abs, ARTIFACTS_DIR)
 
         # 8. Success Handoff
         yield f"data: {json.dumps({'type': 'success', 'msg': f'[Handoff Selesai] {len(records)} baris kode siap ditinjau secara human-in-the-loop di Tab 3.'})}\n\n"
@@ -667,18 +761,48 @@ def get_bob_artifacts():
     return {"artifacts": items}
 
 
+@app.post("/api/bob/launch-desktop")
+def launch_bob_desktop():
+    """Meluncurkan aplikasi IBM Bob Desktop langsung pada repositori aktif."""
+    payload, _ = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
+    target_abs = _resolve_target_repo(payload)
+    artifacts.ensure_mcp_config(target_abs)
+    result = artifacts.launch_ide(target_abs)
+    return result
+
+
 # ==========================================
 # ENDPOINT PEMETAAN DAMPAK & SAFE PATCHING (TAB 3)
 # ==========================================
 @app.get("/api/impact/scan")
 def get_impact_scan():
-    """Memindai kandidat dampak kode nyata di mock_fintech_repo."""
+    """Memindai kandidat dampak kode nyata di repositori aktif (memprioritaskan artefak Bob jika ada)."""
     payload, source = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
-    records = impact.scan_impact(payload, MOCK_REPO_DIR)
+    target_abs = _resolve_target_repo(payload)
+
+    # Prioritaskan membaca artefak resmi impact_report.json dari IBM Bob jika tersedia
+    artifact_path = os.path.join(ARTIFACTS_DIR, "impact_report.json")
+    from_artifact = False
+    records = None
+    if os.path.isfile(artifact_path):
+        try:
+            with open(artifact_path, "r", encoding="utf-8") as f:
+                report_data = json.load(f)
+            if "records" in report_data and isinstance(report_data["records"], list):
+                records = report_data["records"]
+                from_artifact = True
+        except Exception:
+            records = None
+
+    if records is None:
+        records = impact.scan_impact(payload, target_abs)
+
     return {
         "source": source,
+        "from_artifact": from_artifact,
         "records_count": len(records),
         "records": records,
+        "target_repo": target_abs,
     }
 
 
@@ -686,12 +810,14 @@ def get_impact_scan():
 def get_patch_dry_run():
     """Melakukan uji coba (dry-run) penerapan patch tanpa menulis ke disk."""
     payload, _ = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
-    records = impact.scan_impact(payload, MOCK_REPO_DIR)
+    target_abs = _resolve_target_repo(payload)
+    records = impact.scan_impact(payload, target_abs)
     results = impact.apply_patch(records, dry_run=True)
     return {
         "dry_run": True,
         "results": results,
         "records_count": len(records),
+        "target_repo": target_abs,
     }
 
 
@@ -703,8 +829,9 @@ def apply_patch(req: PatchApplyRequest, authorized_role: str = Depends(verify_co
         raise HTTPException(status_code=403, detail=f"Aksi diblokir oleh lisensi: {lic['message']}")
 
     payload, _ = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
-    records = impact.scan_impact(payload, MOCK_REPO_DIR)
-    results = impact.apply_patch(records, dry_run=not req.confirm)
+    target_abs = _resolve_target_repo(payload)
+    records = impact.scan_impact(payload, target_abs)
+    results = impact.apply_patch(records, dry_run=not req.confirm, allowed_change_ids=req.selected_change_ids)
 
     applied_count = sum(1 for r in results if r.get("status") == "applied")
     backups = [r.get("backup_path") for r in results if r.get("backup_path")]
@@ -713,7 +840,7 @@ def apply_patch(req: PatchApplyRequest, authorized_role: str = Depends(verify_co
     log_audit_event(
         action="APPLY_COMPLIANCE_PATCH",
         actor=req.reviewer_role or authorized_role,
-        details=f"Patch kepatuhan diterapkan pada {applied_count} berkas oleh {req.reviewer_role or authorized_role}.",
+        details=f"Patch kepatuhan diterapkan pada {applied_count} berkas oleh {req.reviewer_role or authorized_role} di {os.path.basename(target_abs)}.",
         note=req.reviewer_note,
         backups=backups,
     )
@@ -722,18 +849,77 @@ def apply_patch(req: PatchApplyRequest, authorized_role: str = Depends(verify_co
         "success": True,
         "applied_count": applied_count,
         "results": results,
+        "target_repo": target_abs,
     }
+
+
+@app.get("/api/impact/compliance-report")
+def get_compliance_report():
+    """Menghasilkan dokumen resmi Berita Acara Kepatuhan (Compliance Sign-off) untuk audit OJK."""
+    payload, source = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
+    meta = payload.get("analysis_meta", {})
+    target_abs = _resolve_target_repo(payload)
+    records = impact.scan_impact(payload, target_abs)
+
+    recent_audit = None
+    for log in reversed(_AUDIT_LOGS):
+        if log.get("action") == "APPLY_COMPLIANCE_PATCH":
+            recent_audit = log
+            break
+
+    selected_acuan = meta.get("selected_acuan", {})
+    selected_ojk = meta.get("selected_ojk", {})
+    company_info = meta.get("organization") or "PT Bank Digital Nusantara"
+    repo_info = meta.get("target_repository", {})
+
+    report_id = f"CERT-OJK-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{abs(hash(meta.get('provenance_checksum', ''))) % 100000:05d}"
+
+    applied_records = [r for r in records if r.get("status") in ("applied", "already_or_no_match")]
+    patchable_records = [r for r in records if r.get("status") == "patchable"]
+    policy_records = [r for r in records if r.get("category") == "policy_action_required"]
+
+    certificate = {
+        "report_id": report_id,
+        "title": "BERITA ACARA & SERTIFIKASI KEPATUHAN STATUTORI OJK",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "organization": company_info,
+        "target_repository": repo_info.get("name") or os.path.basename(target_abs),
+        "target_path": target_abs,
+        "regulations": {
+            "acuan": f"POJK {selected_acuan.get('nomor', '77/2016')}",
+            "pembaruan": f"POJK {selected_ojk.get('nomor', '22')}/{selected_ojk.get('tahun', '2023')}",
+            "judul_pembaruan": selected_ojk.get("judul", "Pelindungan Konsumen Sektor Jasa Keuangan"),
+        },
+        "governance_signoff": {
+            "reviewer_role": recent_audit.get("actor", "Compliance Officer") if recent_audit else "Compliance Officer",
+            "reviewer_note": recent_audit.get("note", "Persetujuan pembaruan kepatuhan regulasi.") if recent_audit else "Menunggu persetujuan resmi",
+            "signed_at": recent_audit.get("timestamp") if recent_audit else None,
+            "provenance_checksum": meta.get("provenance_checksum", "sha256:verified"),
+            "status": "APPROVED_AND_PATCHED" if recent_audit else "PENDING_REVIEW",
+        },
+        "summary": {
+            "total_findings": len(records),
+            "code_patches_applied": len(applied_records),
+            "code_patches_pending": len(patchable_records),
+            "policy_action_items": len(policy_records),
+        },
+        "applied_patches": applied_records,
+        "policy_actions": policy_records,
+    }
+    return certificate
 
 
 @app.post("/api/impact/rollback")
 def rollback_compliance_patch(authorized_role: str = Depends(verify_compliance_role)):
     """Mengembalikan berkas repositori mock ke cadangan .bak terbaru."""
-    res = impact.rollback_last_backup(MOCK_REPO_DIR)
+    payload, _ = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
+    target_abs = _resolve_target_repo(payload)
+    res = impact.rollback_last_backup(target_abs)
     if res.get("status") == "success":
         log_audit_event(
             action="ROLLBACK_COMPLIANCE_PATCH",
             actor=authorized_role,
-            details=f"Memulihkan {res.get('count', 0)} berkas dari salinan cadangan (.bak) terbaru.",
+            details=f"Memulihkan {res.get('count', 0)} berkas dari salinan cadangan (.bak) terbaru di {os.path.basename(target_abs)}.",
             restored=res.get("restored", []),
         )
     return res
@@ -742,9 +928,32 @@ def rollback_compliance_patch(authorized_role: str = Depends(verify_compliance_r
 
 @app.post("/api/impact/test")
 def run_repo_tests():
-    """Menjalankan unit test repositori (pytest mock_fintech_repo/tests)."""
-    res = impact.run_pytest(MOCK_REPO_DIR, "tests")
+    """Menjalankan unit test repositori dan verifikasi berkas generated_tests.py."""
+    payload, _ = impact.load_findings(LIVE_RESULT_FILE, GOLDEN_PATH_FILE)
+    target_abs = _resolve_target_repo(payload)
+    
+    test_target = "tests" if os.path.exists(os.path.join(target_abs, "tests")) else "."
+    res = impact.run_pytest(target_abs, test_target)
     res["code"] = res.get("returncode", 0)
+
+    gen_test = os.path.join(ARTIFACTS_DIR, "generated_tests.py")
+    if os.path.isfile(gen_test):
+        try:
+            gen_res = subprocess.run(
+                [sys.executable, "-m", "pytest", gen_test, "-q"],
+                capture_output=True, text=True, timeout=30
+            )
+            res["generated_tests"] = {
+                "returncode": gen_res.returncode,
+                "stdout": gen_res.stdout,
+                "stderr": gen_res.stderr,
+                "passed": gen_res.returncode == 0,
+            }
+            if gen_res.returncode == 0:
+                res["stdout"] = (res.get("stdout") or "") + "\n[SELISIH Compliance Test] artifacts/generated_tests.py: LULUS PENGUJIAN.\n"
+        except Exception as e:
+            res["generated_tests"] = {"error": str(e)}
+
     return res
 
 

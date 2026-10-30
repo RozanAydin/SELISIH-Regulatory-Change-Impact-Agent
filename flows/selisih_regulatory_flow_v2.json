@@ -1,0 +1,488 @@
+{
+  "name": "SELISIH — Regulatory Diff Pipeline (Lengkap 5 Node)",
+  "description": "Pipeline analisis regulasi kepatuhan OJK lengkap 5 node untuk Langflow v1.12.5: TextInput -> Chroma -> Prompt Template -> Google Generative AI (Gemini 1.5 Flash) -> Chat Output.",
+  "endpoint_name": "selisih-regulatory-diff",
+  "data": {
+    "nodes": [
+      {
+        "id": "TextInput-001",
+        "type": "genericNode",
+        "position": {
+          "x": 80,
+          "y": 200
+        },
+        "data": {
+          "id": "TextInput-001",
+          "type": "TextInput",
+          "showNode": true,
+          "node": {
+            "display_name": "Target Regulation Query",
+            "description": "Menerima parameter regulasi pembaruan OJK dari dashboard SELISIH.",
+            "documentation": "https://docs.langflow.org",
+            "icon": "Type",
+            "base_classes": ["Message", "str"],
+            "metadata": {
+              "module": "lfx.components.input_output.text.TextInput"
+            },
+            "field_order": ["input_value"],
+            "outputs": [
+              {
+                "name": "text",
+                "display_name": "Text",
+                "types": ["Message", "str"],
+                "selected": "Message",
+                "method": "text_response",
+                "tool_mode": true,
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "template": {
+              "_type": "Component",
+              "input_value": {
+                "_input_type": "MultilineInput",
+                "name": "input_value",
+                "display_name": "Input Text",
+                "type": "str",
+                "value": "POJK Nomor 22 Tahun 2023 vs POJK Nomor 77 Tahun 2016",
+                "info": "Teks parameter regulasi yang akan dianalisis.",
+                "multiline": true,
+                "show": true,
+                "required": false,
+                "input_types": []
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "Chroma-001",
+        "type": "genericNode",
+        "position": {
+          "x": 480,
+          "y": 80
+        },
+        "data": {
+          "id": "Chroma-001",
+          "type": "Chroma",
+          "showNode": true,
+          "node": {
+            "display_name": "Chroma (Regulasi Acuan)",
+            "description": "Penyimpanan vektor lokal klausul POJK acuan di folder data/chroma_db/.",
+            "documentation": "https://docs.langflow.org",
+            "icon": "Chroma",
+            "base_classes": ["VectorStore", "Data"],
+            "metadata": {
+              "module": "lfx.components.vectorstores.chroma.Chroma"
+            },
+            "field_order": [
+              "collection_name",
+              "persist_directory",
+              "search_type",
+              "number_of_results",
+              "search_query"
+            ],
+            "outputs": [
+              {
+                "name": "search_results",
+                "display_name": "Search Results",
+                "types": ["Data", "Message", "str"],
+                "selected": "Data",
+                "method": "search_documents",
+                "tool_mode": true,
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "template": {
+              "_type": "Component",
+              "collection_name": {
+                "name": "collection_name",
+                "display_name": "Collection Name",
+                "type": "str",
+                "value": "pojk_regulatory_idx",
+                "show": true,
+                "required": true
+              },
+              "persist_directory": {
+                "name": "persist_directory",
+                "display_name": "Persist Directory",
+                "type": "str",
+                "value": "./data/chroma_db",
+                "show": true,
+                "required": true
+              },
+              "search_type": {
+                "name": "search_type",
+                "display_name": "Search Type",
+                "type": "str",
+                "value": "similarity",
+                "show": true,
+                "required": true
+              },
+              "number_of_results": {
+                "name": "number_of_results",
+                "display_name": "Number of Results",
+                "type": "int",
+                "value": 6,
+                "show": true,
+                "required": false
+              },
+              "search_query": {
+                "name": "search_query",
+                "display_name": "Search Query",
+                "type": "str",
+                "value": "",
+                "show": true,
+                "required": false,
+                "input_types": ["Message", "str"]
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "PromptTemplate-001",
+        "type": "genericNode",
+        "position": {
+          "x": 880,
+          "y": 180
+        },
+        "data": {
+          "id": "PromptTemplate-001",
+          "type": "Prompt Template",
+          "showNode": true,
+          "node": {
+            "display_name": "Prompt Template Auditor OJK",
+            "description": "Menyusun perbandingan statutori kepatuhan regulasi OJK dengan variabel dinamis.",
+            "documentation": "https://docs.langflow.org/components-prompts",
+            "icon": "prompts",
+            "base_classes": ["Message"],
+            "custom_fields": {
+              "template": [
+                "regulasi_target",
+                "context"
+              ]
+            },
+            "field_order": [
+              "template",
+              "use_double_brackets",
+              "regulasi_target",
+              "context"
+            ],
+            "outputs": [
+              {
+                "name": "prompt",
+                "display_name": "Prompt Terformat",
+                "types": ["Message"],
+                "selected": "Message",
+                "method": "build_prompt",
+                "tool_mode": true,
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "template": {
+              "_type": "Component",
+              "code": {
+                "advanced": true,
+                "api_editable": false,
+                "dynamic": true,
+                "fileTypes": [],
+                "file_path": "",
+                "info": "",
+                "list": false,
+                "load_from_db": false,
+                "multiline": true,
+                "name": "code",
+                "password": false,
+                "placeholder": "",
+                "required": true,
+                "show": true,
+                "title_case": false,
+                "type": "code",
+                "value": "from typing import Any\n\nfrom lfx.base.prompts.api_utils import process_prompt_template\nfrom lfx.custom.custom_component.component import Component\nfrom lfx.inputs.input_mixin import FieldTypes\nfrom lfx.inputs.inputs import DefaultPromptField\nfrom lfx.io import BoolInput, MessageTextInput, Output, PromptInput\nfrom lfx.log.logger import logger\nfrom lfx.schema.dotdict import dotdict\nfrom lfx.schema.message import Message\nfrom lfx.template.utils import update_template_values\nfrom lfx.utils.mustache_security import validate_mustache_template\n\n\nclass PromptComponent(Component):\n    display_name: str = \"Prompt Template\"\n    description: str = \"Create a prompt template with dynamic variables.\"\n    documentation: str = \"https://docs.langflow.org/components-prompts\"\n    icon = \"prompts\"\n    trace_type = \"prompt\"\n    name = \"Prompt Template\"\n\n    inputs = [\n        PromptInput(name=\"template\", display_name=\"Template\"),\n        BoolInput(\n            name=\"use_double_brackets\",\n            display_name=\"Use Double Brackets\",\n            value=False,\n            advanced=True,\n            info=\"Use {{variable}} syntax instead of {variable}.\",\n            real_time_refresh=True,\n        ),\n    ]\n\n    outputs = [\n        Output(display_name=\"Prompt\", name=\"prompt\", method=\"build_prompt\"),\n    ]\n\n    async def build_prompt(self) -> Message:\n        use_double_brackets = self.use_double_brackets if hasattr(self, \"use_double_brackets\") else False\n        template_format = \"mustache\" if use_double_brackets else \"f-string\"\n        prompt = await Message.from_template_and_variables(template_format=template_format, **self._attributes)\n        self.status = prompt.text\n        return prompt\n"
+              },
+              "template": {
+                "_input_type": "PromptInput",
+                "name": "template",
+                "display_name": "Template Instruksi",
+                "type": "prompt",
+                "value": "Anda adalah Auditor Kepatuhan Regulasi Finansial OJK.\nTugas Anda adalah menganalisis disparitas batasan statutori antara regulasi acuan dan regulasi pembaruan.\n\nKonteks Klausul Regulasi Acuan:\n{context}\n\nParameter Regulasi Target:\n{regulasi_target}\n\nInstruksi Analisis:\n1. Identifikasi perbedaan angka batasan statutori (plafon pinjaman, suku bunga harian, batas modal).\n2. Validasi sitasi pasal secara presisi sesuai teks asli.\n3. Hasilkan output HANYA JSON valid sesuai skema temuan:\n{\n  \"findings\": [\n    {\n      \"change_id\": \"CHG-001\",\n      \"jenis_perubahan\": \"modifikasi\",\n      \"pasal_baru\": {\"doc_id\": \"POJK-22-2023\", \"pasal\": \"Pasal 19\", \"ayat\": \"1\", \"kutipan\": \"...\"},\n      \"pasal_lama\": {\"doc_id\": \"POJK-77-2016\", \"pasal\": \"Pasal 8\", \"ayat\": \"2\", \"kutipan\": \"...\"},\n      \"ringkasan\": \"Perubahan batasan plafon pinjaman statutori.\",\n      \"sitasi_valid\": true,\n      \"confidence\": \"tinggi\"\n    }\n  ]\n}",
+                "show": true,
+                "required": false
+              },
+              "use_double_brackets": {
+                "_input_type": "BoolInput",
+                "name": "use_double_brackets",
+                "display_name": "Use Double Brackets",
+                "type": "bool",
+                "value": false,
+                "show": true,
+                "advanced": true
+              },
+              "regulasi_target": {
+                "name": "regulasi_target",
+                "display_name": "regulasi_target",
+                "field_type": "str",
+                "type": "str",
+                "value": "",
+                "multiline": true,
+                "show": true,
+                "required": false,
+                "advanced": false,
+                "input_types": ["Message", "str"]
+              },
+              "context": {
+                "name": "context",
+                "display_name": "context (Klausul Acuan)",
+                "field_type": "str",
+                "type": "str",
+                "value": "POJK 77/2016 Pasal 8 ayat (2): Batas maksimum total pemberian pinjaman dana adalah sebesar Rp 20.000.000,00. Suku bunga harian maksimum 0,4% per hari.",
+                "multiline": true,
+                "show": true,
+                "required": false,
+                "advanced": false,
+                "input_types": ["Data", "Message", "str"]
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "GoogleGenerativeAI-001",
+        "type": "genericNode",
+        "position": {
+          "x": 1340,
+          "y": 180
+        },
+        "data": {
+          "id": "GoogleGenerativeAI-001",
+          "type": "GoogleGenerativeAIModel",
+          "showNode": true,
+          "node": {
+            "display_name": "Google Generative AI (Gemini)",
+            "description": "Model fondasi Google Gemini (gemini-1.5-flash) untuk komparasi kepatuhan deterministik.",
+            "documentation": "https://ai.google.dev",
+            "icon": "GoogleGenerativeAI",
+            "base_classes": ["LanguageModel", "Message"],
+            "metadata": {
+              "module": "lfx.components.models.google_generative_ai.GoogleGenerativeAIModel"
+            },
+            "field_order": [
+              "model_name",
+              "google_api_key",
+              "temperature",
+              "input_value"
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "display_name": "Text Output",
+                "types": ["Message", "str"],
+                "selected": "Message",
+                "method": "generate_response",
+                "tool_mode": true,
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "template": {
+              "_type": "Component",
+              "model_name": {
+                "name": "model_name",
+                "display_name": "Model Name",
+                "type": "str",
+                "value": "gemini-1.5-flash",
+                "show": true,
+                "required": true
+              },
+              "google_api_key": {
+                "name": "google_api_key",
+                "display_name": "Google API Key",
+                "type": "str",
+                "value": "",
+                "password": true,
+                "show": true,
+                "required": true
+              },
+              "temperature": {
+                "name": "temperature",
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.0,
+                "show": true,
+                "required": false
+              },
+              "input_value": {
+                "name": "input_value",
+                "display_name": "Input Prompt",
+                "type": "str",
+                "value": "",
+                "show": true,
+                "required": false,
+                "input_types": ["Message", "Prompt", "str"]
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-001",
+        "type": "genericNode",
+        "position": {
+          "x": 1760,
+          "y": 180
+        },
+        "data": {
+          "id": "ChatOutput-001",
+          "type": "ChatOutput",
+          "showNode": true,
+          "node": {
+            "display_name": "Chat Output (Hasil Temuan JSON)",
+            "description": "Menampilkan keluaran JSON temuan kepatuhan OJK.",
+            "documentation": "https://docs.langflow.org/chat-input-and-output",
+            "icon": "MessagesSquare",
+            "base_classes": ["Message"],
+            "metadata": {
+              "module": "lfx.components.input_output.chat.ChatOutput"
+            },
+            "field_order": ["input_value"],
+            "outputs": [
+              {
+                "name": "message",
+                "display_name": "Chat Message",
+                "types": ["Message"],
+                "selected": "Message",
+                "method": "message_response",
+                "tool_mode": true,
+                "value": "__UNDEFINED__"
+              }
+            ],
+            "template": {
+              "_type": "Component",
+              "input_value": {
+                "name": "input_value",
+                "display_name": "Input Message",
+                "type": "str",
+                "value": "",
+                "show": true,
+                "required": false,
+                "input_types": ["Message", "str"]
+              }
+            }
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__TextInput-001{œdataTypeœ:œTextInputœ,œidœ:œTextInput-001œ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ,œstrœ]}-Chroma-001{œfieldNameœ:œsearch_queryœ,œidœ:œChroma-001œ,œinputTypesœ:[œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "source": "TextInput-001",
+        "target": "Chroma-001",
+        "sourceHandle": "{œdataTypeœ:œTextInputœ,œidœ:œTextInput-001œ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ,œstrœ]}",
+        "targetHandle": "{œfieldNameœ:œsearch_queryœ,œidœ:œChroma-001œ,œinputTypesœ:[œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "data": {
+          "sourceHandle": {
+            "dataType": "TextInput",
+            "id": "TextInput-001",
+            "name": "text",
+            "output_types": ["Message", "str"]
+          },
+          "targetHandle": {
+            "fieldName": "search_query",
+            "id": "Chroma-001",
+            "inputTypes": ["Message", "str"],
+            "type": "str"
+          }
+        }
+      },
+      {
+        "id": "xy-edge__TextInput-001{œdataTypeœ:œTextInputœ,œidœ:œTextInput-001œ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ,œstrœ]}-PromptTemplate-001{œfieldNameœ:œregulasi_targetœ,œidœ:œPromptTemplate-001œ,œinputTypesœ:[œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "source": "TextInput-001",
+        "target": "PromptTemplate-001",
+        "sourceHandle": "{œdataTypeœ:œTextInputœ,œidœ:œTextInput-001œ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ,œstrœ]}",
+        "targetHandle": "{œfieldNameœ:œregulasi_targetœ,œidœ:œPromptTemplate-001œ,œinputTypesœ:[œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "data": {
+          "sourceHandle": {
+            "dataType": "TextInput",
+            "id": "TextInput-001",
+            "name": "text",
+            "output_types": ["Message", "str"]
+          },
+          "targetHandle": {
+            "fieldName": "regulasi_target",
+            "id": "PromptTemplate-001",
+            "inputTypes": ["Message", "str"],
+            "type": "str"
+          }
+        }
+      },
+      {
+        "id": "xy-edge__Chroma-001{œdataTypeœ:œChromaœ,œidœ:œChroma-001œ,œnameœ:œsearch_resultsœ,œoutput_typesœ:[œDataœ,œMessageœ,œstrœ]}-PromptTemplate-001{œfieldNameœ:œcontextœ,œidœ:œPromptTemplate-001œ,œinputTypesœ:[œDataœ,œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "source": "Chroma-001",
+        "target": "PromptTemplate-001",
+        "sourceHandle": "{œdataTypeœ:œChromaœ,œidœ:œChroma-001œ,œnameœ:œsearch_resultsœ,œoutput_typesœ:[œDataœ,œMessageœ,œstrœ]}",
+        "targetHandle": "{œfieldNameœ:œcontextœ,œidœ:œPromptTemplate-001œ,œinputTypesœ:[œDataœ,œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "data": {
+          "sourceHandle": {
+            "dataType": "Chroma",
+            "id": "Chroma-001",
+            "name": "search_results",
+            "output_types": ["Data", "Message", "str"]
+          },
+          "targetHandle": {
+            "fieldName": "context",
+            "id": "PromptTemplate-001",
+            "inputTypes": ["Data", "Message", "str"],
+            "type": "str"
+          }
+        }
+      },
+      {
+        "id": "xy-edge__PromptTemplate-001{œdataTypeœ:œPrompt Templateœ,œidœ:œPromptTemplate-001œ,œnameœ:œpromptœ,œoutput_typesœ:[œMessageœ]}-GoogleGenerativeAI-001{œfieldNameœ:œinput_valueœ,œidœ:œGoogleGenerativeAI-001œ,œinputTypesœ:[œMessageœ,œPromptœ,œstrœ],œtypeœ:œstrœ}",
+        "source": "PromptTemplate-001",
+        "target": "GoogleGenerativeAI-001",
+        "sourceHandle": "{œdataTypeœ:œPrompt Templateœ,œidœ:œPromptTemplate-001œ,œnameœ:œpromptœ,œoutput_typesœ:[œMessageœ]}",
+        "targetHandle": "{œfieldNameœ:œinput_valueœ,œidœ:œGoogleGenerativeAI-001œ,œinputTypesœ:[œMessageœ,œPromptœ,œstrœ],œtypeœ:œstrœ}",
+        "data": {
+          "sourceHandle": {
+            "dataType": "Prompt Template",
+            "id": "PromptTemplate-001",
+            "name": "prompt",
+            "output_types": ["Message"]
+          },
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "GoogleGenerativeAI-001",
+            "inputTypes": ["Message", "Prompt", "str"],
+            "type": "str"
+          }
+        }
+      },
+      {
+        "id": "xy-edge__GoogleGenerativeAI-001{œdataTypeœ:œGoogleGenerativeAIModelœ,œidœ:œGoogleGenerativeAI-001œ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ,œstrœ]}-ChatOutput-001{œfieldNameœ:œinput_valueœ,œidœ:œChatOutput-001œ,œinputTypesœ:[œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "source": "GoogleGenerativeAI-001",
+        "target": "ChatOutput-001",
+        "sourceHandle": "{œdataTypeœ:œGoogleGenerativeAIModelœ,œidœ:œGoogleGenerativeAI-001œ,œnameœ:œtextœ,œoutput_typesœ:[œMessageœ,œstrœ]}",
+        "targetHandle": "{œfieldNameœ:œinput_valueœ,œidœ:œChatOutput-001œ,œinputTypesœ:[œMessageœ,œstrœ],œtypeœ:œstrœ}",
+        "data": {
+          "sourceHandle": {
+            "dataType": "GoogleGenerativeAIModel",
+            "id": "GoogleGenerativeAI-001",
+            "name": "text",
+            "output_types": ["Message", "str"]
+          },
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "ChatOutput-001",
+            "inputTypes": ["Message", "str"],
+            "type": "str"
+          }
+        }
+      }
+    ],
+    "viewport": {
+      "x": 40,
+      "y": 60,
+      "zoom": 0.75
+    }
+  },
+  "last_tested_version": "1.12.5"
+}

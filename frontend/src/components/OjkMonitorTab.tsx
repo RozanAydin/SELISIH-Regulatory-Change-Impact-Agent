@@ -123,7 +123,7 @@ export default function OjkMonitorTab({
                 filtered.map((reg) => (
                   <tr key={reg.id} className="hover:bg-[#F8F7F4] transition-colors">
                     <td className="px-4 py-3 font-bold text-[#111110] whitespace-nowrap">
-                      POJK {reg.nomor}/{reg.tahun || "-"}
+                      POJK {reg.nomor.includes(reg.tahun) ? reg.nomor : `${reg.nomor}/${reg.tahun || "-"}`}
                     </td>
                     <td className="px-4 py-3 text-[#1A1917] max-w-md">
                       <div className="line-clamp-2 font-medium">{reg.judul}</div>
@@ -159,6 +159,17 @@ export default function OjkMonitorTab({
                             title="Buka Halaman Resmi JDIH OJK"
                           >
                             <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        {reg.download_url && (
+                          <a
+                            href={reg.download_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded p-1.5 text-[#0f62fe] hover:text-[#0043ce] hover:bg-[#EBF3FB]"
+                            title="Unduh Berkas PDF Asli OJK"
+                          >
+                            <Download className="h-3.5 w-3.5" />
                           </a>
                         )}
                         <button

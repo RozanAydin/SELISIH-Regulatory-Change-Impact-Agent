@@ -42,3 +42,34 @@ def test_ingest_and_query_reference_pojk():
     assert len(matches) >= 1
     assert matches[0]["pasal"] == "Pasal 8"
     assert "POJK-77-2016" in matches[0]["doc_id"]
+
+
+def test_ingest_regulation_dynamic():
+    text = (
+        "Pasal 10\n(1) Batas modal disetor minimal Rp 25.000.000.000.\n"
+        "\nPasal 11\n(1) Tata kelola manajemen risiko wajib dipatuhi.\n"
+    )
+    reg_info = {
+        "id": "pojk-10-2022",
+        "nomor": "10/POJK.05/2022",
+        "tahun": "2022",
+        "doc_id": "POJK-10-2022",
+    }
+    col_name = "test_dynamic_col"
+    count = vector_store.ingest_regulation_dynamic(
+        text=text,
+        reg_info=reg_info,
+        collection_name=col_name,
+        force=True,
+    )
+    assert count >= 2
+
+    # Query matching clause
+    matches = vector_store.query_reference_clauses(
+        "modal disetor minimal",
+        n_results=1,
+        collection_name=col_name,
+    )
+    assert len(matches) >= 1
+    assert "Pasal 10" in matches[0]["full_text"]
+

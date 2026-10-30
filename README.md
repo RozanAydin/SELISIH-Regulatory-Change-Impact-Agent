@@ -38,10 +38,11 @@ flowchart TD
 Platform SELISIH beroperasi dengan arsitektur web modern mandiri:
 1. **Frontend**: Next.js 15 (React 19, TypeScript, Tailwind CSS, Lucide Icons) di port `3000`.
 2. **Backend**: FastAPI REST & Server-Sent Events (SSE) Streaming di port `8000` (`api.py`).
-3. **Pipeline Orchestrator**: Langflow REST API (`http://localhost:7860`) & Embedded Flow Engine (`flows/selisih_regulatory_flow.json`).
-4. **LLM Engine**: IBM watsonx Granite (`ibm/granite-13b-chat-v2`) untuk diferensiasi regulasi & verifikasi sitasi anti-halusinasi.
+3. **Pipeline Orchestrator**: Langflow REST API (`http://localhost:7860`), Embedded Flow Engine (`flows/selisih_regulatory_flow.json`), serta Flow Visual v2 (`flows/selisih_regulatory_flow_v2.json`) untuk antarmuka Langflow 1.12.5.
+4. **LLM Engine**: IBM watsonx Granite (`ibm/granite-13b-chat-v2`) untuk diferensiasi regulasi & verifikasi sitasi anti-halusinasi (didukung pula Google Gemini 1.5 Flash pada flow v2).
 5. **Local MCP Server**: Python stdlib JSON-RPC dual-pintu di port `8765` untuk integrasi IDE IBM Bob.
 6. **Vector Store**: ChromaDB lokal offline di `data/chroma_db/` tanpa ketergantungan cloud.
+7. **Gerbang Masuk Klien B2B**: Autentikasi multi-tier terpadu (Enterprise, Professional, Starter) dengan login instan 1-klik (`LoginPage.tsx`).
 
 ---
 
@@ -78,6 +79,18 @@ Skrip ini akan secara otomatis:
 
 ---
 
+## Gerbang Masuk Klien Enterprise (B2B Multi-Client)
+
+Platform SELISIH dilengkapi gerbang masuk terpadu (`LoginPage.tsx`) yang mensimulasikan lingkungan B2B multi-perusahaan:
+- **3 Pilihan Paket Klien (1-Click Instant Access)**:
+  - **PT Bank Digital Nusantara (Enterprise Plan)**: Kuota 3 repositori aktif tanpa batas, akses penuh patch.
+  - **PT Dana Mandiri Fintech (Professional Plan)**: Kuota 25 repositori (terpakai 18), status aktif.
+  - **PT Pinjaman Kilat Indonesia (Starter Plan)**: Kuota 5 repositori (terpakai 5/5, kuota penuh), memicu *license gate*.
+- **Formulir Login Manual Fleksibel**: Memungkinkan input username & password manual dengan aturan validasi `password == username` (misal: `bank_digital` / `bank_digital`).
+- **Ganti Klien Instan**: Tombol *"Ganti Klien"* di header utama memudahkan perpindahan organisasi tanpa mematikan sesi server.
+
+---
+
 ## Modul Utama pada Platform Web
 
 1. **Tab 1 — Analisis Perubahan Regulasi (Diff)**
@@ -87,10 +100,10 @@ Skrip ini akan secara otomatis:
    - Kartu perbandingan berdampingan (*side-by-side*) antara klausul acuan dan usulan pembaruan beserta kandidat kode terdampak.
 
 2. **Tab 2 — Konsol Agen IBM Bob Shell & Integrasi MCP**
-   - Terminal interaktif IBM Bob Shell dengan streaming penalaran agen AI secara real-time via Server-Sent Events (SSE).
-   - Pengaman sesi (*session guard*): Tombol eksekusi terlindungi dan hanya aktif setelah analisis Tab 1 dijalankan pada sesi aktif.
+   - Pemetaan dampak kode otomatis di latar belakang (*background execution*) menggunakan IBM Bob Shell.
+   - Pengaman sesi (*session guard*): Tombol eksekusi *"Jalankan IBM Bob"* terlindungi dan hanya aktif setelah analisis Tab 1 dijalankan pada sesi aktif.
    - Penampil berkas artefak handoff (`proposed_patch.diff`, `generated_tests.py`, `impact_report.json`) dengan *syntax highlighting* dan fitur unduh berkas.
-   - Tombol peluncuran IBM Bob Desktop langsung ke repositori target lokal.
+   - Status terintegrasi dengan server MCP lokal di port 8765.
 
 3. **Tab 3 — Tata Kelola & Tinjauan Dampak Kode (Human-in-the-Loop)**
    - Alur kerja bertahap bebas risiko (*Progressive Workflow*): Simulasi Dry-Run -> Tinjauan Diff Baris Kode -> Konfirmasi Patch -> Pengujian Otomatis Pytest Asli.
@@ -109,7 +122,7 @@ Skrip ini akan secara otomatis:
 ## Sistem Lisensi B2B & Manajemen Repositori
 
 Sidebar menyediakan pengalih profil entitas perusahaan secara langsung:
-- **PT Bank Digital Nusantara (Enterprise Plan)**: Kuota repositori tanpa batas, status lisensi aktif.
+- **PT Bank Digital Nusantara (Enterprise Plan)**: Kuota 3 repositori aktif tanpa batas, status lisensi aktif.
 - **PT Dana Mandiri Fintech (Professional Plan)**: Kuota 25 repositori (terpakai 18), status lisensi aktif.
 - **PT Pinjaman Kilat Indonesia (Starter Plan)**: Kuota 5 repositori (terpakai 5/5, kuota penuh), memicu *license gate* di mana tombol patch Tab 3 dikunci secara aman.
 
@@ -131,10 +144,19 @@ python mcp_server.py
 
 ---
 
+## Impor Visual Flow Langflow v1.12.5
+
+Tersedia template visual kanvas di `flows/selisih_regulatory_flow_v2.json` (dan varian clean `flows/selisih_regulatory_flow_v2_clean.json`) yang siap diimpor ke Langflow UI 1.12.5.
+Panduan lengkap langkah impor, konfigurasi, dan pengujian kanvas dapat dibaca di:
+👉 [Panduan Impor Langflow (docs/LANGFLOW_IMPORT_GUIDE.md)](docs/LANGFLOW_IMPORT_GUIDE.md).
+
+---
+
 ## Menjalankan Pengujian Unit Test
 
 ```bash
-# Seluruh unit test (FastAPI, Langflow, Vector Store, License, OJK, Impact, MCP, Mock Repo)
+# Seluruh unit test (FastAPI, Langflow, Vector Store, License, OJK, Impact, MCP, Mock Repo, Auth)
+# Total 90 unit tests: 89 passed, 1 portable skip
 python -m pytest
 
 # Hanya pengujian kepatuhan repo mock

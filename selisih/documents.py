@@ -24,7 +24,7 @@ def load_document_text(path: str, *, clean: bool = True) -> str:
         with open(path, encoding="utf-8") as f:
             text = f.read()
     elif ext == ".pdf":
-        text = extract_pdf_text(path)
+        text = extract_pdf_text_pdfplumber(path)
     else:
         raise DocumentLoadError(f"Format dokumen belum didukung: {ext or '(tanpa ekstensi)'}")
 
@@ -32,6 +32,28 @@ def load_document_text(path: str, *, clean: bool = True) -> str:
     if not text.strip():
         raise DocumentLoadError(f"Dokumen kosong atau gagal diekstrak: {path}")
     return text
+
+
+def extract_pdf_text_pdfplumber(path: str) -> str:
+    """Ekstrak teks PDF memakai `pdfplumber` (dengan fallback otomatis ke `pypdf`)."""
+    try:
+        import pdfplumber
+
+        pages = []
+        with pdfplumber.open(path) as pdf:
+            for page in pdf.pages:
+                text = page.extract_text(x_tolerance=3, y_tolerance=3) or ""
+                pages.append(text)
+        extracted = "\n\n".join(pages).strip()
+        if extracted:
+            return extracted
+        # Bila string kosong (misal pdfplumber tidak mendeteksi teks), coba fallback
+        return extract_pdf_text(path)
+    except ImportError:
+        return extract_pdf_text(path)
+    except Exception:
+        # Fallback aman ke pypdf bila pdfplumber gagal membaca format tertentu
+        return extract_pdf_text(path)
 
 
 def extract_pdf_text(path: str) -> str:
@@ -66,16 +88,17 @@ def clean_pojk_text(text: str) -> str:
 
 
 def split_by_pasal(text: str, *, doc_id: str = "") -> list[dict]:
-    """Potong teks regulasi menjadi chunk per `Pasal` untuk calon ingest Astra."""
+    """Potong teks regulasi menjadi chunk per `Pasal` untuk calon ingest Astra/ChromaDB."""
     cleaned = clean_pojk_text(text)
-    matches = list(re.finditer(r"(?m)^\s*(Pasal\s+\d+[A-Za-z]?)\s*$", cleaned))
+    matches = list(re.finditer(r"(?mi)^\s*(Pasal\s+\d+[A-Za-z]?)\s*$", cleaned))
     chunks = []
     for idx, match in enumerate(matches):
         start = match.start()
         end = matches[idx + 1].start() if idx + 1 < len(matches) else len(cleaned)
         body = cleaned[start:end].strip()
         if body:
-            chunks.append({"doc_id": doc_id, "pasal": match.group(1), "text": body})
+            pasal_str = match.group(1).title() if match.group(1).isupper() else match.group(1)
+            chunks.append({"doc_id": doc_id, "pasal": pasal_str, "text": body})
     return chunks
 
 

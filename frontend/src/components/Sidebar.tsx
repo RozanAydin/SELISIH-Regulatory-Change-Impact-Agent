@@ -186,8 +186,10 @@ export default function Sidebar({
             </span>
           </div>
           <div>
-            <strong>Repositori Aktif:</strong> {lic?.active_repos ?? 3} /{" "}
-            {(lic?.repo_limit ?? -1) < 0 ? "Tidak Dibatasi" : `${lic?.repo_limit} Repositori`}
+            <strong>Repositori Aktif:</strong>{" "}
+            {(lic?.repo_limit ?? -1) < 0
+              ? `${lic?.active_repos ?? 3}`
+              : `${lic?.active_repos ?? 3} / ${lic?.repo_limit} Repositori`}
           </div>
 
           {/* Dynamic Progress Bar */}

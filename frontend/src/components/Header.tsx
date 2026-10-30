@@ -6,9 +6,10 @@ import { SystemHealth } from "@/lib/api";
 
 interface HeaderProps {
   health: SystemHealth | null;
-  activeRole: string;
-  onRoleChange: (role: string) => void;
+  activeRole?: string;
+  onRoleChange?: (role: string) => void;
   onOpenAudit: () => void;
+  onLogout?: () => void;
 }
 
 export const ROLES = [
@@ -18,7 +19,7 @@ export const ROLES = [
   "External Auditor (Read-Only)",
 ];
 
-export default function Header({ health, activeRole, onRoleChange, onOpenAudit }: HeaderProps) {
+export default function Header({ health, activeRole, onRoleChange, onOpenAudit, onLogout }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[#DDD8CD] bg-[#FFFFFF]/95 backdrop-blur px-6 py-3.5 shadow-sm">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -73,22 +74,16 @@ export default function Header({ health, activeRole, onRoleChange, onOpenAudit }
             <span>Audit Trail</span>
           </button>
 
-          {/* Role Selector */}
-          <div className="flex items-center space-x-2 rounded border border-[#C8C2B5] bg-[#EFECE6] px-3 py-1 text-xs">
-            <KeyRound className="h-3.5 w-3.5 text-[#1A1917]" />
-            <span className="text-xs text-[#4A4843]">Peran:</span>
-            <select
-              value={activeRole}
-              onChange={(e) => onRoleChange(e.target.value)}
-              className="bg-transparent font-semibold text-[#1A1917] focus:outline-none cursor-pointer"
+          {/* Tombol Ganti Klien / Logout */}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="flex items-center space-x-1.5 rounded border border-[#C8C2B5] bg-[#EFECE6] hover:bg-[#DDD8CD] px-3 py-1.5 text-xs font-semibold text-[#111110] transition-colors shadow-xs"
+              title="Keluar ke halaman pemilihan klien"
             >
-              {ROLES.map((role) => (
-                <option key={role} value={role} className="bg-[#FFFFFF] text-[#1A1917]">
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
+              <span>Ganti Klien</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

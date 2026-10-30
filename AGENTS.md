@@ -35,7 +35,15 @@ Alur inti:
 - **Fase 8 (UX presisi & lisensi B2B) SELESAI** — pemetaan baris dinamis, pemulihan rollback `.bak.<ts>`,
   alur bertahap progressive review, B2B Multi-Company Licensing (Enterprise, Professional, Starter) dengan repo quota gating,
   dan pengaman sesi antar-tab terpadu.
-- `flows/` **selisih_regulatory_flow.json** telah terintegrasi — mendukung eksekusi Embedded Langflow Engine mandiri maupun REST API.
+- **Fase 10-14 (Pipeline OJK, Remediasi Dinamis, Governance, Flow Langflow v2) SELESAI** — ekstraksi PDFPlumber,
+  cache SQLite `data/regulations.db`, pemindai kode dinamis, peninjauan granular & sertifikat Berita Acara Kepatuhan,
+  serta penyelarasan handoff Tab 2 ke Tab 3.
+- **Fase 15 (Standardisasi Flow Langflow 1.12.5 & Gerbang Masuk Klien Enterprise) SELESAI** — portal login B2B 3 paket klien
+  (`frontend/src/components/LoginPage.tsx`), validasi kredensial `password == username`, penyederhanaan kuota Enterprise menjadi "3",
+  eksekusi IBM Bob murni background di Tab 2, endpoint `POST /api/auth/client-login`, template visual Langflow v1.12.5
+  (`flows/selisih_regulatory_flow_v2.json`) dengan 5 node LFX lengkap.
+- Total pengujian unit kini mencapai **90 unit tests: 89 passed, 1 portable skip (100% green)**.
+- `flows/` **selisih_regulatory_flow.json** & **selisih_regulatory_flow_v2.json** telah terintegrasi — mendukung eksekusi Embedded Langflow Engine mandiri maupun REST API.
 - Baca `PROGRESS.md` untuk status per fase dan `docs/CONTEXT.md` untuk konteks penuh.
 
 ## Struktur Repo
@@ -45,7 +53,7 @@ rcia-app/
 ├── api.py                     # Server backend FastAPI (REST & SSE streaming Bob Shell)
 ├── frontend/                  # Dashboard Next.js 15 (React 19, TypeScript, Tailwind CSS)
 │   ├── src/app/               # App Router Next.js (page.tsx, layout.tsx, globals.css)
-│   ├── src/components/        # Komponen Tab 1-4, Sidebar, Header, Modal Dialog
+│   ├── src/components/        # Komponen Tab 1-4, LoginPage, Sidebar, Header, Modal Dialog
 │   └── src/lib/               # Klien API typed & utilitas frontend
 ├── mcp_server.py              # Jembatan MCP lokal ke Bob: stdio JSON-RPC + HTTP admin 127.0.0.1:8765
 ├── selisih/                   # Paket inti Python
@@ -56,6 +64,8 @@ rcia-app/
 │   ├── impact.py              # Scanner dampak, engine patch aman, & rollback backup
 │   ├── artifacts.py           # Ekspor artefak Bob & runner Bob Shell
 │   ├── ojk.py                 # Sinkronisasi & pemantau regulasi portal resmi JDIH OJK
+│   ├── pipeline.py            # Orchestrator pipeline regulasi terpadu
+│   ├── regulation_cache.py    # Cache SQLite teks regulasi & chunk pasal
 │   └── vector_store.py        # Vector store lokal ChromaDB untuk klausul acuan offline
 ├── tests/
 │   ├── test_api.py               # Unit test RESTful FastAPI
@@ -66,6 +76,10 @@ rcia-app/
 │   ├── test_license.py           # Unit test license gateway lokal
 │   ├── test_impact.py            # Unit test scanner dampak, patch, & rollback
 │   ├── test_artifacts.py         # Unit test ekspor artefak Bob & runner Bob Shell
+│   ├── test_code_impact_dynamic.py # Unit test pemindai kode dinamis
+│   ├── test_tab3_governance.py   # Unit test tata kelola granular & sertifikat audit
+│   ├── test_pipeline.py          # Unit test orchestrator pipeline OJK
+│   ├── test_regulation_cache.py  # Unit test cache SQLite regulasi
 │   └── test_mcp_server.py        # Unit test protokol JSON-RPC MCP lokal
 ├── data/
 │   ├── pojk_lama_77_2016.txt  # Teks regulasi acuan (publik)
@@ -78,6 +92,10 @@ rcia-app/
 │   └── tests/test_compliance.py
 ├── artifacts/                 # Artefak handoff Bob (RUNTIME, di-gitignore)
 ├── .bob/mcp.json              # Registrasi MCP server untuk IBM Bob
+├── flows/                     # Ekspor flow Langflow (selisih_regulatory_flow.json & v2)
+├── docs/                      # Dokumentasi teknis & panduan impor
+│   ├── CONTEXT.md             # Konteks & arsitektur lengkap
+│   └── LANGFLOW_IMPORT_GUIDE.md # Panduan impor kanvas Langflow 1.12.5
 ├── flows/                     # Ekspor flow Langflow (selisih_regulatory_flow.json)
 ├── docs/CONTEXT.md            # Konteks & rencana lengkap
 ├── PROGRESS.md                # Checklist fase

@@ -260,3 +260,80 @@ def query_reference_clauses(
                 "distance": float(dist) if dist is not None else 0.0,
             })
     return matches
+
+
+def ingest_regulation_dynamic(
+    text: str,
+    reg_info: dict,
+    collection_name: str = "pojk_acuan_idx",
+    force: bool = False,
+) -> int:
+    """Ingest teks regulasi apapun ke ChromaDB secara dinamis."""
+    global _FALLBACK_INDEXES
+    doc_id = (
+        reg_info.get("doc_id")
+        or reg_info.get("id")
+        or f"POJK-{reg_info.get('nomor', 'UNKNOWN')}"
+    )
+    col = get_or_create_collection(collection_name)
+
+    if not force:
+        try:
+            if hasattr(col, "get"):
+                existing = col.get(where={"doc_id": doc_id}, limit=1)
+                if existing and existing.get("ids"):
+                    return col.count()
+            elif isinstance(col, FallbackVectorIndex):
+                if any(r.get("metadata", {}).get("doc_id") == doc_id for r in col.records):
+                    return col.count()
+        except Exception:
+            pass
+
+    chunks = split_by_pasal(text, doc_id=doc_id)
+    if not chunks:
+        return 0
+
+    ids = []
+    documents = []
+    metadatas = []
+
+    for chunk in chunks:
+        pasal_name = chunk["pasal"]
+        chunk_text = chunk["text"]
+        chunk_id = f"{doc_id}-{pasal_name}".replace(" ", "_")
+        ids.append(chunk_id)
+        documents.append(chunk_text)
+        metadatas.append({
+            "doc_id": doc_id,
+            "pasal": pasal_name,
+            "nomor": str(reg_info.get("nomor", "")),
+            "tahun": str(reg_info.get("tahun", "")),
+            "ayat": "(1)",
+            "level": "pasal",
+        })
+
+        ayat_blocks = re.findall(r"(?m)^\s*\((\d+)\)\s*(.+?)(?=(?:^\s*\(\d+\)|\Z))", chunk_text, re.DOTALL)
+        for ayat_num, ayat_content in ayat_blocks:
+            ayat_id = f"{doc_id}-{pasal_name}-Ayat_{ayat_num}".replace(" ", "_")
+            ids.append(ayat_id)
+            documents.append(f"{pasal_name} Ayat ({ayat_num}) {ayat_content.strip()}")
+            metadatas.append({
+                "doc_id": doc_id,
+                "pasal": pasal_name,
+                "nomor": str(reg_info.get("nomor", "")),
+                "tahun": str(reg_info.get("tahun", "")),
+                "ayat": f"({ayat_num})",
+                "level": "ayat",
+            })
+
+    try:
+        if ids:
+            col.upsert(ids=ids, documents=documents, metadatas=metadatas)
+        return col.count()
+    except Exception:
+        if collection_name not in _FALLBACK_INDEXES:
+            _FALLBACK_INDEXES[collection_name] = FallbackVectorIndex(FastLegalEmbeddingFunction())
+        fallback_col = _FALLBACK_INDEXES[collection_name]
+        if ids:
+            fallback_col.upsert(ids=ids, documents=documents, metadatas=metadatas)
+        return fallback_col.count()

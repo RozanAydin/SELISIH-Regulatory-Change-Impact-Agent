@@ -33,7 +33,16 @@ def build_artifacts(findings: dict, repo_dir: str, out_dir: str) -> dict:
 
     diff_path = os.path.join(out_dir, "proposed_patch.diff")
     with open(diff_path, "w", encoding="utf-8") as f:
-        parts = [impact.make_diff(r["old_code"], r["proposed_code"], r["path"]) for r in patchable]
+        parts = []
+        for r in patchable:
+            file_content = None
+            if r.get("abs_path") and os.path.isfile(r["abs_path"]):
+                try:
+                    with open(r["abs_path"], "r", encoding="utf-8") as fp:
+                        file_content = fp.read()
+                except Exception:
+                    pass
+            parts.append(impact.make_diff(r["old_code"], r["proposed_code"], r["path"], full_file_content=file_content))
         f.write("\n".join(parts))
 
     try:
@@ -59,6 +68,14 @@ def build_artifacts(findings: dict, repo_dir: str, out_dir: str) -> dict:
         "patchable": len(patchable),
         "skipped": len(records) - len(patchable),
     }
+
+
+def build_artifacts_from_findings(findings: dict | list, out_dir: str, repo_dir: str | None = None) -> dict:
+    """Tolerant alias build_artifacts untuk menerima dict kontrak maupun list temuan."""
+    if repo_dir is None:
+        repo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "mock_fintech_repo"))
+    findings_dict = findings if isinstance(findings, dict) else {"findings": findings}
+    return build_artifacts(findings_dict, repo_dir, out_dir)
 
 
 def _gen_tests(patchable: list, repo_relpath: str) -> str:
@@ -183,13 +200,16 @@ def ensure_mcp_server_running(server_script_path: str = None, host: str = "127.0
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        time.sleep(0.3)
-        try:
-            req = urllib.request.Request(url)
-            with urllib.request.urlopen(req, timeout=0.5) as resp:
-                return resp.status == 200
-        except Exception:
-            return False
+        for _ in range(15):
+            time.sleep(0.2)
+            try:
+                req = urllib.request.Request(url)
+                with urllib.request.urlopen(req, timeout=0.5) as resp:
+                    if resp.status == 200:
+                        return True
+            except Exception:
+                pass
+        return False
     except Exception:
         return False
 
