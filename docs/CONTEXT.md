@@ -3,7 +3,7 @@
 Dokumen konteks lengkap + rencana perbaikan. Tujuan file ini: **session baru bisa langsung
 nyambung tanpa perlu dijelaskan ulang.**
 
-Terakhir diperbarui: 2026-10-12
+Terakhir diperbarui: 2026-10-30
 
 ---
 
@@ -132,7 +132,39 @@ Dari demo -> arsitektur Web Enterprise produksi.
 - Pemilih Entitas Perusahaan (B2B Multi-Company Licensing) di sidebar: Enterprise (Unlimited), Professional (25 repo), Starter (5/5 repo, lisensi penuh/gating).
 - Modal Manajer Repositori Terpadu (`RepoManagerModal`) untuk pendaftaran repositori mikroservis lokal dengan verifikasi kuota paket.
 - Guard siklus eksekusi antar-tab: Tab 2 dan Tab 3 terlindungi dari eksekusi tanpa analisis hulu.
-- Total pengujian saat ini: **78 unit test** (`pytest`): 77 passed, 1 portable skip (100% green). Frontend Next.js build: lolos kompilasi tanpa error.
+
+### Fase 9 — Hardening Keamanan, Ketahanan Runtime, & Pengujian RBAC — SELESAI
+- Runtime segfault bypass untuk isolasi crash Rust ChromaDB di Windows Python 3.13 (`FallbackVectorIndex` berbasis NumPy).
+- Pengetatan header RBAC `X-User-Role` dan CORS eksplisit (`localhost:3000` & `127.0.0.1:3000`).
+- Opsi peran auditor eksternal read-only untuk demonstrasi penolakan mutasi kode.
+
+### Fase 10 — Pipeline Analisis Regulasi OJK Terintegrasi — SELESAI
+- Pemasangan parser `pdfplumber` dan cache SQLite lokal `data/regulations.db` (`selisih/regulation_cache.py`).
+- Ingest ChromaDB dinamis (`ingest_regulation_dynamic`) dan modul pipeline terpadu (`selisih/pipeline.py`).
+
+### Fase 11 — Integrasi Tab 2 IBM Bob Code Impact & Remediation Pipeline — SELESAI
+- Injeksi metadata sesi klien ke `data/temuan.json` (`company_id`, `organization`, `target_repository`).
+- Resolusi direktori dinamis repositori klien sasaran di `api.py` via `_resolve_target_repo()`.
+- Pemindai kode dinamis `scan_repo_for_compliance_targets()` di `selisih/impact.py` untuk deteksi konstanta finansial.
+
+### Fase 12 — Tab 3 Tata Kelola Human-in-the-Loop & Berita Acara Kepatuhan — SELESAI
+- Tinjauan selektif & patching granular berbasis checkbox (`selected_change_ids`).
+- Pemisahan temuan `code_patchable` vs `policy_action_required` (kartu panduan SOP tata kelola).
+- Pembuatan Berita Acara Kepatuhan resmi (*Compliance Sign-off Certificate*) berformat Markdown (`GET /api/impact/compliance-report`).
+
+### Fase 13 — Penyelarasan Rantai Pipeline Tab 2 ke Tab 3 — SELESAI
+- Eliminasi pemindaian prematur di Tab 1 dan penghapusan terminal CLI tiruan di Tab 2.
+- IBM Bob Shell berjalan murni background dengan SSE streaming status riil dan penampil artefak handoff resmi.
+
+### Fase 14 — Flow Langflow Visual Siap Import & Perbaikan Tautan Resmi OJK — SELESAI
+- Template visual Langflow `flows/selisih_regulatory_flow_v2.json` dan panduan impor `docs/LANGFLOW_IMPORT_GUIDE.md`.
+- Perbaikan tautan dokumentasi statutori dan berkas PDF resmi POJK 77/2016, 10/2022, dan 22/2023.
+
+### Fase 15 — Standardisasi Flow Langflow 1.12.5 (LFX) & Gerbang Autentikasi Klien Enterprise — SELESAI
+- Standarisasi flow v2 untuk engine Langflow 1.12.5 (LFX) dengan serialisasi handle `œ`, `custom_fields` dinamis, dan 5 node lengkap (`TextInput`, `Chroma`, `PromptTemplate`, `GoogleGenerativeAI`, `ChatOutput`).
+- Gerbang Masuk Klien Enterprise (`LoginPage.tsx`): 3 paket klien (Enterprise, Professional, Starter) dengan login 1-klik dan validasi `password == username`.
+- Penyederhanaan tampilan kuota aktif Enterprise menjadi "3" dan penyembunyian tombol desktop Tab 2 untuk fokus pada headless Bob Shell.
+- Total pengujian saat ini: **90 unit tests** (`pytest`): 89 passed, 1 portable skip (100% green). Frontend Next.js build: lolos kompilasi tanpa error.
 
 ## 6. Pembagian Kerja
 

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
+import LoginPage from "@/components/LoginPage";
 import OjkMonitorTab from "@/components/OjkMonitorTab";
 import RegulatoryDiffTab from "@/components/RegulatoryDiffTab";
 import BobShellConsoleTab from "@/components/BobShellConsoleTab";
@@ -35,6 +36,7 @@ import {
 import { GitCompare, Terminal, ShieldCheck, Globe, KeyRound } from "lucide-react";
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"diff" | "bob" | "review" | "ojk">("diff");
   const [activeRole, setActiveRole] = useState<string>("Compliance Officer");
   const [auditOpen, setAuditOpen] = useState<boolean>(false);
@@ -61,6 +63,14 @@ export default function Home() {
 
   // Initial Load & periodic health sync
   useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("selisih_auth_user");
+      if (saved) {
+        setIsAuthenticated(true);
+        setActiveCompanyId(saved);
+      }
+    } catch (_) {}
+
     fetchSystemHealth().then(setHealth).catch(console.error);
     const healthInterval = setInterval(() => {
       fetchSystemHealth().then(setHealth).catch(() => {});
@@ -96,6 +106,21 @@ export default function Home() {
     }
   };
 
+  const handleLoginCompany = async (companyId: string) => {
+    await handleCompanyChange(companyId);
+    setIsAuthenticated(true);
+    try {
+      sessionStorage.setItem("selisih_auth_user", companyId);
+    } catch (_) {}
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    try {
+      sessionStorage.removeItem("selisih_auth_user");
+    } catch (_) {}
+  };
+
   const handleAddRepo = async (name: string, path: string) => {
     await addCompanyRepo(activeCompanyId, name, path, activeRole);
     const h = await fetchSystemHealth();
@@ -128,9 +153,10 @@ export default function Home() {
     }
     setAnalysisLoading(true);
     try {
-      const res = await runAnalysis("embedded", selectedRegulation, selectedReference);
+      const res = await runAnalysis("embedded", selectedRegulation, selectedReference, activeCompanyId);
       setHasRunAnalysis(true);
       setHasRunBob(false);
+      setImpactRecords([]);
       if (res?.data) {
         const d = res.data;
         const total = d.findings?.length || 0;
@@ -138,6 +164,7 @@ export default function Home() {
         setAnalysis({
           source: "live",
           analysis_meta: d.analysis_meta,
+          pipeline_log: res.pipeline_log || d.pipeline_log || [],
           metrics: {
             total_findings: total,
             valid_citations: valid,
@@ -150,7 +177,6 @@ export default function Home() {
       } else {
         await loadAnalysis();
       }
-      await loadImpact();
     } catch (err: any) {
       alert(`Error analisis: ${err.message}`);
     } finally {
@@ -177,9 +203,10 @@ export default function Home() {
     setAnalysisLoading(true);
     setActiveTab("diff");
     try {
-      const res = await runAnalysis("embedded", reg, ref);
+      const res = await runAnalysis("embedded", reg, ref, activeCompanyId);
       setHasRunAnalysis(true);
       setHasRunBob(false);
+      setImpactRecords([]);
       if (res?.data) {
         const d = res.data;
         const total = d.findings?.length || 0;
@@ -187,6 +214,7 @@ export default function Home() {
         setAnalysis({
           source: "live",
           analysis_meta: d.analysis_meta,
+          pipeline_log: res.pipeline_log || d.pipeline_log || [],
           metrics: {
             total_findings: total,
             valid_citations: valid,
@@ -199,7 +227,6 @@ export default function Home() {
       } else {
         await loadAnalysis();
       }
-      await loadImpact();
     } catch (err: any) {
       alert(`Gagal memproses POJK ${reg.nomor}/${reg.tahun}: ${err.message}`);
     } finally {
@@ -211,8 +238,18 @@ export default function Home() {
     setSelectedReference(reg);
     setHasRunAnalysis(false);
     setHasRunBob(false);
+    setImpactRecords([]);
     setActiveTab("diff");
   };
+
+  if (!isAuthenticated) {
+    return (
+      <LoginPage
+        companyProfiles={companyProfiles}
+        onSelectCompany={handleLoginCompany}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1A1917] flex flex-col md:flex-row font-sans">
@@ -238,22 +275,14 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              {/* Role Selector (RBAC Demo) */}
-              <div className="flex items-center space-x-2 rounded border border-[#C8C2B5] bg-[#EFECE6] px-3 py-1.5 text-xs shadow-xs">
-                <KeyRound className="h-3.5 w-3.5 text-[#1A1917]" />
-                <span className="text-xs font-medium text-[#4A4843]">Peran (RBAC):</span>
-                <select
-                  value={activeRole}
-                  onChange={(e) => setActiveRole(e.target.value)}
-                  className="bg-transparent font-bold text-[#111110] focus:outline-none cursor-pointer"
-                >
-                  {ROLES.map((role) => (
-                    <option key={role} value={role} className="bg-[#FFFFFF] text-[#111110]">
-                      {role}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Tombol Ganti Klien */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-1.5 rounded border border-[#C8C2B5] bg-[#EFECE6] hover:bg-[#DDD8CD] px-3 py-1.5 text-xs font-bold text-[#111110] transition-colors shadow-xs cursor-pointer"
+                title="Keluar ke halaman pemilihan klien"
+              >
+                <span>Ganti Klien</span>
+              </button>
 
               {/* Entitas Perusahaan */}
               <div className="text-left sm:text-right border-l border-[#DDD8CD] pl-4">
@@ -323,6 +352,7 @@ export default function Home() {
               }}
               onRunAnalysis={handleRunAnalysis}
               hasRunAnalysis={hasRunAnalysis}
+              onNavigateToBob={() => setActiveTab("bob")}
             />
           )}
 
@@ -335,7 +365,11 @@ export default function Home() {
               selectedRegulation={selectedRegulation}
               hasRunAnalysis={hasRunAnalysis}
               hasRunBob={hasRunBob}
-              onBobExecuted={() => setHasRunBob(true)}
+              onBobExecuted={async () => {
+                setHasRunBob(true);
+                await loadImpact();
+                await loadArtifacts();
+              }}
               mcpConnected={Boolean(health?.components?.bob?.connected)}
               onNavigateToReview={() => setActiveTab("review")}
             />
@@ -351,8 +385,8 @@ export default function Home() {
               canRunPatch={health?.license?.is_valid !== false}
               licenseMessage={health?.license?.message}
               onDryRun={fetchImpactDryRun}
-              onApplyPatch={async (note) => {
-                const res = await applyPatch(activeRole, note);
+              onApplyPatch={async (note, selectedIds) => {
+                const res = await applyPatch(activeRole, note, selectedIds);
                 await loadImpact();
                 await loadArtifacts();
                 return res;

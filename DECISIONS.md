@@ -3,7 +3,7 @@
 Log keputusan arsitektur. Format: **D-XXX** — keputusan, alasan, konsekuensi.
 Tambahkan entri baru di bawah; jangan hapus yang lama.
 
-Terakhir diperbarui: 2026-10-12
+Terakhir diperbarui: 2026-10-30
 
 ---
 
@@ -213,6 +213,48 @@ Terakhir diperbarui: 2026-10-12
   4. **Deklarasi Dependensi Eksplisit:** Menambahkan `numpy>=1.26.0` secara eksplisit pada `requirements.txt`.
 - **Alasan:** Menutup celah keamanan otorisasi default di backend, meniadakan penolakan browser terhadap CORS credentials wildcard, menghilangkan bug unpacking pada fallback index, dan memudahkan presenter mendemokan mekanisme penolakan RBAC secara langsung kepada juri hackathon.
 - **Konsekuensi:** Repositori sepenuhnya aman, patuh terhadap standar tata kelola perbankan, bebas fatal crash di seluruh versi Python, dan memiliki kontrol akses berbasis peran (*RBAC*) yang teruji secara otomatis maupun visual.
+
+## D-041 — Pipeline Analisis Terpadu: Ekstraksi PDFPlumber, Cache SQLite, dan Ingest ChromaDB Dinamis
+- **Keputusan:** Membangun modul orchestrator pipeline terpadu (`selisih/pipeline.py`), modul cache SQLite (`selisih/regulation_cache.py`), dan integrasi parser `pdfplumber` (`selisih/documents.py`). Saat pengguna memilih regulasi OJK di Tab 1, sistem otomatis memeriksa cache SQLite (`data/regulations.db`), mengunduh PDF dari portal resmi JDIH OJK jika belum ada, mengekstraksi teks dengan format tabel yang terjaga via `pdfplumber`, melakukan pemotongan per pasal (`split_by_pasal`), meng-ingest dokumen baru ke ChromaDB secara dinamis (`ingest_regulation_dynamic`), dan menjalankan analisis komparasi statutori.
+- **Alasan:** Menghilangkan keharusan input teks manual atau persistensi berkas mentah berulang, mempercepat waktu analisis melalui caching deterministik, dan memungkinkan analisis perbandingan untuk regulasi OJK mana pun secara langsung.
+- **Konsekuensi:** Sistem memiliki persistensi lokal mandiri di `data/regulations.db`, latensi analisis berkurang drastis pada eksekusi berulang, dan status progres pipeline disajikan secara real-time di UI Tab 1.
+
+## D-042 — Dynamic Target Repo Resolution & Remediasi Kode Finansial Otomatis (Tab 2)
+- **Keputusan:** Menghilangkan ketergantungan path statis `mock_fintech_repo/` pada pemindaian dampak dan eksekusi IBM Bob. Sistem memperkenalkan fungsi `_resolve_target_repo(payload)` di `api.py` dan `scan_repo_for_compliance_targets()` di `selisih/impact.py` yang menelusuri seluruh berkas Python dalam direktori repositori organisasi yang aktif untuk mendeteksi konstanta moneter (plafon, suku bunga) dan memetakan kandidat kode secara dinamis.
+- **Alasan:** Memungkinkan sistem diterapkan ke repositori mikroservis riil apa pun yang didaftarkan oleh klien, bukan hanya repo mock tiruan.
+- **Konsekuensi:** Berkas `data/temuan.json` kini membawa metadata `company_id`, `organization`, dan `target_repository` dari sesi aktif; eksekusi Bob Shell, diff generation, dry-run, apply patch, dan pytest runner beroperasi pada repositori sasaran yang benar.
+
+## D-043 — Tata Kelola Human-in-the-Loop Tab 3: Tinjauan Granular, Pemisahan Kode vs Kebijakan, dan Berita Acara Kepatuhan
+- **Keputusan:** Mengembangkan tiga fitur tata kelola perbankan di Tab 3:
+  1. **Tinjauan Granular & Patching Selektif:** Dukungan checkbox pemilihan perubahan (`selected_change_ids`) yang memungkinkan petugas kepatuhan menyetujui pasal tertentu dan menunda pasal lainnya.
+  2. **Pemisahan Tampilan Kode vs Kebijakan:** Memisahkan temuan `code_patchable` (variabel kode terdeteksi) yang menampilkan diff kode interaktif dengan temuan `policy_action_required` (kewajiban tata kelola organisasi, seperti Unit Perlindungan Konsumen) yang ditampilkan sebagai kartu tindakan SOP panduan kepatuhan.
+  3. **Berita Acara Kepatuhan (*Compliance Sign-off Certificate*):** Penyediaan dokumen Berita Acara berformat Markdown (`CERT-OJK-...`) via `GET /api/impact/compliance-report` yang dapat diunduh untuk kebutuhan audit formal.
+- **Alasan:** Menjawab standar tata kelola kepatuhan perbankan di mana tidak semua perubahan regulasi dapat diselesaikan dengan kode (sebagian adalah SOP), dan peninjau memerlukan fleksibilitas persetujuan bertahap serta bukti audit resmi.
+- **Konsekuensi:** Tab 3 menjadi modul tata kelola kepatuhan enterprise yang komprehensif, tidak ada diff rusak/kosong untuk temuan organisasional, dan hasil tinjauan terdokumentasi dalam sertifikat kepatuhan resmi.
+
+## D-044 — Penyelarasan Rantai Pipeline Tab 2 (Background Agent) ke Tab 3 (Tata Kelola)
+- **Keputusan:** Mengeliminasi terminal CLI hitam tiruan dari Tab 2 dan memindahkan eksekusi agen IBM Bob sepenuhnya ke latar belakang (*background execution*) dengan indikator status progres yang bersih. Pemindaian dampak (`loadImpact()`) diikat secara eksklusif ke penyelesaian eksekusi Tab 2 (bukan dipicu prematur di Tab 1), dan `GET /api/impact/scan` memprioritaskan membaca data langsung dari artefak resmi `artifacts/impact_report.json`.
+- **Alasan:** Mencegah disorientasi antarmuka akibat terminal tiruan yang tidak responsif, memastikan satu sumber kebenaran data (*single source of truth*) dari artefak IBM Bob, dan menciptakan alur linear: Analisis Regulasi (Tab 1) -> Pemetaan Kode IBM Bob (Tab 2) -> Tata Kelola & Tinjauan (Tab 3).
+- **Konsekuensi:** Pengguna mendapatkan pengalaman dashboard enterprise yang mulus (*single pane of glass*), bebas inkonsistensi status antar-tab, dan paket artefak handoff tersaji secara transparan.
+
+## D-045 — Flow Visual Langflow v1.12.5 (LFX Engine, Handle Serialisasi `œ`, Custom Fields Dinamis)
+- **Keputusan:** Membangun berkas `flows/selisih_regulatory_flow_v2.json` yang mematuhi standar Langflow 1.12.5 (LFX):
+  1. Struktur 5 node: `TextInput` (Target Regulation Query), `Chroma` (Persist Directory `./data/chroma_db`, Collection `pojk_regulatory_idx`), `PromptTemplate` (Prompt perbandingan OJK), `GoogleGenerativeAI` (Gemini 1.5 Flash), dan `ChatOutput` (Output findings JSON).
+  2. Deklarasi variabel dinamis prompt `{context}` dan `{regulasi_target}` di `custom_fields: {"template": ["context", "regulasi_target"]}` dengan `input_types: ["Message"]` dan tipe `str`.
+  3. Format handle koneksi serialisasi Langflow 1.12.5 menggunakan karakter delimiter `œ` (misal: `{œdataTypeœ:œTextInputœ,...}`).
+  4. Penyediaan varian bersih `flows/selisih_regulatory_flow_v2_clean.json` tanpa edges untuk kemudahan perakitan manual lintas versi Langflow.
+- **Alasan:** Memastikan flow dapat diimpor secara langsung dan mulus ke dalam kanvas Langflow UI v1.12.5 tanpa galat `Cannot read properties of undefined (reading 'type')`, serta memastikan node Prompt Template merender connection dots masukan secara otomatis.
+- **Konsekuensi:** Kanvas Langflow dapat langsung dibuka, diedit, dan diuji (*Playground*) oleh developer/evaluator dengan visual 5 node yang terhubung sempurna.
+
+## D-046 — Gerbang Masuk Klien Enterprise (`LoginPage.tsx`) & Penyederhanaan Tampilan Kuota
+- **Keputusan:** Mengimplementasikan modul `frontend/src/components/LoginPage.tsx` dan endpoint backend `POST /api/auth/client-login`:
+  1. Menghadirkan portal login B2B dengan 3 pilihan paket klien langsung: Enterprise (PT Bank Digital Nusantara), Professional (PT Dana Mandiri Fintech), dan Starter (PT Pinjaman Kilat Indonesia) dengan kemampuan login 1-klik untuk kemudahan demo.
+  2. Menyediakan formulir login manual fleksibel dengan aturan validasi perbankan `password == username`.
+  3. Menyembunyikan pemilih peran RBAC dari header canvas utama agar pengguna/evaluator fokus pada simulasi kuota multi-klien, dan menambahkan tombol *"Ganti Klien"* di header untuk logout/ganti organisasi.
+  4. Menyederhanakan tampilan repositori aktif paket Enterprise dari label `"3 / Tidak Dibatasi"` menjadi `"3"` agar seragam dan ringkas.
+  5. Menyembunyikan tombol sekunder *"Buka di IBM Bob Desktop"* di Tab 2 untuk memfokuskan alur demo pada agen headless Bob Shell di dalam dashboard.
+- **Alasan:** Memperjelas proposisi nilai komersial platform SELISIH sebagai solusi B2B SaaS Kepatuhan Perbankan, menyederhanakan alur navigasi bagi juri hackathon, dan menghilangkan elemen UI yang membingungkan.
+- **Konsekuensi:** Platform memiliki gerbang login enterprise yang memikat, pengujian kuota lisensi multi-organisasi dapat didemokan dalam hitungan detik, dan sesi klien terkelola secara aman di `sessionStorage`.
 
 
 

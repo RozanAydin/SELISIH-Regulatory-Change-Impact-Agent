@@ -1,0 +1,297 @@
+{
+  "name": "SELISIH — Regulatory Diff Pipeline v2 (ChromaDB + Gemini) [Kanvas Bebas Hubungan]",
+  "description": "Pipeline analisis diferensiasi regulasi OJK berbasis ChromaDB lokal dan Google Gemini (Gemini 1.5 Flash). Berkas ini berisi konfigurasi lengkap 5 node komponen tanpa edge sehingga 100% kompatibel lintas semua versi Langflow tanpa risiko kesalahan parsing handle. Pengguna cukup menghubungkan 4 port secara visual di kanvas.",
+  "endpoint_name": "selisih-regulatory-diff-v2-clean",
+  "data": {
+    "nodes": [
+      {
+        "id": "TextInput-001",
+        "type": "genericNode",
+        "position": {
+          "x": 60,
+          "y": 200
+        },
+        "data": {
+          "id": "TextInput-001",
+          "type": "TextInput",
+          "node": {
+            "display_name": "Parameter Regulasi Target (Input Query)",
+            "description": "Menerima parameter regulasi OJK yang ingin dianalisis terhadap regulasi acuan di database.",
+            "documentation": "https://docs.langflow.org",
+            "template": {
+              "_type": "Component",
+              "input_value": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "POJK Nomor 22 Tahun 2023 vs POJK Nomor 77 Tahun 2016",
+                "display_name": "Nilai Input Query"
+              }
+            },
+            "outputs": [
+              {
+                "name": "text",
+                "display_name": "Teks Query",
+                "types": ["str"]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "ChromaDB-001",
+        "type": "genericNode",
+        "position": {
+          "x": 420,
+          "y": 140
+        },
+        "data": {
+          "id": "ChromaDB-001",
+          "type": "Chroma",
+          "node": {
+            "display_name": "ChromaDB Local Vector Store (Database Pasal)",
+            "description": "Penyimpanan vektor lokal klausul POJK hasil ekstraksi Python di folder data/chroma_db/.",
+            "documentation": "https://docs.langflow.org",
+            "template": {
+              "_type": "Component",
+              "collection_name": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "pojk_regulatory_idx",
+                "display_name": "Nama Koleksi Vektor"
+              },
+              "persist_directory": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "./data/chroma_db",
+                "display_name": "Direktori Persistensi Lokal"
+              },
+              "search_type": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "similarity",
+                "display_name": "Tipe Pencarian Vektor"
+              },
+              "number_of_results": {
+                "type": "int",
+                "required": false,
+                "show": true,
+                "value": 6,
+                "display_name": "Jumlah Pasal Teratas (Top-K)"
+              },
+              "search_query": {
+                "type": "str",
+                "required": false,
+                "show": true,
+                "value": "",
+                "display_name": "Query Pencarian"
+              }
+            },
+            "inputs": [
+              {
+                "name": "search_query",
+                "display_name": "Query Pencarian",
+                "type": "str"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "search_results",
+                "display_name": "Klausul Pasal Terkait",
+                "types": ["Data", "list[Data]", "str"]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "PromptTemplate-001",
+        "type": "genericNode",
+        "position": {
+          "x": 780,
+          "y": 200
+        },
+        "data": {
+          "id": "PromptTemplate-001",
+          "type": "Prompt",
+          "node": {
+            "display_name": "Prompt Template Komparasi Regulasi",
+            "description": "Menggabungkan klausul dari database ChromaDB dengan instruksi auditor hukum finansial OJK.",
+            "documentation": "https://docs.langflow.org",
+            "template": {
+              "_type": "Component",
+              "template": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "multiline": true,
+                "value": "Anda adalah Auditor Kepatuhan Regulasi Finansial OJK.\nTugas Anda adalah menganalisis disparitas statutori antara regulasi acuan dan regulasi pembaruan.\n\nKonteks Klausul dari Database Vektor:\n{context}\n\nParameter Regulasi Target:\n{regulasi_target}\n\nInstruksi Analisis:\n1. Identifikasi perbedaan ketentuan angka statutori (plafon pinjaman, batas suku bunga harian, batas waktu).\n2. Validasi sitasi pasal secara akurat (pasal, ayat, kutipan langsung).\n3. Klasifikasikan temuan ke dalam format temuan.json dengan struktur:\n   - change_id (misal CHG-001)\n   - jenis_perubahan (modifikasi / penambahan / penghapusan)\n   - pasal_baru: {doc_id, pasal, ayat, kutipan}\n   - pasal_lama: {doc_id, pasal, ayat, kutipan}\n   - ringkasan: penjelasan ringkas perubahan\n   - sitasi_valid: true/false\n   - confidence: tinggi/sedang/rendah\n\nKeluarkan HANYA JSON murni yang valid tanpa teks pembuka/penutup.",
+                "display_name": "Instruksi Prompt"
+              },
+              "context": {
+                "type": "str",
+                "required": false,
+                "show": true,
+                "value": "",
+                "display_name": "Konteks Database (context)"
+              },
+              "regulasi_target": {
+                "type": "str",
+                "required": false,
+                "show": true,
+                "value": "",
+                "display_name": "Regulasi Target (regulasi_target)"
+              }
+            },
+            "inputs": [
+              {
+                "name": "context",
+                "display_name": "Konteks Database",
+                "type": "str"
+              },
+              {
+                "name": "regulasi_target",
+                "display_name": "Regulasi Target",
+                "type": "str"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "prompt",
+                "display_name": "Prompt Terformat",
+                "types": ["Prompt"]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "GoogleGemini-001",
+        "type": "genericNode",
+        "position": {
+          "x": 1140,
+          "y": 200
+        },
+        "data": {
+          "id": "GoogleGemini-001",
+          "type": "GoogleGenerativeAIModel",
+          "node": {
+            "display_name": "Google Gemini 1.5 Flash (Google Generative AI)",
+            "description": "Model fondasi Google Gemini untuk analisis komparasi hukum finansial cepat, akurat, dan deterministik.",
+            "documentation": "https://ai.google.dev",
+            "template": {
+              "_type": "Component",
+              "model_name": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "gemini-1.5-flash",
+                "display_name": "Model Google Gemini"
+              },
+              "google_api_key": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "",
+                "display_name": "Google Gemini API Key",
+                "password": true
+              },
+              "temperature": {
+                "type": "float",
+                "required": false,
+                "show": true,
+                "value": 0.0,
+                "display_name": "Temperature (0.0 = Deterministik)"
+              },
+              "max_output_tokens": {
+                "type": "int",
+                "required": false,
+                "show": true,
+                "value": 2048,
+                "display_name": "Max Output Tokens"
+              },
+              "input_value": {
+                "type": "Prompt",
+                "required": false,
+                "show": true,
+                "value": "",
+                "display_name": "Prompt Input"
+              }
+            },
+            "inputs": [
+              {
+                "name": "input_value",
+                "display_name": "Prompt Input",
+                "type": "Prompt"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "text",
+                "display_name": "Keluaran Teks LLM",
+                "types": ["str", "Message"]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "StructuredOutput-001",
+        "type": "genericNode",
+        "position": {
+          "x": 1500,
+          "y": 200
+        },
+        "data": {
+          "id": "StructuredOutput-001",
+          "type": "StructuredOutput",
+          "node": {
+            "display_name": "Validator Kontrak Temuan (temuan_schema.json)",
+            "description": "Memvalidasi keluaran model Gemini agar selalu patuh pada skema resmi temuan.json.",
+            "documentation": "https://docs.langflow.org",
+            "template": {
+              "_type": "Component",
+              "schema_file": {
+                "type": "str",
+                "required": true,
+                "show": true,
+                "value": "data/temuan_schema.json",
+                "display_name": "Berkas JSON Schema"
+              },
+              "input_data": {
+                "type": "str",
+                "required": false,
+                "show": true,
+                "value": "",
+                "display_name": "Data JSON dari Gemini"
+              }
+            },
+            "inputs": [
+              {
+                "name": "input_data",
+                "display_name": "Data JSON dari Gemini",
+                "type": "str"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "structured_data",
+                "display_name": "JSON Temuan Tervalidasi",
+                "types": ["dict", "Data"]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "edges": [],
+    "viewport": {
+      "x": 60,
+      "y": 120,
+      "zoom": 0.8
+    }
+  }
+}

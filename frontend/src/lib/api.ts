@@ -60,7 +60,8 @@ export const DEFAULT_POJK_77: OjkRegulation = {
   jenis: "Peraturan OJK",
   tanggal_berlaku: "28-12-2016",
   status: "Diubah / Terdahulu",
-  detail_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-77-2016",
+  detail_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/DetailPeraturan/1748",
+  download_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/DownloadFileRiwayat/1748",
   fetched_at: "2026-10-23T12:00:00Z",
 };
 
@@ -102,7 +103,8 @@ export const DEFAULT_POJK_22: OjkRegulation = {
   jenis: "Peraturan OJK",
   tanggal_berlaku: "20-12-2023",
   status: "Berlaku",
-  detail_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/pojk-22-2023",
+  detail_url: "https://jdih.ojk.go.id/Web/ViewPeraturan/Detail/9e0724ba-dc51-cc94-da74-1a91af0201bb//06",
+  download_url: "https://jdih.ojk.go.id/Download/1788/POJK-Nomor-22-Tahun-2023.pdf",
   fetched_at: "2026-10-23T12:00:00Z",
 };
 
@@ -203,6 +205,7 @@ export interface Finding {
 export interface AnalysisResponse {
   source: string;
   analysis_meta: any;
+  pipeline_log?: Array<{ step: string; status?: string; msg: string }>;
   metrics: {
     total_findings: number;
     valid_citations: number;
@@ -257,6 +260,13 @@ export interface TestResultResponse {
   code?: number;
   stdout: string;
   stderr: string;
+  generated_tests?: {
+    returncode?: number;
+    stdout?: string;
+    stderr?: string;
+    passed?: boolean;
+    error?: string;
+  };
 }
 
 export interface AuditLog {
@@ -291,12 +301,20 @@ export async function fetchAnalysisFindings(): Promise<AnalysisResponse> {
 export async function runAnalysis(
   engine: "embedded" | "rest" = "embedded",
   ojkInfo?: Partial<OjkRegulation>,
-  acuanInfo?: Partial<OjkRegulation>
+  acuanInfo?: Partial<OjkRegulation>,
+  companyId?: string,
+  targetRepo?: string
 ): Promise<any> {
   const res = await fetch(`${API_BASE}/api/analysis/run`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ engine, ojk_info: ojkInfo, acuan_info: acuanInfo }),
+    body: JSON.stringify({
+      engine,
+      ojk_info: ojkInfo,
+      acuan_info: acuanInfo,
+      company_id: companyId,
+      target_repo: targetRepo,
+    }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
@@ -305,7 +323,11 @@ export async function runAnalysis(
   return res.json();
 }
 
-export async function analyzeOjkRegulation(reg: OjkRegulation): Promise<any> {
+export async function analyzeOjkRegulation(
+  reg: OjkRegulation,
+  companyId?: string,
+  targetRepo?: string
+): Promise<any> {
   const res = await fetch(`${API_BASE}/api/ojk/analyze`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -315,6 +337,8 @@ export async function analyzeOjkRegulation(reg: OjkRegulation): Promise<any> {
       nomor: reg.nomor,
       tahun: reg.tahun,
       detail_url: reg.detail_url,
+      company_id: companyId,
+      target_repo: targetRepo,
     }),
   });
   if (!res.ok) {
@@ -336,7 +360,11 @@ export async function fetchImpactDryRun(): Promise<DryRunResponse> {
   return res.json();
 }
 
-export async function applyPatch(reviewerRole: string, reviewerNote: string): Promise<ApplyPatchResponse> {
+export async function applyPatch(
+  reviewerRole: string,
+  reviewerNote: string,
+  selectedChangeIds?: string[]
+): Promise<ApplyPatchResponse> {
   const res = await fetch(`${API_BASE}/api/impact/apply`, {
     method: "POST",
     headers: {
@@ -347,12 +375,19 @@ export async function applyPatch(reviewerRole: string, reviewerNote: string): Pr
       reviewer_role: reviewerRole,
       reviewer_note: reviewerNote,
       confirm: true,
+      selected_change_ids: selectedChangeIds,
     }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.detail || "Gagal menerapkan patch");
   }
+  return res.json();
+}
+
+export async function fetchComplianceReport(): Promise<any> {
+  const res = await fetch(`${API_BASE}/api/impact/compliance-report`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Gagal mengambil Berita Acara Kepatuhan");
   return res.json();
 }
 
@@ -379,6 +414,12 @@ export async function rollbackPatch(role: string = "Compliance Officer"): Promis
 export async function runRepoTests(): Promise<TestResultResponse> {
   const res = await fetch(`${API_BASE}/api/impact/test`, { method: "POST" });
   if (!res.ok) throw new Error("Gagal mengeksekusi test suite repositori");
+  return res.json();
+}
+
+export async function launchBobDesktop(): Promise<{ status: string; app: string; path?: string; message: string }> {
+  const res = await fetch(`${API_BASE}/api/bob/launch-desktop`, { method: "POST" });
+  if (!res.ok) throw new Error("Gagal meluncurkan IBM Bob Desktop");
   return res.json();
 }
 

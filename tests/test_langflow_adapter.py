@@ -194,3 +194,28 @@ def test_flow_template_file_valid_json():
     assert "nodes" in data["data"]
     assert "edges" in data["data"]
     assert len(data["data"]["nodes"]) >= 3
+
+
+def test_flow_v2_template_file_valid_and_compliant():
+    import os
+    flow_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "flows", "selisih_regulatory_flow_v2.json"))
+    assert os.path.isfile(flow_file)
+    with open(flow_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    assert "name" in data
+    nodes = data["data"]["nodes"]
+    edges = data["data"]["edges"]
+    assert len(nodes) >= 2
+    assert len(edges) >= 1
+    for node in nodes:
+        assert node["type"] == "genericNode"
+        assert "data" in node
+        assert "node" in node["data"]
+        assert "template" in node["data"]["node"]
+    for edge in edges:
+        assert "source" in edge
+        assert "target" in edge
+        assert "sourceHandle" in edge
+        assert "targetHandle" in edge
+        assert "data" in edge
+        assert "type" in edge["data"]["targetHandle"]

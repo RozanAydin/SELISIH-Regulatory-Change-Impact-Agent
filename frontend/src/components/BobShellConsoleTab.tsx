@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import {
-  Terminal,
   Play,
   Copy,
   FileCode,
@@ -10,11 +9,13 @@ import {
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
-  RotateCcw,
   Download,
   AlertCircle,
+  ExternalLink,
+  Loader2,
+  Cpu,
 } from "lucide-react";
-import { AnalysisResponse, OjkRegulation } from "@/lib/api";
+import { AnalysisResponse, OjkRegulation, launchBobDesktop } from "@/lib/api";
 
 interface BobShellConsoleTabProps {
   artifacts: Array<{ name: string; size: number; content: string }>;
@@ -27,12 +28,6 @@ interface BobShellConsoleTabProps {
   onBobExecuted?: () => void;
   mcpConnected?: boolean;
   onNavigateToReview?: () => void;
-}
-
-interface LogEntry {
-  type: string;
-  tool?: string;
-  msg: string;
 }
 
 export default function BobShellConsoleTab({
@@ -48,14 +43,27 @@ export default function BobShellConsoleTab({
   onNavigateToReview,
 }: BobShellConsoleTabProps) {
   const [running, setRunning] = useState<boolean>(false);
-  const [logs, setLogs] = useState<LogEntry[]>([
-    {
-      type: "ready",
-      msg: "[IBM Bob Shell] Lingkungan CLI terhubung ke jembatan MCP lokal (127.0.0.1:8765). Siap mengeksekusi agen pada hasil analisis Tab 1.",
-    },
-  ]);
+  const [currentStatusMsg, setCurrentStatusMsg] = useState<string>("");
   const [activeArtifactTab, setActiveArtifactTab] = useState<string>("proposed_patch.diff");
   const [copied, setCopied] = useState<boolean>(false);
+  const [launchingDesktop, setLaunchingDesktop] = useState<boolean>(false);
+
+  const meta = analysis?.analysis_meta;
+  const companyOrg = meta?.organization || "PT Bank Digital Nusantara";
+  const targetRepoObj = meta?.target_repository;
+  const targetRepoName = targetRepoObj?.name || targetRepoObj?.path || "mock_fintech_repo (Core Banking)";
+
+  const handleLaunchDesktop = async () => {
+    setLaunchingDesktop(true);
+    try {
+      const res = await launchBobDesktop();
+      alert(res.message || "Aplikasi IBM Bob Desktop berhasil diluncurkan!");
+    } catch (err: any) {
+      alert("Gagal meluncurkan IBM Bob Desktop: " + err.message);
+    } finally {
+      setLaunchingDesktop(false);
+    }
+  };
 
   const hasFindings = Boolean(
     hasRunAnalysis &&
@@ -70,7 +78,7 @@ export default function BobShellConsoleTab({
     ? `POJK ${selectedRegulation.nomor}${selectedRegulation.tahun ? `/${selectedRegulation.tahun}` : ""}`
     : null;
   const findingsCount = hasFindings ? (analysis?.findings?.length || 0) : 0;
-  const isHandoffDone = Boolean(hasRunBob && logs.some((l) => l.type === "success"));
+  const isHandoffDone = Boolean(hasRunBob);
 
   const startBobAgent = () => {
     if (!hasFindings) {
@@ -78,19 +86,16 @@ export default function BobShellConsoleTab({
       return;
     }
     setRunning(true);
-    setLogs([
-      {
-        type: "init",
-        msg: `[IBM Bob Shell] Memulai sesi interaktif penalaran agen AI untuk ${refLabel || "Regulasi Acuan"} vs ${ojkLabel || "Regulasi Target"}...`,
-      },
-    ]);
+    setCurrentStatusMsg(`Menghubungkan ke agen IBM Bob di latar belakang untuk ${refLabel || "Regulasi Acuan"} vs ${ojkLabel || "Regulasi Target"}...`);
 
     const eventSource = new EventSource("http://127.0.0.1:8000/api/bob/stream");
 
     eventSource.onmessage = (event) => {
       try {
-        const data: LogEntry = JSON.parse(event.data);
-        setLogs((prev) => [...prev, data]);
+        const data = JSON.parse(event.data);
+        if (data.msg) {
+          setCurrentStatusMsg(data.msg);
+        }
         if (data.type === "success") {
           onBobExecuted?.();
         }
@@ -105,15 +110,6 @@ export default function BobShellConsoleTab({
       onRefreshArtifacts();
       onBobExecuted?.();
     };
-  };
-
-  const clearLogs = () => {
-    setLogs([
-      {
-        type: "ready",
-        msg: "[IBM Bob Shell] Lingkungan CLI terhubung ke jembatan MCP lokal (127.0.0.1:8765). Siap mengeksekusi agen pada hasil analisis Tab 1.",
-      },
-    ]);
   };
 
   const currentArtifact = artifacts.find((a) => a.name === activeArtifactTab);
@@ -154,24 +150,55 @@ export default function BobShellConsoleTab({
             </p>
           </div>
 
-          <button
-            onClick={startBobAgent}
-            disabled={running || !hasFindings}
-            className={`flex items-center space-x-2 rounded px-5 py-2.5 text-sm font-semibold transition-all shadow-sm shrink-0 ${
-              !hasFindings
-                ? "bg-[#DDD8CD] text-[#8C887B] cursor-not-allowed border border-[#C8C2B5]"
-                : "bg-[#1A1917] hover:bg-[#2D2C28] disabled:opacity-50 text-white cursor-pointer"
-            }`}
-          >
-            <Play className={`h-4 w-4 ${running ? "animate-spin" : ""}`} />
-            <span>
-              {running
-                ? "Agen Sedang Bekerja..."
-                : !hasFindings
-                ? "Menunggu Analisis Tab 1"
-                : "Jalankan IBM Bob"}
-            </span>
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            {mcpConnected ? (
+              <span className="text-xs font-mono text-[#0F5C2B] bg-[#E6F4EA] border border-[#A3D4B0] px-3 py-1.5 rounded flex items-center gap-1.5 font-bold shrink-0">
+                <span className="h-2 w-2 rounded-full bg-[#0F5C2B] animate-pulse"></span>
+                MCP Terhubung
+              </span>
+            ) : (
+              <span className="text-xs font-mono text-[#C5221F] bg-[#FCE8E6] border border-[#F4B3AE] px-3 py-1.5 rounded flex items-center gap-1.5 font-bold shrink-0">
+                <span className="h-2 w-2 rounded-full bg-[#C5221F]"></span>
+                MCP Terputus
+              </span>
+            )}
+
+            {/* Tombol peluncur desktop disembunyikan sementara sesuai instruksi */}
+            {/* 
+            <button
+              onClick={handleLaunchDesktop}
+              disabled={launchingDesktop}
+              className="flex items-center space-x-2 rounded border border-[#C8C2B5] bg-[#EFECE6] hover:bg-[#DDD8CD] px-4 py-2.5 text-sm font-semibold text-[#111110] transition-all shadow-xs cursor-pointer disabled:opacity-50 shrink-0"
+              title="Buka proyek di aplikasi desktop IBM Bob asli"
+            >
+              <ExternalLink className="h-4 w-4 text-[#1A1917]" />
+              <span>{launchingDesktop ? "Membuka Bob..." : "Buka di IBM Bob Desktop"}</span>
+            </button>
+            */}
+
+            <button
+              onClick={startBobAgent}
+              disabled={running || !hasFindings}
+              className={`flex items-center space-x-2 rounded px-5 py-2.5 text-sm font-semibold transition-all shadow-sm shrink-0 ${
+                !hasFindings
+                  ? "bg-[#DDD8CD] text-[#8C887B] cursor-not-allowed border border-[#C8C2B5]"
+                  : "bg-[#1A1917] hover:bg-[#2D2C28] disabled:opacity-50 text-white cursor-pointer"
+              }`}
+            >
+              {running ? (
+                <Loader2 className="h-4 w-4 animate-spin text-white" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
+              <span>
+                {running
+                  ? "Agen Sedang Memetakan..."
+                  : !hasFindings
+                  ? "Menunggu Analisis Tab 1"
+                  : "Jalankan Pemetaan Bob"}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -192,7 +219,7 @@ export default function BobShellConsoleTab({
           <div className="flex items-center space-x-2">
             <span className={`h-2 w-2 rounded-full ${hasFindings ? "bg-[#0F5C2B]" : "bg-[#8C887B]"}`}></span>
             <span className="text-xs font-bold uppercase tracking-wider text-[#3C3A35]">
-              Konteks Input Temuan Regulasi (dari Tab 1 Analisis Diff)
+              Konteks Input Temuan Regulasi & Repositori Klien
             </span>
           </div>
           <span className={`rounded border px-2 py-0.5 text-[10px] font-mono font-bold ${
@@ -206,106 +233,59 @@ export default function BobShellConsoleTab({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
           <div className="rounded border border-[#DDD8CD] bg-[#F8F7F4] p-3">
-            <span className="text-[10px] font-bold uppercase text-[#4A4843] block">Regulasi Acuan (Lama):</span>
+            <span className="text-[10px] font-bold uppercase text-[#4A4843] block">Pasangan Regulasi POJK:</span>
             <span className="font-bold text-[#111110] mt-0.5 block">
-              {refLabel || "Belum Dipilih (Menunggu Tab 1)"}
+              {refLabel || "Acuan Belum Dipilih"} vs {ojkLabel || "Target Belum Dipilih"}
             </span>
             <span className="text-[11px] text-[#4A4843] line-clamp-1 mt-0.5">
-              {selectedReference?.judul || "Pilih dokumen acuan di Tab 1"}
+              Acuan: {selectedReference?.judul || "POJK Acuan"}
             </span>
           </div>
 
           <div className="rounded border border-[#DDD8CD] bg-[#F8F7F4] p-3">
-            <span className="text-[10px] font-bold uppercase text-[#4A4843] block">Regulasi Pembaruan (Target):</span>
-            <span className="font-bold text-[#111110] mt-0.5 block">
-              {ojkLabel || "Belum Dipilih (Menunggu Tab 1)"}
+            <span className="text-[10px] font-bold uppercase text-[#4A4843] block">Perusahaan & Target Repositori:</span>
+            <span className="font-bold text-[#111110] mt-0.5 block truncate">
+              {companyOrg}
             </span>
-            <span className="text-[11px] text-[#4A4843] line-clamp-1 mt-0.5">
-              {selectedRegulation?.judul || "Pilih dokumen pembaruan di Tab 1"}
+            <span className="text-[11px] text-[#4A4843] mt-0.5 block font-mono">
+              Folder: <span className="font-bold text-[#111110]">{targetRepoName}</span>
             </span>
           </div>
 
           <div className="rounded border border-[#DDD8CD] bg-[#F8F7F4] p-3">
             <span className="text-[10px] font-bold uppercase text-[#4A4843] block">Klausul Kepatuhan Teridentifikasi:</span>
             <span className={`font-bold mt-0.5 block text-sm ${hasFindings ? "text-[#0F5C2B]" : "text-[#8C887B]"}`}>
-              {hasFindings ? `${findingsCount} Klausul Siap Dipetakan` : "Belum Dianalisis (Menunggu Tab 1)"}
+              {hasFindings ? `${findingsCount} Klausul Terverifikasi` : "Belum Dianalisis (Menunggu Tab 1)"}
             </span>
             <span className="text-[11px] text-[#4A4843] mt-0.5 block">
-              Target Repo:{" "}
-              {hasFindings ? (
-                <code className="font-mono font-bold text-[#111110]">mock_fintech_repo/</code>
-              ) : (
-                <span className="text-[#8C887B]">Menunggu Analisis Tab 1</span>
-              )}
+              Status: <span className="text-[#0F5C2B] font-semibold">{hasFindings ? "Siap Dipetakan ke Kode" : "Menunggu Analisis Tab 1"}</span>
             </span>
           </div>
         </div>
       </div>
 
-      {/* Terminal View */}
-      <div className="rounded-md border border-[#C8C2B5] bg-[#1A1917] overflow-hidden shadow-sm">
-        <div className="flex items-center justify-between bg-[#2D2C28] px-4 py-2.5 border-b border-[#3C3A35]">
-          <div className="flex items-center space-x-2">
-            <Terminal className="h-4 w-4 text-[#A3D4B0]" />
-            <span className="text-xs font-mono font-bold text-white">
-              ibm-bob-shell --workspace mock_fintech_repo --input data/temuan.json --mcp-config .bob/mcp.json
-            </span>
+      {/* Background Agent Execution Status (Clean & Headless) */}
+      {running && (
+        <div className="rounded-md border border-[#AECBFA] bg-[#F4F8FE] p-5 shadow-xs flex items-center space-x-4">
+          <div className="h-10 w-10 rounded-full bg-[#E8F0FE] flex items-center justify-center shrink-0 border border-[#AECBFA]">
+            <Loader2 className="h-5 w-5 text-[#1A73E8] animate-spin" />
           </div>
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={clearLogs}
-              disabled={running}
-              className="flex items-center space-x-1 text-[11px] font-mono text-[#DDD8CD] hover:text-white px-2 py-0.5 rounded bg-[#3C3A35] hover:bg-[#4A4843] transition-colors cursor-pointer disabled:opacity-50"
-              title="Bersihkan log konsol"
-            >
-              <RotateCcw className="h-3 w-3" />
-              <span>Bersihkan Log</span>
-            </button>
-            {mcpConnected ? (
-              <span className="text-[11px] font-mono text-[#A3D4B0] flex items-center gap-1.5 font-bold">
-                <span className="h-2 w-2 rounded-full bg-[#A3D4B0] animate-pulse"></span>
-                MCP Server Terhubung
+          <div className="space-y-0.5 min-w-0 flex-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs font-bold text-[#1A73E8] uppercase tracking-wider">
+                Pemrosesan Agen IBM Bob di Latar Belakang (MCP)
               </span>
-            ) : (
-              <span className="text-[11px] font-mono text-[#F4B3AE] flex items-center gap-1.5 font-bold">
-                <span className="h-2 w-2 rounded-full bg-[#C5221F]"></span>
-                MCP Server Terputus
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="p-4 font-mono text-xs space-y-2 max-h-80 overflow-y-auto">
-          {logs.map((log, idx) => {
-            let color = "text-[#EFECE6]";
-            let badge = null;
-
-            if (log.type === "tool_call") {
-              color = "text-[#A3D4B0]";
-              badge = <span className="rounded bg-[#FFFFFF]/10 text-[#A3D4B0] px-1.5 py-0.5 text-[10px] mr-2 font-bold border border-[#A3D4B0]/30">MCP Tool</span>;
-            } else if (log.type === "thought") {
-              color = "text-[#F8F7F4]";
-              badge = <span className="rounded bg-[#F5D68B]/20 text-[#F5D68B] px-1.5 py-0.5 text-[10px] mr-2 font-bold border border-[#F5D68B]/30">Bob Reasoning</span>;
-            } else if (log.type === "success") {
-              color = "text-[#A3D4B0]";
-              badge = <span className="rounded bg-[#A3D4B0]/20 text-[#A3D4B0] px-1.5 py-0.5 text-[10px] mr-2 font-bold border border-[#A3D4B0]/30">Handoff</span>;
-            }
-
-            return (
-              <div key={idx} className={`leading-relaxed ${color}`}>
-                {badge}
-                <span>{log.msg}</span>
-              </div>
-            );
-          })}
-          {running && (
-            <div className="flex items-center space-x-2 text-[#C8C2B5] animate-pulse">
-              <span className="inline-block h-3 w-1 bg-[#A3D4B0]"></span>
-              <span>Menunggu output eksekusi Bob berikutnya...</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-[#1A73E8] animate-pulse"></span>
             </div>
-          )}
+            <p className="text-xs font-semibold text-[#111110] truncate">
+              {currentStatusMsg || "Agen IBM Bob sedang memindai repositori dan merumuskan draf patch via MCP..."}
+            </p>
+            <p className="text-[11px] text-[#4A4843]">
+              Target: <span className="font-mono font-bold text-[#111110]">{targetRepoName}</span> • Protokol Localhost MCP (127.0.0.1:8765) • Status: Eksekusi Otomatis
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Success Banner & Call-to-Action to Tab 3 */}
       {isHandoffDone && onNavigateToReview && (

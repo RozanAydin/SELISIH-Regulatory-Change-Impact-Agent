@@ -64,6 +64,32 @@ def run_embedded_analysis(
     )
 
 
+def _extract_numerals(text: str) -> dict:
+    """Ekstrak nilai numerik signifikan (Rupiah, persentase, durasi hari/bulan) dari teks."""
+    import re
+    return {
+        "rupiah": re.findall(r"Rp\.?\s*([\d.,]+(?:\.\d{3})*(?:,\d+)?)", text, re.IGNORECASE),
+        "persen": re.findall(r"([\d,.]+)\s*(?:persen|%)(?:\s+per\s+hari)?", text, re.IGNORECASE),
+        "hari": re.findall(r"(\d+)\s*(?:hari|Hari)", text),
+        "bulan": re.findall(r"(\d+)\s*(?:bulan|Bulan)", text),
+    }
+
+
+def _diff_numerals(old_nums: dict, new_nums: dict) -> list[dict]:
+    """Bandingkan nilai numerik antara regulasi acuan dan regulasi baru."""
+    diffs = []
+    for label in ("rupiah", "persen", "hari", "bulan"):
+        o_vals = old_nums.get(label, [])
+        n_vals = new_nums.get(label, [])
+        if o_vals and n_vals and o_vals[0] != n_vals[0]:
+            diffs.append({
+                "type": label,
+                "old_value": o_vals[0],
+                "new_value": n_vals[0],
+            })
+    return diffs
+
+
 def _run_builtin_embedded_engine(
     input_text: str,
     acuan_info: dict | None = None,
@@ -133,7 +159,7 @@ def _run_builtin_embedded_engine(
 
     findings: List[Dict[str, Any]] = []
 
-    # Cek pasal plafon pinjaman
+    # 1. Cek klausul batas pinjaman / pendanaan
     has_loan = any(k in text_lower for k in ["pinjaman", "plafon", "50.000.000", "50 juta", "50_000_000", "pendanaan", "pemberian pinjaman"])
     if has_loan or "22" in b_nomor:
         ref_matches = query_reference_clauses("Batas maksimum total pemberian pinjaman dana adalah sebesar Rp20.000.000", n_results=1)
@@ -180,7 +206,7 @@ def _run_builtin_embedded_engine(
         }
         findings.append(finding_loan)
 
-    # Cek pasal suku bunga harian
+    # 2. Cek klausul suku bunga harian / manfaat ekonomi
     has_rate = any(k in text_lower for k in ["bunga", "suku bunga", "manfaat ekonomi", "0,1%", "0.1%"])
     if has_rate or "22" in b_nomor:
         ref_matches = query_reference_clauses("tingkat suku bunga harian yang dikenakan tidak melebihi 0,4 persen per hari", n_results=1)
