@@ -1,0 +1,16 @@
+{"id":"G001","pasal_baru":"Pasal 18","ayat_baru":"(3)","pasal_lama":"Pasal 14","ayat_lama":"(3)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G002","pasal_baru":"Pasal 30","ayat_baru":"(2)","pasal_lama":"Pasal 25","ayat_lama":"(2)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G003","pasal_baru":"Pasal 32","ayat_baru":"(1)","pasal_lama":"Pasal 27","ayat_lama":"(1)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G004","pasal_baru":"Pasal 45","ayat_baru":"(8)","pasal_lama":"Pasal 40","ayat_lama":"(8)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G005","pasal_baru":"Pasal 46","ayat_baru":"(6)","pasal_lama":"Pasal 41","ayat_lama":"(5)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G006","pasal_baru":"Pasal 51","ayat_baru":"(1)","pasal_lama":"Pasal 44","ayat_lama":"(1)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G007","pasal_baru":"Pasal 51","ayat_baru":"(3)","pasal_lama":"Pasal 44","ayat_lama":"(3)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G008","pasal_baru":"Pasal 51","ayat_baru":"(5)","pasal_lama":"Pasal 44","ayat_lama":"(5)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G009","pasal_baru":"Pasal 54","ayat_baru":"(2)","pasal_lama":"Pasal 47","ayat_lama":"(2)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G010","pasal_baru":"Pasal 74","ayat_baru":"(2)","pasal_lama":"Pasal 63","ayat_lama":"(3)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G011","pasal_baru":"Pasal 76","ayat_baru":"(3)","pasal_lama":"Pasal 63","ayat_lama":"(3)","jenis":"tidak_berubah","note":"teks ayat identik (exact match dalam corpus)"}
+{"id":"G012","pasal_baru":"Pasal 32","ayat_baru":"(2)","pasal_lama":"Pasal 27","ayat_lama":"(2)","jenis":"diubah","note":"struktur dirombak: khusus orang perseorangan; pemilik manfaat Korporasi dipindah"} 
+{"id":"G013","pasal_baru":"Pasal 32","ayat_baru":"(3)","pasal_lama":"Pasal 27","ayat_lama":null,"jenis":"diubah","note":"kewajiban CDD/EDD untuk Pemilik Manfaat Korporasi/legal arrangement yang sebelumnya di ayat (2)"}
+{"id":"G014","pasal_baru":"Pasal 49","ayat_baru":"(1)","pasal_lama":"Pasal 42","ayat_lama":"(1)","jenis":"diubah","note":"kriteria penolakan hubungan usaha dirinci ulang"}
+{"id":"G015","pasal_baru":"Pasal 53","ayat_baru":"(1)","pasal_lama":"Pasal 68","ayat_lama":null,"jenis":"kewajiban_baru","note":"PPPSPM baru: pemeliharaan dan pengkinian DTTOT/DPPSPM dari OJK"}
+{"id":"G016","pasal_baru":"Pasal 77","ayat_baru":"(1)","pasal_lama":null,"ayat_lama":null,"jenis":"kewajiban_baru","note":"PPPSPM baru: laporan pemblokiran serta-merta terkait DTTOT ke Kepolisian"}

@@ -1,0 +1,20 @@
+{
+  "old": {
+    "doc_id": "POJK-12-2017",
+    "pages": 59,
+    "empty_pages": 0,
+    "pasal_headings": 70,
+    "pasal_unique": 70,
+    "objects": 179,
+    "checksum": "5b865a558873e60b23de9df2a60868276633f9d51079c221eae7b2ec96806a8a"
+  },
+  "new": {
+    "doc_id": "POJK-8-2023",
+    "pages": 117,
+    "empty_pages": 0,
+    "pasal_headings": 90,
+    "pasal_unique": 90,
+    "objects": 290,
+    "checksum": "e869df89e048ab61e41c23e007dc6cbe064789d9abc61952b720a17da57dc48b"
+  }
+}

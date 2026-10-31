@@ -1,0 +1,202 @@
+[
+  {
+    "id": "G001",
+    "pasal_baru": "Pasal 18",
+    "ayat_baru": "(3)",
+    "pasal_lama": "Pasal 14",
+    "ayat_lama": "(3)",
+    "jenis": "tidak_berubah",
+    "kategori": "CDD",
+    "note": "teks ayat identik mengenai verifikasi identitas calon nasabah"
+  },
+  {
+    "id": "G002",
+    "pasal_baru": "Pasal 30",
+    "ayat_baru": "(2)",
+    "pasal_lama": "Pasal 25",
+    "ayat_lama": "(2)",
+    "jenis": "tidak_berubah",
+    "kategori": "Pemantauan",
+    "note": "kewajiban pemantauan profil transaksi nasabah berkala"
+  },
+  {
+    "id": "G003",
+    "pasal_baru": "Pasal 32",
+    "ayat_baru": "(1)",
+    "pasal_lama": "Pasal 27",
+    "ayat_lama": "(1)",
+    "jenis": "tidak_berubah",
+    "kategori": "BO",
+    "note": "prinsip identifikasi Pemilik Manfaat (Beneficial Owner)"
+  },
+  {
+    "id": "G004",
+    "pasal_baru": "Pasal 45",
+    "ayat_baru": "(8)",
+    "pasal_lama": "Pasal 40",
+    "ayat_lama": "(8)",
+    "jenis": "tidak_berubah",
+    "kategori": "Dokumentasi",
+    "note": "penatausahaan dokumen transaksi minimal 5 tahun"
+  },
+  {
+    "id": "G005",
+    "pasal_baru": "Pasal 46",
+    "ayat_baru": "(6)",
+    "pasal_lama": "Pasal 41",
+    "ayat_lama": "(5)",
+    "jenis": "tidak_berubah",
+    "kategori": "Teknologi",
+    "note": "pemeliharaan sistem informasi pemantauan transaksi terkomputerisasi"
+  },
+  {
+    "id": "G006",
+    "pasal_baru": "Pasal 51",
+    "ayat_baru": "(1)",
+    "pasal_lama": "Pasal 44",
+    "ayat_lama": "(1)",
+    "jenis": "tidak_berubah",
+    "kategori": "Cross-Border",
+    "note": "kewajiban transfer dana lintas batas negara"
+  },
+  {
+    "id": "G007",
+    "pasal_baru": "Pasal 51",
+    "ayat_baru": "(3)",
+    "pasal_lama": "Pasal 44",
+    "ayat_lama": "(3)",
+    "jenis": "tidak_berubah",
+    "kategori": "Cross-Border",
+    "note": "verifikasi kelengkapan informasi pengirim transfer dana"
+  },
+  {
+    "id": "G008",
+    "pasal_baru": "Pasal 51",
+    "ayat_baru": "(5)",
+    "pasal_lama": "Pasal 44",
+    "ayat_lama": "(5)",
+    "jenis": "tidak_berubah",
+    "kategori": "Cross-Border",
+    "note": "penolakan transfer dana jika informasi tidak lengkap"
+  },
+  {
+    "id": "G009",
+    "pasal_baru": "Pasal 54",
+    "ayat_baru": "(2)",
+    "pasal_lama": "Pasal 47",
+    "ayat_lama": "(2)",
+    "jenis": "tidak_berubah",
+    "kategori": "Audit",
+    "note": "evaluasi independen audit kepatuhan APU PPT"
+  },
+  {
+    "id": "G010",
+    "pasal_baru": "Pasal 74",
+    "ayat_baru": "(2)",
+    "pasal_lama": "Pasal 63",
+    "ayat_lama": "(3)",
+    "jenis": "tidak_berubah",
+    "kategori": "Pelaporan",
+    "note": "prosedur teknis pelaporan transaksi tunai ke PPATK"
+  },
+  {
+    "id": "G011",
+    "pasal_baru": "Pasal 76",
+    "ayat_baru": "(3)",
+    "pasal_lama": "Pasal 63",
+    "ayat_lama": "(3)",
+    "jenis": "tidak_berubah",
+    "kategori": "Pelaporan",
+    "note": "mekanisme pelaporan transaksi keuangan mencurigakan"
+  },
+  {
+    "id": "G012",
+    "pasal_baru": "Pasal 32",
+    "ayat_baru": "(2)",
+    "pasal_lama": "Pasal 27",
+    "ayat_lama": "(2)",
+    "jenis": "diubah",
+    "kategori": "BO",
+    "note": "struktur dirombak: penguatan verifikasi Pemilik Manfaat perorangan"
+  },
+  {
+    "id": "G013",
+    "pasal_baru": "Pasal 32",
+    "ayat_baru": "(3)",
+    "pasal_lama": "Pasal 27",
+    "ayat_lama": null,
+    "jenis": "diubah",
+    "kategori": "BO",
+    "note": "kewajiban CDD/EDD untuk Pemilik Manfaat Korporasi dan legal arrangement"
+  },
+  {
+    "id": "G014",
+    "pasal_baru": "Pasal 49",
+    "ayat_baru": "(1)",
+    "pasal_lama": "Pasal 42",
+    "ayat_lama": "(1)",
+    "jenis": "diubah",
+    "kategori": "Risk Rating",
+    "note": "kriteria penolakan hubungan usaha dan terminasi rekening dirinci ulang"
+  },
+  {
+    "id": "G015",
+    "pasal_baru": "Pasal 53",
+    "ayat_baru": "(1)",
+    "pasal_lama": "Pasal 68",
+    "ayat_lama": null,
+    "jenis": "kewajiban_baru",
+    "kategori": "PPPSPM",
+    "note": "PPPSPM baru: pemeliharaan dan pengkinian DTTOT/DPPSPM dari OJK secara otomatis"
+  },
+  {
+    "id": "G016",
+    "pasal_baru": "Pasal 77",
+    "ayat_baru": "(1)",
+    "pasal_lama": null,
+    "ayat_lama": null,
+    "jenis": "kewajiban_baru",
+    "kategori": "PPPSPM",
+    "note": "PPPSPM baru: laporan pemblokiran serta-merta terkait DTTOT ke OJK dan Kepolisian"
+  },
+  {
+    "id": "G017",
+    "pasal_baru": "Pasal 53",
+    "ayat_baru": "(2)",
+    "pasal_lama": "Pasal 47",
+    "ayat_lama": "(3)",
+    "jenis": "diubah",
+    "kategori": "Sanksi Proliferasi",
+    "note": "perluasan penyaringan nama nasabah terhadap daftar proliferasi senjata pemusnah massal"
+  },
+  {
+    "id": "G018",
+    "pasal_baru": "Pasal 76",
+    "ayat_baru": "(1)",
+    "pasal_lama": "Pasal 63",
+    "ayat_lama": "(1)",
+    "jenis": "diubah",
+    "kategori": "Pelaporan",
+    "note": "pengetatan batas waktu pelaporan transaksi mencurigakan paling lambat 3 hari kerja"
+  },
+  {
+    "id": "G019",
+    "pasal_baru": "Pasal 100",
+    "ayat_baru": "(1)",
+    "pasal_lama": "Pasal 68",
+    "ayat_lama": "(1)",
+    "jenis": "diubah",
+    "kategori": "Sanksi Denda",
+    "note": "eskalasi sanksi administratif dan denda kepatuhan finansial hingga Rp 100 Miliar"
+  },
+  {
+    "id": "G020",
+    "pasal_baru": "Pasal 102",
+    "ayat_baru": "(1)",
+    "pasal_lama": null,
+    "ayat_lama": null,
+    "jenis": "kewajiban_baru",
+    "kategori": "Peralihan",
+    "note": "ketentuan peralihan pembaruan konfigurasi sistem core banking maksimal 6 bulan"
+  }
+]

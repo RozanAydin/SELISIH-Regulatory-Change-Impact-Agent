@@ -1,0 +1,2258 @@
+ 
+ 
+OTORITAS JASA KEUANGAN 
+REPUBLIK INDONESIA 
+SALINAN 
+PERATURAN OTORITAS JASA KEUANGAN  
+NOMOR 12 /POJK.01/2017 
+ TENTANG 
+PENERAPAN PROGRAM ANTI PENCUCIAN UANG DAN PENCEGAHAN 
+PENDANAAN TERORISME DI SEKTOR JASA KEUANGAN 
+ 
+DENGAN RAHMAT TUHAN YANG MAHA ESA 
+ 
+DEWAN KOMISIONER OTORITAS JASA KEUANGAN, 
+ 
+ 
+Menimbang : a.  bahwa dengan sem akin berkembangnya kompleksitas  
+produk dan  layanan jasa keuangan termasuk 
+pemasarannya ( multi channel marketing ), serta semakin 
+meningkatnya penggunaan teknologi informasi pada 
+industri jasa keuangan  maka semakin tinggi risiko 
+Penyedia Jasa Keuangan digunakan sebagai sarana 
+Pencucian Uang dan/atau Pendanaan Terorisme; 
+     b. bahwa peningkatan risiko yang dihadapi Penyedia Jasa 
+Keuangan perlu diimbangi dengan penin gkatan kualitas 
+penerapan program anti Pencucian Uang dan/atau 
+pencegahan Pendanaan Terorisme yang didasarkan pada 
+pendekatan berbasis risiko ( risk based approach ) sesuai 
+dengan prinsip -prinsip umum yang berlaku secara 
+internasional;  
+  c. bahwa perlu adanya harmonisasi dan integrasi 
+pengaturan mengenai penerapan program anti Pencucian 
+Uang dan/atau pencegahan Pendanaan Terorisme di 
+sektor jasa keuangan;
+ 
+  d.  bahwa berdasarkan pertimbangan sebagaimana dimaksud 
+dalam huruf a, huruf b, dan huruf c, perlu menetapkan 
+Peraturan Otoritas Jasa Keuangan tentang Penerapan 
+Program Anti Pencucian Uang dan Pencegahan Pendanaan 
+Terorisme di Sektor Jasa Keuangan; 
+ 
+Mengingat : 1.  Undang-Undang Nomor 8 Tahun 2010 tentang 
+Pencegahan dan Pemberantasan Tindak Pidana Pencucian 
+Uang (Lembaran Negara Republik Indonesia Tahun 2010 
+Nomor 122, Tambahan Lembaran Negara Republik 
+Indonesia Nomor 5164); 
+  2.  Undang-Undang Nomor 21 Tahun 2011 tentang Otoritas 
+Jasa Keuangan (Lembaran Negara Republik Indonesia 
+Tahun 2011 Nomor 111, Tambahan Lembaran Negara 
+Republik Indonesia Nomor 5253);  
+  3.  Undang-Undang Nomor 9 Tahun 2013 tentang 
+Pencegahan dan Pemberantasan Tindak P idana 
+Pendanaan Terorisme (Lembaran Negara Republik 
+Indonesia Tahun 2013 Nomor 50, Tambahan Lembaran 
+Negara Republik Indonesia Nomor 5406); 
+ 
+MEMUTUSKAN: 
+Menetapkan : PERATURAN OTORITAS JASA KEUANGAN TENTANG 
+PENERAPAN PROGRAM ANTI PENCUCIAN UANG DAN 
+PENCEGAHAN PENDANAAN TERORISME DI SEKTOR JASA 
+KEUANGAN. 
+ 
+BAB I 
+KETENTUAN UMUM 
+ 
+Pasal 1 
+Dalam Peraturan Otoritas Jasa Keuangan ini, yang dimaksud 
+dengan: 
+1. Otoritas Jasa Keuangan yang selanjutnya disingkat OJK, 
+adalah lembaga yang independen yang mempunyai fungsi, 
+tugas, dan wewenang pengaturan, pengawasan, 
+pemeriksaan, dan penyidikan sebagaimana dimaksud 
+- 2 - 
+ 
+dalam Undang-Undang yang mengatur mengenai Otoritas 
+Jasa Keuangan. 
+2. Penyedia Jasa Keuangan yang selanjutnya disingkat PJK 
+adalah PJK di Sektor Perbankan, PJK di Sektor Pasar 
+Modal, dan PJK di Sektor Industri Keuangan Non Bank. 
+3. PJK di Sektor Perbankan adalah bank umum, termasuk 
+kantor cabang dari bank ya ng berkedudukan di luar 
+negeri, bank umum syariah, bank perkreditan rakyat yang 
+selanjutnya disebut BPR, dan bank pembiayaan rakyat 
+syariah yang selanjutnya disebut BPRS sebagaimana 
+diatur dalam ketentuan peraturan perundang -undangan 
+di bidang Perbankan. 
+4. PJK di Sektor Pasar Modal adalah perusahaan efek yang 
+melakukan kegiatan usaha sebagai penjamin emisi efek, 
+perantara pedagang efek, dan/atau manajer investasi, 
+serta bank umum yang menjalankan fungsi kustodian 
+sebagaimana dimaksud dalam  ketentuan peraturan 
+perundang-undangan di bidang Pasar Modal. 
+5. PJK di Sektor Industri Keuangan Non Bank adalah 
+perusahaan asuransi, perusahaan asuransi syariah, 
+perusahaan pialang asuransi, dana pensiun lembaga 
+keuangan (DPLK), perusahaan pembiayaan, perusahan 
+modal ventura (PMV), perusahaan pembiayaan 
+infrastruktur, lembaga pembiayaan ekspor Indonesia 
+(LPEI), perusahaan pergadaian, lembaga keuangan mikro 
+(LKM), dan penyelenggara layanan pinjam meminjam uang 
+berbasis teknologi informasi  sebagaimana dimaksud 
+dalam ketentuan peraturan perundang -undangan di 
+Industri Keuangan Non Bank. 
+6. Pencucian Uang adalah pencucian uang sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai pencegahan dan pemberantasan tindak pidana 
+Pencucian Uang. 
+7. Pendanaan Terorisme adalah pendanaan terorisme 
+sebagaimana   dimaksud   dalam   Undang-Undang   yang  
+  
+- 3 - 
+ 
+mengatur mengenai pencegahan dan pemberantasan 
+tindak pidana Pendanaan Terorisme. 
+8. Calon Nasabah adalah pihak yang akan menggunakan 
+jasa PJK.  
+9. Nasabah adalah pihak yang menggunakan jasa PJK. 
+10. Walk in Customer  yang untuk selanjutnya disingkat WIC 
+adalah pihak yang menggunakan jasa PJK di Sektor 
+Perbankan atau PJK di Sektor Pasar Modal namun tidak 
+memiliki rekening pada PJK di Sektor Perbankan atau PJK 
+di Sektor Pasar Modal tersebut, tidak termasuk pihak yang 
+mendapatkan perintah atau penugasan dari Nasabah 
+untuk melakukan transaksi atas kepentingan Nasabah.  
+11. Uji Tuntas Nasabah ( Customer Due Diligence ) yang 
+selanjutnya disingkat CDD adalah kegiatan berupa 
+identifikasi, verifikasi, dan pemantauan yang dilakukan 
+oleh PJK untuk memastikan transaksi sesuai dengan 
+profil, karakteristik, dan/atau pola transaksi Calon 
+Nasabah, Nasabah, atau WIC. 
+12. Uji Tuntas Lanjut ( Enhanced Due Diligence ) yang 
+selanjutnya disingkat EDD adalah tindakan CDD lebih 
+mendalam yang dilakukan PJK  terhadap Calon Nasabah, 
+WIC, atau Nasabah, yang berisiko tinggi termasuk PEP 
+dan/atau dalam area berisiko tinggi.  
+13. Nasabah Berisiko Tinggi ( High Risk Customers ) adalah 
+Nasabah yang berdasarkan latar belakang, identitas dan 
+riwayatnya dianggap memiliki ris iko tinggi melakukan 
+kegiatan terkait tindak pidana Pencucian Uang dan/atau 
+Pendanaan Terorisme. 
+14. Transaksi Keuangan Mencurigakan adalah transaksi 
+keuangan mencurigakan sebagaimana dimaksud dalam 
+Undang-Undang yang mengatur mengenai pencegahan 
+dan pemberant asan tindak pidana Pencucian Uang dan 
+Undang-Undang yang mengatur mengenai pencegahan 
+dan pemberantasan tindak pidana Pendanaan Terorisme. 
+15. Transaksi Keuangan Tunai adalah transaksi keuangan 
+tunai sebagaimana dimaksud dalam Undang-Undang yang 
+- 4 - 
+ 
+mengatur menge nai pencegahan dan pemberantasan 
+tindak pidana Pencucian Uang. 
+16. Pusat Pelaporan dan Analisis Transaksi Keuangan yang 
+selanjutnya disingkat PPATK adalah PPATK sebagaimana 
+dimaksud dalam Undang-Undang yang me ngatur 
+mengenai pencegahan dan pemberantasan tindak pidana 
+Pencucian Uang. 
+17. Anti Pencucian Uang dan Pencegahan Pendanaan 
+Terorisme yang selanjutnya disingkat APU dan PPT adalah 
+upaya pencegahan dan pemberantasan tindak pidana 
+Pencucian Uang dan Pendanaan Terorisme. 
+18. Direksi:  
+a. bagi PJK di Sektor Perbankan, PJK di Sektor Pasar 
+Modal, PJK di Sektor Industri Keuangan Non Bank 
+berbentuk badan hukum perseroan terbatas adalah 
+direksi sebagaimana dimaksud dalam Undang-
+Undang yang mengatur mengenai perseroan terbatas; 
+b. bagi BPR, perusahaan asuransi, perusahaan 
+asuransi syariah, perusahaan pialang asuransi, 
+perusahaan pembiayaan, PMV, perusahaan 
+pembiayaan infrastruktur, perusahaan pergadaian, 
+LKM atau penyelenggara layanan pinjam meminjam 
+uang berbasis teknologi informasi  berbentuk badan 
+hukum koperasi adalah pengurus sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai perkoperasian; 
+c. bagi perusahaan asuransi, perusahaan asuransi 
+syariah, atau perusahaan pialang asuransi berbentuk 
+badan hukum usaha bersama adalah direksi 
+sebagaimana dimaksud dalam anggaran dasar 
+perusahaan;  
+d. bagi PMV berbentuk badan usaha perseroan 
+komanditer adalah yang setara dengan direksi 
+sebagaimana dimaksud dalam anggaran dasar 
+perusahaan; 
+- 5 - 
+ 
+e. bagi DPLK adalah pengurus sebagaimana dimaksud 
+dalam Undang-Undang yang mengatur mengenai 
+dana pensiun; 
+f. bagi LPEI adalah direktur eksekutif sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai LPEI; dan 
+g. bagi BPR berbentuk hukum perusahaan umum 
+daerah, perusahaan perseroan daerah, atau 
+perusahaan daerah adalah direksi sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai pemerintahan daerah. 
+19. Dewan Komisaris: 
+a. bagi PJK di Sektor Perbankan, PJK di S ektor Pasar 
+Modal, PJK di Sektor Industri Keuangan Non Bank 
+berbentuk badan hukum perseroan terbatas adalah 
+dewan komisaris sebagaimana dimaksud dalam 
+Undang-Undang yang mengatur mengenai perseroan 
+terbatas; 
+b. bagi BPR, perusahaan asuransi, perusahaan 
+asuransi syariah, perusahaan pialang asuransi, 
+perusahaan pembiayaan, PMV, perusahaan 
+pembiayaan infrastruktur, perusahaan pergadaian , 
+LKM, atau penyelenggara layanan pinjam meminjam 
+uang berbasis teknologi informasi berbentuk badan 
+hukum koperasi adalah pengawas sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai perkoperasian; 
+c. bagi perusahaan asuransi, perusahaan asuransi 
+syariah, atau perusahaan pialang asuransi berbentuk 
+badan hukum usaha bersama adalah dewan 
+komisaris sebagaimana dimaksud d alam anggaran 
+dasar perusahaan; 
+d. bagi PMV berbentuk badan usaha perseroan 
+komanditer adalah yang setara dengan dewan 
+komisaris sebagaimana dimaksud dalam anggaran 
+dasar perusahaan; 
+- 6 - 
+ 
+e. bagi DPLK adalah dewan pengawas sebagaimana 
+dimaksud dalam Undang-Undang yan g mengatur 
+mengenai dana pensiun; 
+f. bagi LPEI adalah dewan direktur sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai lembaga pembiayaan ekspor Indonesia; dan 
+g. bagi BPR berbentuk hukum perusahaan umum 
+daerah, perusahaan perseroan daerah, atau 
+perusahaan daerah, adalah pengawas sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai pemerintahan daerah. 
+20. Pemilik Manfaat ( Beneficial Owner ) adalah setiap orang 
+yang: 
+a. berhak atas dan/atau menerima manfaat tertentu 
+yang berkaitan dengan rekening Nasabah; 
+b. merupakan pemilik sebenarnya dari dana dan/atau 
+efek yang ditempatkan pada PJK ( ultimately own 
+account); 
+c. mengendalikan transaksi Nasabah; 
+d. memberikan kuasa untuk melakukan transaksi; 
+e. mengendalikan korporasi atau perikatan lainnya 
+(legal arrangement); dan/atau  
+f. merupakan pengendali akhir dari transaksi yang 
+dilakukan melalui badan hukum atau berdasarkan 
+suatu perjanjian. 
+21. Korporasi adalah kumpulan orang dan/atau kelompok 
+yang terorganisasi, baik yang merupakan badan hukum 
+(legal person) maupun bukan badan hukum, antara lain: 
+perusahaan, yayasan, koperasi, perkumpulan keagamaan, 
+partai politik, lembaga swadaya masyarakat atau 
+organisasi non profit, dan organisasi kemasyarakatan. 
+22. Rekomendasi Financial Action Task Force  yang untuk 
+selanjutnya d isebut Rekomendasi FATF adalah standar 
+pencegahan dan pemberantasan Pencucian Uang 
+dan/atau Pendanaan Terorisme yang dikeluarkan oleh 
+FATF.  
+- 7 - 
+ 
+23. Negara Berisiko Tinggi (High Risk Countries) adalah negara 
+atau teritori yang potensial digunakan sebagai tempat: 
+a. terjadinya atau sarana tindak pidana Pencucian 
+Uang; 
+b. dilakukannya tindak pidana asal ( predicate crime ); 
+dan/atau 
+c. dilakukannya aktivitas pendanaan  kegiatan 
+terorisme. 
+24. Lembaga Negara adalah lembaga yang memiliki 
+kewenangan di bidang eksekutif, yudikatif, atau legislatif. 
+25. Instansi Pemerintah adalah sebutan kolektif dari unit 
+organisasi pemerintahan yang menjalankan tugas dan 
+fungsinya, meliputi: 
+a. kementerian koordinator; 
+b. kementerian negara; 
+c. kementerian; 
+d. Lembaga Negara non kementerian; 
+e. pemerintah propinsi; 
+f. pemerintah kota; 
+g. pemerintah kabupaten; 
+h. Lembaga Negara yang dibentuk berdasarkan undang-
+undang; dan 
+i. lembaga-lembaga negara yang menjalankan fungsi 
+pemerintahan dengan menggunakan anggaran 
+pendapatan belanja negara dan/atau anggaran 
+pendapatan belanja daerah.  
+26. Orang yang Populer Secara Politis (Politically Exposed 
+Person) yang selanjutnya disingkat PEP meliputi: 
+a. PEP Asing yaitu orang yang diberi kewenangan untuk 
+melakukan fungsi penting ( prominent function ) oleh 
+negara lain (asing), seperti kepala negara atau  
+pemerintahan, politisi senior, pejabat pemerintah 
+senior, pejabat militer atau pejabat di  bidang 
+penegakan hukum, eksekutif senior pada perusahaan 
+yang dimiliki oleh negara, pejabat penting dalam 
+partai politik; 
+- 8 - 
+ 
+b. PEP Domestik yaitu orang yang diberi kewenangan 
+untuk melakukan fungsi penting (prominent function) 
+oleh negara, seperti kepala negara atau 
+pemerintahan, politisi senior, pejabat pemerintah 
+senior, pejabat militer atau pejabat dibidang 
+penegakan hukum, eksekutif senior pada perusahaan 
+yang di miliki oleh negara, pejabat penting dalam 
+partai politik; dan 
+c. Orang yang diberi kewenangan untuk melakukan 
+fungsi penting ( prominent function ) oleh organisasi 
+internasional, seperti senior manajer yang meliputi 
+antara lain direktur, deputi direktur, dan an ggota 
+dewan atau fungsi yang setara. 
+27. Correspondent Banking  adalah kegiatan suatu bank 
+(correspondent) dalam menyediakan layanan jasa bagi 
+bank lainnya (respondent) berdasarkan suatu kesepakatan 
+tertulis dalam rangka memberikan jasa pembayaran dan 
+jasa perbankan lainnya. 
+28. Cross Border Corespondent Banking adalah Correspondent 
+Banking dimana salah satu kedudukan bank 
+correspondent atau bank  respondent berada di luar 
+wilayah Negara Republik Indonesia. 
+29. Bank adalah bank umum yang melaksanakan kegiatan 
+usaha secara konvensional, termasuk kantor cabang dari 
+bank yang berkedudukan di luar negeri, dan bank umum 
+syariah sebagaimana diatur dalam  ketentuan peraturan 
+perundangan-undangan di bidang perbankan. 
+30. Transfer Dana adalah transfer dana sebagaimana 
+dimaksud dalam Undang-Undang yang mengatur 
+mengenai transfer dana. 
+31. Bank Pengirim adalah bank yang mengirimkan perintah 
+Transfer Dana.  
+32. Bank Penerus adalah bank yang meneruskan perintah 
+Transfer Dana dari Bank Pengirim. 
+33. Bank Penerima adalah bank yang menerima perintah 
+Transfer Dana. 
+- 9 - 
+ 
+34. Konglomerasi Keuangan (Financial Group) adalah PJK yang 
+berada dalam satu grup atau kelompok karena keterkaitan 
+kepemilikan dan/atau pengendalian. 
+ 
+BAB II 
+KEWAJIBAN PENERAPAN PROGRAM ANTI PENCUCIAN UANG 
+DAN PENCEGAHAN PENDANAAN TERORISME DI SEKTOR 
+JASA KEUANGAN 
+ 
+Pasal 2 
+PJK wajib mengidentifikasi, menilai, dan memahami risiko 
+tindak pidana Pencucian Uang dan/atau tindak pidana 
+Pendanaan Terorisme terkait dengan nasabah, negara atau 
+area geografis, produk, jasa, transaksi atau jaringan distribusi 
+(delivery channels), termasuk kewajiban untuk: 
+a. mendokumentasikan penilaian risiko; 
+b. mempertimbangkan seluruh faktor risiko yang relevan 
+sebelum menetapkan tingkat keseluruhan risiko, serta 
+tingkat dan jenis mitigasi risiko yang memadai untuk 
+diterapkan; 
+c. mengkinikan penilaian risiko secara berkala; dan 
+d. memiliki mekanisme yang memadai terkait penyediaan 
+informasi penilaian risiko kepada instansi yang 
+berwenang. 
+ 
+Pasal 3  
+(1) PJK wajib memiliki kebijakan, pengawasan, dan prosedur 
+pengelolaan dan mitigasi  risiko Pencucian Uang dan 
+Pendanaan Terorisme, yang disetujui oleh Direksi dan 
+Dewan Komisaris , agar PJK mampu mengelola dan 
+memitigasi risiko yang telah diidentifikasi. 
+(2) PJK wajib memantau penerapan kebijakan, pengawasan 
+dan prosedur sebagaimana dimaksud pada ayat (1) dan 
+meningkatkan penerapannya jika diperlukan. 
+(3) PJK wajib menetapkan tindakan yang lebih mendalam 
+untuk mengelola dan memitigasi risiko dalam hal risiko 
+yang lebih tinggi teridentifikasi. 
+- 10 - 
+ 
+Pasal 4 
+PJK wajib menerapkan program APU dan PPT untuk mengelola 
+dan memitigasi risiko yang telah diidentifikasi berdasarkan 
+penilaian risiko sebagaimana dimaksud dalam Pasal 2 dan yang 
+telah memenuhi ketentuan yang ditetapkan  dalam Peraturan 
+OJK ini.  
+ 
+Pasal 5 
+(1) Program APU dan PPT merupakan bagian dari penerapan 
+manajemen risiko PJK secara keseluruhan. 
+(2) Penerapan program APU dan PPT sebagaimana dimaksud 
+pada ayat (1) paling sedikit meliputi: 
+a. pengawasan aktif Direksi dan Dewan Komisaris; 
+b. kebijakan dan prosedur; 
+c. pengendalian intern; 
+d. sistem informasi manajemen; dan 
+e. sumber daya manusia dan pelatihan. 
+ 
+BAB III 
+PENGAWASAN AKTIF DIREKSI DAN DEWAN 
+KOMISARIS 
+ 
+Bagian Pertama 
+Pengawasan Aktif Direksi 
+ 
+Pasal 6 
+Pengawasan aktif Direksi paling kurang meliputi: 
+a. memastikan PJK memiliki kebijakan dan prosedur 
+penerapan program APU dan PPT; 
+b. mengusulkan kebijakan dan prosedur tertulis yang 
+bersifat strategis mengenai penerapan program APU dan 
+PPT kepada Dewan Komisaris;  
+c. memastikan penerapan program APU dan PPT 
+dilaksanakan sesuai dengan kebijakan dan prosedur 
+tertulis yang telah ditetapkan; 
+- 11 - 
+ 
+d. membentuk unit kerja khusus dan/atau menunjuk 
+pejabat yang bertanggung jawab terhadap penerapan 
+program APU dan PPT; 
+e. melakukan pengawasan atas kepatuhan unit kerja dalam 
+menerapkan program APU dan PPT; 
+f. memastikan bahwa kebijakan dan prosedur tertulis 
+mengenai penerapan program APU dan PPT sejalan 
+dengan perubahan dan pengembangan produk, jasa, dan 
+teknologi di sektor jasa k euangan se rta sesuai dengan 
+perkembangan modus Pencucian Uang dan/atau 
+Pendanaan Terorisme; dan 
+g. memastikan bahwa seluruh pegawai, khususnya pegawai 
+dari satuan kerja terkait dan pegawai baru, telah 
+mengikuti pelatihan yang berkaitan dengan penerapan 
+program APU dan PPT secara berkala. 
+ 
+Bagian Kedua 
+Pengawasan Aktif Dewan Komisaris 
+ 
+Pasal 7 
+Pengawasan aktif Dewan Komisaris paling kurang meliputi: 
+a. memberikan persetujuan atas kebijakan dan prosedur 
+penerapan program APU dan PPT yang diusulkan oleh 
+Direksi; 
+b. melakukan pengawasan atas pelaksanaan tanggung jawab 
+Direksi terhadap penerapan program APU dan PPT; dan 
+c. memastikan adanya pembahasan terkait Pencucian Uang 
+dan/atau Pendanaan Terorisme dalam rapat Direksi dan 
+Dewan Komisaris. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 12 - 
+ 
+Bagian Ketiga 
+Penanggung Jawab Penerapan Program APU dan PPT 
+ 
+Paragraf 1 
+Umum 
+ 
+Pasal 8 
+(1) PJK wajib membentuk unit kerja khusus dan/atau 
+menunjuk pejabat sebagai penanggung jawab penerapan 
+program APU dan PPT, pada kantor pusat dan kantor 
+cabang.  
+(2) Unit kerja khusus dan/atau pejabat yang ditunjuk 
+sebagaimana dimaksud pada ayat (1) ditetapkan sebagai 
+bagian dari struktur organisasi PJK dan bertanggung 
+jawab kepada Direksi. 
+(3) Bagi bank umum, BPR, dan PJK di S ektor Pasar Modal, 
+unit kerja khusus dan/atau pejabat yang ditunjuk 
+sebagaimana dimaksud pada ayat (1) bertanggung  jawab 
+kepada Direktur yang membawahkan fungsi kepatuhan. 
+(4) Bagi BPRS dan PJK di S ektor I ndustri Keuangan Non 
+Bank, penanggung jawab penerapan program APU dan 
+PPT dapat dilaksanakan oleh salah satu anggota Direksi. 
+(5) PJK wajib memastikan bahwa unit kerja khusus dan/atau 
+pejabat yang bertanggung jawab atas penerapan program 
+APU dan PPT sebagaimana dimaksud pada ayat (1), 
+memiliki kemampuan yang memadai dan memiliki 
+kewenangan untuk mengakses seluruh data Nasabah dan 
+informasi lainnya yang terkait. 
+(6) Dalam hal PJK di Sektor Pasar Modal merupakan 
+perusahaan efek yang melakukan kegiatan usaha sebagai 
+penjamin emisi efek, perantara pedagang efek, dan/atau 
+manajer investasi dalam satu badan usaha, PJK di Sektor 
+Pasar Modal tersebut dapat  hanya memiliki satu 
+penanggung jawab penerapan program APU dan PPT.  
+(7) Dalam hal PJK di Sektor Pasar Modal merupakan bank 
+kustodian, penanggung jawab penerapan program APU 
+dan PPT dapat ditugaskan kepada penanggung jawab bank 
+- 13 - 
+ 
+kustodian atau dirangkap o leh p enanggung jawab 
+penerapan program APU dan PPT pada bank umum. 
+(8) Dalam hal PJK di Sektor Pasar Modal berupa bank 
+kustodian yang merupakan kantor cabang bank asing, 
+penanggung jawab penerapan program APU dan PPT 
+dilakukan oleh pimpinan kantor cabang bank asing  
+tersebut. 
+ 
+Paragraf 2 
+Unit Kerja Khusus 
+ 
+Pasal 9 
+Dalam hal PJK membentuk unit kerja khusus sebagai 
+penanggung jawab penerapan program APU dan PPT, berlaku 
+ketentuan sebagai berikut: 
+a. unit kerja khusus paling sedikit terdiri dari 1 (satu) orang 
+yang bertindak sebagai pimpinan dan 1 (satu) orang yang 
+bertindak sebagai pelaksana; 
+b. pimpinan dan pelaksana pada unit kerja khusus tidak 
+merangkap fungsi lain; 
+c. pimpinan unit kerja khusus ditetapkan/diangkat oleh 
+Direksi; 
+d. unit kerja khusus berada di bawah koordi nasi Direksi 
+secara langsung dalam struktur organisasi PJK; dan 
+e. unit kerja khusus bersifat independen dari fungsi lain. 
+ 
+Paragraf 3 
+Penugasan Pejabat 
+ 
+Pasal 10 
+Dalam hal PJK menugaskan pejabat sebagai penanggung jawab 
+penerapan program APU dan PPT, pejabat  tersebut harus 
+ditetapkan atau diangkat oleh Direksi dan hanya dapat 
+merangkap untuk melaksanakan fungsi manajemen risiko 
+dan/atau fungsi kepatuhan. 
+ 
+ 
+- 14 - 
+ 
+Paragraf 4 
+Tugas dan Wewenang 
+ 
+Pasal 11 
+Penanggung jawab penerapan program APU dan PPT 
+sebagaimana dimak sud dalam Pasal 8 ayat (1) mempunyai 
+tugas paling kurang meliputi: 
+a. menganalisis secara berkala penilaian risiko tindak pidana 
+Pencucian Uang dan/atau tindak pidana Pendanaan 
+Terorisme terkait dengan Nasabahnya, negara atau area 
+geografis, produk, jasa, transaksi atau jaringan distribusi 
+(delivery channels); 
+b. menyusun, melakukan pengkinian, dan mengusulkan 
+kebijakan dan prosedur penerapan program APU dan PPT 
+yang telah disusun untuk mengelola dan memitigasi risiko 
+berdasarkan penilaian risiko sebagaimana dimaksud pada 
+huruf a, untuk dimintakan pertimbangan dan persetujuan 
+Direksi; 
+c. memastikan adanya sistem yang dapat mengidentifikasi, 
+menganalisa, memantau dan menyediakan laporan secara 
+efektif mengenai karakteristik transaksi yang dilakukan 
+oleh Nasabah; 
+d. memastikan bahwa kebijakan dan prosedur yang disusun 
+sebagaimana dimaksud dalam huruf b telah sesuai dengan 
+perubahan dan perkembangan yang meliputi antara lain 
+produk, jasa, dan teknologi di sektor jasa keuangan, 
+kegiatan dan kompleksitas usaha PJK, volume transaksi 
+PJK, dan modus Pencucian Uang dan/atau Pendanaan 
+Terorisme; 
+e. memastikan bahwa formulir yang berkaitan dengan 
+Nasabah telah mengakomodasi data yang diperlukan 
+dalam penerapan program APU dan PPT;  
+f. memantau rekening Nasabah dan pelaksanaan transaksi  
+Nasabah; 
+g. melakukan evaluasi terhadap hasil pemantauan dan 
+analisis transaksi Nasabah untuk memastikan ada atau 
+tidak adanya Transaksi Keuangan Mencurigakan, 
+- 15 - 
+ 
+Transaksi Keuangan Tunai dan/atau transaksi keuangan 
+transfer dana dari dan ke luar negeri; 
+h. menatausahakan hasil pemantauan dan evaluasi; 
+i. memastikan pengkinian data dan profil Nasabah serta 
+data dan profil transaksi Nasabah; 
+j. memastikan bahwa kegiatan usaha yang berisiko tinggi 
+terhadap tindak pidana Pencucian Uang dan/atau tindak 
+pidana Pendanaan Teror isme diidentifikasi secara efektif 
+sesuai dengan kebijakan dan prosedur PJK serta 
+ketentuan sebagaimana dimaksud dalam Peraturan OJK 
+ini; 
+k. memastikan adanya mekanisme komunikasi yang baik 
+dari setiap satuan kerja terkait kepada unit kerja khusus 
+atau pejabat yang bertanggung jawab terhadap penerapan 
+program APU dan PPT dengan menjaga kerahasiaan 
+informasi dan memperhatikan ketentuan anti tipping-off; 
+l. melakukan pengawasan terkait penerapan program APU 
+dan PPT terhadap satuan kerja terkait; 
+m. memastikan adanya i dentifikasi area yang berisiko tinggi 
+yang terkait dengan penerapan program APU dan PPT 
+dengan mengacu pada ketentuan peraturan perundang-
+undangan dan sumber informasi yang memadai; 
+n. menerima, melakukan analisis, dan menyusun laporan 
+Transaksi Keuangan Menc urigakan dan/atau transaksi 
+keuangan yang dilakukan secara tunai yang disampaikan 
+oleh satuan kerja; 
+o. menyusun laporan Transaksi Keuangan Mencurigakan, 
+Transaksi Keuangan Tunai, dan/atau transaksi keuangan 
+transfer dana dari dan ke luar negeri; 
+p. memastikan seluruh kegiatan dalam rangka penerapan 
+program APU dan PPT terlaksana dengan baik; dan 
+q. memantau, menganalisis, dan merekomendasik an 
+kebutuhan pelatihan tentang penerapan program APU dan 
+PPT bagi pejabat dan/atau pegawai PJK. 
+ 
+ 
+ 
+- 16 - 
+ 
+Pasal 12 
+Penanggung jawab penerapan program APU dan PPT 
+sebagaimana dimaksud dalam Pasal 8 ayat (1) mempunyai 
+wewenang paling kurang meliputi: 
+a. memperoleh akses terhadap informasi yang dibutuhkan 
+yang ada di seluruh unit organisasi PJK; 
+b. melakukan koordinasi dan pemantauan terhadap 
+penerapan program APU dan PPT oleh unit kerja terkait; 
+c. mengusulkan pejabat dan/atau pegawai unit kerja terkait 
+untuk membantu penerapan program APU dan PPT; dan 
+d. melaporkan Transaksi Keuangan Mencurigakan, 
+Transaksi Keuangan Tunai, dan/atau transaksi keuangan 
+transfer dana dari dan ke luar negeri yang dilakukan oleh 
+Direksi, Dewan Komisaris, dan/atau p ihak terafiliasi 
+dengan Direksi atau Dewan Komisaris, secara langsung 
+kepada PPATK. 
+ 
+BAB IV 
+KEBIJAKAN DAN PROSEDUR 
+ 
+Pasal 13 
+(1) PJK wajib memiliki kebijakan dan p rosedur untuk 
+mengelola dan memitigasi risiko Pencucian Uang 
+dan/atau Pendanaan Terorisme yang diidentifikasi sesuai 
+dengan penilaian risiko.  
+(2) Kebijakan dan prosedur penerapan program APU dan PPT 
+sebagaimana dimaksud pada ayat (1) paling kurang 
+meliputi: 
+a. identifikasi dan verifikasi Nasabah; 
+b. identifikasi dan verifikasi Beneficial Owner; 
+c. penutupan hubungan usaha atau penolakan 
+transaksi; 
+d. pengelolaan risiko Pencucian Uang dan/atau 
+Pendanaan Terorisme yang berkelanjutan terkait 
+dengan Nasabah, negara, produk dan jasa serta 
+jaringan distribusi (delivery channels); 
+- 17 - 
+ 
+e. pemeliharaan data yang akurat terkait dengan 
+transaksi, penatausahaan proses CDD, dan 
+penatausahaan kebijakan dan prosedur; 
+f. pengkinian dan pemantauan;  
+g. pelaporan kepada pejabat senior, Direksi dan Dewan 
+Komisaris terkait pelaksanaan kebijakan dan 
+prosedur penerapan program APU dan PPT; dan 
+h. pelaporan kepada PPATK. 
+(3) Khusus untuk bank umum , cakupan pedoman 
+pelaksanaan program APU dan PPT sebagaimana 
+dimaksud pada ayat (2) meliput i pula Cross Border 
+Correspondent Banking dan Transfer Dana. 
+(4) PJK wajib menerapkan kebijakan dan prosedur penerapan 
+program APU dan PPT sebagaimana dimaksud pada ayat 
+(1) secara konsisten dan berkesinambungan. 
+(5) Kebijakan dan prosedur penerapan program APU dan PPT 
+sebagaimana dimaksud pada ayat (1) wajib mendapat 
+persetujuan dari Direksi. 
+ 
+Pasal 14 
+(1) PJK wajib mengidentifikasi dan melakukan penilaian 
+risiko tindak pidana Pencucian Uang dan/atau tindak 
+pidana Pendanaan Terorisme yang terkait dengan 
+pengembangan produk dan praktik usaha baru, termasuk 
+mekanisme distribusi baru, dan penggunaan teknologi 
+baru atau pengembangan teknologi untuk produk baru 
+maupun produk yang telah ada. 
+(2) PJK wajib melakukan penilaian risiko sebagaimana 
+dimaksud pada ayat (1) sebelum prod uk, praktik usaha 
+dan teknologi diluncurkan atau digunakan. 
+(3) PJK wajib melakukan tindakan yang memadai untuk 
+mengelola dan memitigasi risiko sebagaimana dimaksud 
+pada ayat (1). 
+ 
+ 
+ 
+ 
+- 18 - 
+ 
+Pasal 15 
+PJK wajib melakukan prosedur CDD pada saat: 
+a. melakukan hubungan usaha dengan Calon Nasabah;  
+b. terdapat transaksi keuangan dengan mata uang rupiah 
+dan/atau mata uang asing yang nilainya paling sedikit 
+atau setara dengan Rp100.000.000,00 (seratus juta 
+rupiah); 
+c. terdapat transaksi Transfer Dana sebagaimana dimaksud 
+dalam Peraturan OJK ini; 
+d. terdapat indikasi Transaksi Keuangan Mencurigakan yang 
+terkait dengan Pencucian Uang dan/atau Pendanaan 
+Terorisme; atau 
+e. PJK meragukan kebenaran informasi yang diberikan oleh 
+Calon Nasabah, Nasabah, penerima kuasa, dan/atau 
+Pemilik Manfaat (Beneficial Owner). 
+ 
+Pasal 16 
+(1) PJK wajib mengelompokkan Calon Nasabah dan Nasabah 
+berdasarkan tingkat risiko terjadinya Pencucian Uang 
+dan/atau Pendanaan Terorisme. 
+(2) Pengelompokkan Calon Nasabah dan Nasabah 
+berdasarkan tingkat risiko sebagaimana dimaksud pad a 
+ayat (1) dilakukan berdasarkan analisis yang pal ing 
+kurang meliputi: 
+a. identitas Nasabah; 
+b. lokasi usaha bagi Nasabah perusahaan; 
+c. profil Nasabah; 
+d. frekuensi transaksi; 
+e. kegiatan usaha Nasabah; 
+f. struktur kepemilikan bagi Nasabah perusahaan; 
+g. produk, jasa, dan jaringan distribusi  (delivery 
+channels) yang digunakan oleh Nasabah; dan 
+h. informasi lainnya yang dapat digunakan untuk 
+mengukur tingkat risiko Nasabah. 
+ 
+ 
+ 
+- 19 - 
+ 
+Pasal 17 
+(1) Dalam rangka melakukan hubungan usaha dengan Calon 
+Nasabah, PJK wajib: 
+a. melakukan identifikasi  Calon Nasabah untuk 
+mengetahui profil Calon Nasabah; dan 
+b. melakukan verifikasi atas informasi dan dokumen 
+pendukung Calon Nasabah sebagaimana dimaksud 
+dalam huruf a. 
+(2) PJK wajib melakukan verifikasi kebenaran identitas Calon 
+Nasabah melalui pertemuan langsung (face to face) dengan 
+Calon Nasabah pada awal melakukan hubungan usaha 
+dalam rangka meyakini kebenaran identitas Calon 
+Nasabah. 
+(3) Proses verifikasi melalui pertemuan langsung (face to face) 
+sebagaimana dimaksud pada ayat (2) dapat digantikan 
+dengan verifikasi melalui sarana elektronik milik PJK. 
+(4) Proses verifikasi melalui pertemuan langsung (face to face) 
+sebagaimana dimaksud pada ayat (2) dapat dikecualikan 
+dengan ketentuan sebagai berikut: 
+a. verifikasi dilakukan melalui proses dan sarana 
+elektronik milik PJK dan/atau milik Calon Nasabah; 
+dan 
+b. verifikasi wajib memanfaatkan data kependudukan 
+yang memenuhi 2 (dua) faktor otentikasi. 
+ 
+Pasal 18 
+(1) PJK dilarang membuka atau memelihara rekening anonim 
+atau rekening yang menggunakan nama fiktif. 
+(2) PJK dilarang mem buka hubungan usaha dengan Calon 
+Nasabah atau memelihara rekening Nasabah apabila: 
+a. Calon Nasabah atau Nasabah menolak untuk 
+mematuhi peraturan yang terkait dengan penerapan 
+program APU dan PPT; atau 
+b. PJK tidak dapat meyakini kebenaran identitas dan 
+kelengkapan dokumen Calon Nasabah atau Nasabah. 
+ 
+ 
+- 20 - 
+ 
+Bagian Pertama 
+Identifikasi dan Verifikasi Calon Nasabah dan Nasabah 
+ 
+Pasal 19 
+PJK wajib mengidentifikasi dan mengklasifikasikan Calon 
+Nasabah atau Nasabah ke dalam kelompok orang perseorangan 
+(natural person ), Korporasi, dan perikatan lainnya ( legal 
+arrangement). 
+ 
+Pasal 20 
+(1) Identifikasi Calon Nasabah untuk mengetahui profil Calon 
+Nasabah sebagaimana dimaksud dalam Pasal 17 ayat (1) 
+huruf a, dilakukan melalui permintaan data dan informasi 
+yang paling kurang meliputi: 
+a. bagi Calon Nasabah orang perseorangan ( natural 
+person): 
+1. identitas yang memuat:  
+a) nama lengkap termasuk nama alias (jika 
+ada);  
+b) nomor dokumen identitas; 
+c) alamat tempat tinggal sesuai dokumen 
+identitas dan alamat tempat tinggal lain 
+(jika ada); 
+d) tempat dan tanggal lahir; 
+e) kewarganegaraan; 
+f) pekerjaan; 
+g) alamat dan nomor telepon tempat kerja (jika 
+ada); 
+h) jenis kelamin; dan 
+i) status perkawinan; 
+2. identitas Pemilik Manfaat (Beneficial Owner), jika 
+ada; 
+3. sumber dana; 
+4. penghasilan rata-rata per tahun; dan 
+5. maksud dan tujuan hubungan usaha atau 
+transaksi yang akan dilakukan Calon Nasabah. 
+ 
+- 21 - 
+ 
+b. bagi Calon Nasabah Korporasi: 
+1. nama; 
+2. nomor izin dari instansi berwenang; 
+3. bidang usaha atau kegiatan; 
+4. alamat kedudukan; 
+5. tempat dan tanggal pendirian; 
+6. bentuk badan hukum atau badan usaha; 
+7. identitas Pemilik Manfaat ( Beneficial Owner ) 
+apabila Calon Nasabah memiliki Pemilik Manfaat 
+(Beneficial Owner); 
+8. sumber dana; dan 
+9. maksud dan tujuan hubungan usaha atau 
+transaksi yang akan dilakukan Calon Nasabah. 
+c. bagi Calon Nasabah perikatan lainnya ( legal 
+arrangement):  
+1. nama; 
+2. nomor izin dari instansi berwenang (jika ada); 
+3. alamat kedudukan; 
+4. bentuk perikatan (legal arrangement); 
+5. identitas Pemilik Manfaat ( Beneficial Owner ) 
+apabila Calon Nasabah memiliki Pemilik Manfaat 
+(Beneficial Owner); 
+6. sumber dana; dan 
+7. maksud dan tujuan hubungan usaha atau 
+transaksi yang akan dilakukan Calon Nasabah. 
+(2) Berkaitan dengan transaksi WIC, sebelum melakukan 
+transaksi dengan WIC, PJK di Sektor Perbankan dan PJK 
+di Sektor Pasar Modal wajib meminta: 
+a. seluruh informasi sebagaimana dimaksud pada ayat 
+(1) bagi WIC orang perseorangan ( natural person ), 
+Korporasi, maupun perikatan lainnya ( legal 
+arrangement) yang melakukan transaksi pali ng 
+sedikit Rp100.000.000,00 (seratus juta rupiah) atau 
+yang nilainya setara, baik yang dilakukan dalam  1 
+(satu) kali maupun beberapa kali transaksi dalam 1 
+(satu) hari kerja; 
+- 22 - 
+ 
+b. informasi sebagaimana dimaksud pada ayat (1) huruf 
+a angka 1  huruf a), huruf b), dan huruf c) bagi WIC 
+orang perseorangan (natural person) yang melakukan 
+transaksi kurang dari Rp 100.000.000,00 (seratus 
+juta rupiah) atau nilai yang setara; 
+c. informasi sebagaimana dimaksud pada ayat (1) huruf 
+b angka 1 dan angka 4 bagi WIC Korporasi yang 
+melakukan transaksi kurang dari Rp 100.000.000,00 
+(seratus juta rupiah) atau nilai yang setara; dan 
+d. informasi sebagaimana dimaksud pada ayat (1) huruf 
+c angka 1 dan angka 3 bagi WIC perikatan lainnya 
+(legal arrangement) yang melakukan transaksi kurang 
+dari Rp 100.000.000,00 (seratus juta rupiah) atau 
+nilai yang setara. 
+ 
+Pasal 21 
+Untuk Calon Nasabah orang perseorangan (natural person) dan 
+WIC sebagaimana dimaksud dalam Pasal 20 ayat (2) huruf a, 
+informasi sebagaimana dimaksud dalam Pasal 20 ayat (1) huruf 
+a angka 1  wajib didukung dengan dokumen identitas Calon 
+Nasabah dan spesimen tanda tangan. 
+ 
+Pasal 22 
+(1) Untuk Calon Nasabah Korporasi berupa perusahaan, 
+informasi sebagaimana dimaksud dalam Pasal 20 ayat (1) 
+huruf b wajib didukung dengan dokumen identitas 
+perusahaan dan: 
+a. untuk Calon Nasabah Korporasi berupa perusahaan 
+yang tergolong usaha mikro dan usaha kecil 
+ditambah dengan: 
+1. spesimen tanda tangan dan kuasa kepada pihak 
+yang ditunjuk mempunyai wewenang bertindak 
+untuk dan atas nama perusahaan dalam 
+melakukan hubungan usaha dengan PJK; 
+2. kartu NPWP bagi Nasabah yang diwajibkan 
+untuk memiliki NPWP sesuai dengan ketentuan 
+peraturan perundang-undangan; dan 
+- 23 - 
+ 
+3. surat izin tempat usaha atau dokumen lain yang 
+dipersyaratkan oleh instansi yang berwenang; 
+b. untuk Calon Nasabah Korporasi berupa perusahaan 
+yang tidak tergolong usaha mikro dan usaha kecil 
+selain disertai dokumen sebagaimana dimaksud 
+dalam huruf a angka 2  dan angka 3, ditambah 
+dengan: 
+1. laporan keuangan atau deskripsi kegiatan usaha 
+perusahaan; 
+2. struktur manajemen perusahaan; 
+3. struktur kepemilikan perusahaan; dan 
+4. dokumen identitas anggota Direksi atau 
+pemegang kuasa dari anggota Direksi yang 
+berwenang mewakili perusahaan untuk 
+melakukan hubungan usaha. 
+(2) Untuk Calon Nasabah Korporasi berupa PJK, dokumen 
+yang disampaikan paling sedikit meliputi: 
+a. akta pendirian/anggaran dasar PJK; 
+b. izin usaha dari instansi yang berwenang; dan 
+c. spesimen tanda tangan dan kuasa kepada pihak yang 
+ditunjuk mempunyai wewenang bertindak untuk dan 
+atas nama PJK dalam m elakukan hubungan usaha 
+dengan PJK. 
+ 
+Pasal 23 
+(1) Untuk Calon Nasabah selain Calon Nasabah orang 
+perseorangan ( natural person) dan Korporasi berupa 
+perusahaan sebagaimana dimaksud dalam Pasal 20, Pasal 
+21 dan Pasal 22, PJK wajib meminta informasi 
+sebagaimana dimaksud dalam Pasal 20 ayat (1) huruf b. 
+(2) PJK wajib meminta dokumen pendukung informasi untuk 
+Calon Nasabah sebagaimana dimaksud pada ayat (1) 
+paling kurang meliputi: 
+a. untuk Calon Nasabah Korporasi berupa yayasan: 
+1. izin kegiatan yayasan; 
+2. deskripsi kegiatan yayasan;  
+3. struktur dan nama pengurus yayasan; dan 
+- 24 - 
+ 
+4. dokumen identitas anggota pengurus atau 
+pemegang kuasa dari anggota pengurus yang 
+berwenang mewakili yayasan untuk melakukan 
+hubungan usaha dengan PJK. 
+b. untuk Calon Nasabah Korporasi selain perusahaan 
+dan yayasan baik  yang merupakan badan hukum, 
+maupun bukan badan hukum: 
+1. bukti izin dari instansi yang berwenang; 
+2. nama Korporasi;  
+3. akta pendirian dan/atau anggaran dasar dan 
+anggaran rumah tangga (AD/ART); dan 
+4. dokumen identitas pihak yang berwenang 
+mewakili Korporasi dalam melakukan hubungan 
+usaha dengan PJK. 
+c. untuk Calon Nasabah berupa perikatan lainnya (legal 
+arrangement): 
+1. bukti pendaftaran pada instansi yang 
+berwenang; 
+2. nama perikatan; 
+3. akta pendirian dan/atau anggaran dasar dan 
+anggaran rumah tangga (AD/ART) (jika ada); dan 
+4. dokumen identitas pihak yang berwenang 
+mewakili perikatan lainnya ( legal arrangement ) 
+dalam melakukan hubungan usaha dengan PJK. 
+ 
+Pasal 24 
+(1) Untuk Calon Nasabah berupa Lembaga Negara, Instansi 
+Pemerintah, lembaga internasional, dan perwakilan 
+negara asing, PJK wajib meminta informasi mengenai 
+nama dan alamat kedudukan lembaga, instansi atau 
+perwakilan tersebut. 
+(2) Informasi sebagaimana dimaksud pada ayat (1) wajib 
+didukung dengan dokumen meliputi:  
+a. surat penunjukan bagi pihak yang berwenang 
+mewakili lembaga, instansi atau perwakilan dalam 
+melakukan hubungan usaha; dan 
+- 25 - 
+ 
+b. spesimen tanda tangan pihak yang berwenang 
+mewakili lembaga, instansi atau perwakilan dalam 
+melakukan hubungan usaha. 
+ 
+Pasal 25 
+(1) PJK wajib melakukan verifikasi atas informasi dan 
+dokumen pendukung Calon Nasabah sebagaimana 
+dimaksud dalam Pasal 20, Pasal 21, Pasal 22, Pasal 23, 
+dan Pasal 24, berdasarkan dokumen dan/atau sumber 
+informasi lainnya yang dapat dipercaya dan independen 
+serta m emastikan bahwa data tersebut adalah data 
+terkini. 
+(2) PJK wajib melakukan verifikasi bahwa pihak yang 
+bertindak untuk dan atas nama Nasabah telah 
+mendapatkan otorisasi dari Nasabah, dan melakukan 
+identifikasi dan verifikasi terhadap identitas dari pihak 
+tersebut. 
+(3) Verifikasi sebagaimana dimaksud pada ayat (1) wajib 
+didasarkan pada risiko Pencucian Uang dan/atau 
+Pendanaan Terorisme yang telah diidentifikasi 
+berdasarkan penilaian risiko yang dilakukan oleh PJK dan 
+wajib memenuhi ketentuan dalam Peraturan OJK ini. 
+(4) PJK dapat melakukan wawancara dengan Calon Nasabah 
+untuk meneliti dan meyakini keabsahan dan kebenaran 
+dokumen, dalam hal terdapat keraguan atas data, 
+informasi, dan/atau dokumen pendukung yang diterima. 
+(5) Dalam hal terdapat keraguan, PJK wajib meminta kepada 
+Calon Nasabah untuk memberikan lebih dari satu 
+dokumen identitas yang dike luarkan oleh pihak yang 
+berwenang untuk memastikan kebenaran identitas Calon 
+Nasabah. 
+(6) PJK wajib menyelesaikan proses verifikasi identitas Calon 
+Nasabah dan/atau Pemilik Manfaat (Beneficial Owner ), 
+apabila Calon Nasabah memiliki Pemilik Manfaat 
+(Beneficial Owner), sebelum membuka hubungan usaha 
+dengan Calon Nasabah atau sebelum melakukan 
+transaksi dengan WIC. 
+- 26 - 
+ 
+(7) Dalam hal PJK telah menerapkan prosedur manajemen 
+risiko, PJK dapat melaku kan hubungan usaha atau 
+transaksi sebelum proses verifikasi s ebagaimana 
+dimaksud pada ayat (6) selesai. 
+(8) Proses verifikasi s ebagaimana dimaksud pada ayat (7 ) 
+wajib diselesaikan sesegera mungkin, setelah terjadinya 
+hubungan usaha nasabah dengan PJK, dengan 
+memperhatikan bahwa risiko Pencucian Uang dan 
+Pendanaan Terorisme dapat dikelola secara efektif dan 
+bahwa proses pertemuan langsung ini tidak mengganggu 
+kegiatan usaha secara normal. 
+ 
+Pasal 26 
+PJK wajib memahami profil, maksud dan tujuan hubungan 
+usaha, da n transaksi yang dilakukan Nasabah dan Pemilik 
+Manfaat (Beneficial Owner) melalui identifikasi dan verifikasi.  
+ 
+Bagian Kedua 
+Identifikasi dan Verifikasi Pemilik Manfaat (Beneficial Owner) 
+ 
+Pasal 27 
+(1) PJK wajib memastikan Calon Nasabah, Nasabah, atau WIC 
+yang membuka hubungan usaha atau melakukan 
+transaksi bertindak untuk diri sendiri atau untuk 
+kepentingan Pemilik Manfaat (Beneficial Owner).  
+(2) Dalam hal Calon Nasabah, Nasabah, atau WIC bertindak 
+untuk kepentingan Pemilik Manfaat ( Beneficial Owner ), 
+PJK wajib melakukan CDD terhadap Pemilik Manfaat 
+(Beneficial Owner). 
+(3) Dalam hal Pemilik Manfaat ( Beneficial Owner ) 
+sebagaimana dimaksud pada ayat (2) tergolong sebagai 
+PEP maka prosedur yang diterapkan adalah prosedur 
+EDD. 
+(4) Dalam hal terdapat perbedaan tingkat risiko antara Calon 
+Nasabah, Nasabah, atau WIC dengan Pemilik Manfaat 
+(Beneficial Owner), penerapan CDD dilakukan mengikuti 
+tingkat risiko yang lebih tinggi. 
+- 27 - 
+ 
+(5) Kewajiban melakukan CDD terhadap Pemilik Manfaat 
+(Beneficial Owner ) sebagaimana dimaksud pada ayat (2) 
+tidak berlaku bagi calon Nasabah, Nasabah atau WIC yang 
+memiliki tingkat risiko rendah.  
+ 
+Pasal 28 
+(1) Dalam hal Calon Nasabah, Nasabah atau WIC bukan 
+merupakan Pemilik Manfaat (Beneficial Owner), PJK wajib 
+melakukan identifikasi dan verifikasi identitas Pemilik  
+Manfaat (Beneficial Owner), antara lain berupa: 
+a. bagi Pemilik Manfaat ( Beneficial Owner ) dari Calon 
+Nasabah, Nasabah atau WIC orang perseorangan 
+(natural person) berupa: 
+1. informasi dan dokumen identitas sebagaimana 
+dimaksud dalam Pasal 20 ayat (1) huruf a d an 
+Pasal 21; 
+2. hubungan hukum  antara Calon Nasabah, 
+Nasabah atau WIC dengan Pemilik Manfaat 
+(Beneficial Owner) yang ditunjukkan dengan 
+surat penugasan, surat perjanjian, surat kuasa 
+atau bentuk lainnya;  
+3. pernyataan dari Calon Nasabah, Nasabah atau 
+WIC mengen ai kebenaran identitas maupun 
+sumber dana dari Pemilik Manfaat ( Beneficial 
+Owner); dan 
+4. pernyataan dari Pemilik Manfaat (Beneficial 
+Owner) bahwa yang bersangkutan adalah 
+pemilik sebenarnya dari dana Calon Nasabah, 
+Nasabah atau WIC; 
+b. bagi Pemilik Manfaat ( Beneficial Owner) dari Calon 
+Nasabah, Nasabah atau WIC Korporasi berupa: 
+1. informasi dan dokumen identi tas sebagaimana 
+dimaksud dalam Pasal 20 ayat (1) huruf b dan 
+Pasal 22; 
+2. hubungan hukum  antara Calon Nasabah, 
+Nasabah atau WIC dengan Pemilik Manfaat 
+(Beneficial Owner) yang ditunjukkan dengan 
+- 28 - 
+ 
+surat penugasan, surat perjanjian, surat kuasa 
+atau bentuk lainnya; 
+3. dokumen dan/atau informasi identitas orang 
+perseorangan ( natural person ), jika ada, yang 
+menjadi pemilik atau pengendali akhir dari 
+Korporasi; 
+4. pernyataan dari Calon Nasabah, Nasabah atau 
+WIC mengenai kebenaran identitas maupun 
+sumber dana dari Pemilik Manfaat ( Beneficial 
+Owner); dan 
+5. pernyataan dari Pemilik Manfaat (Beneficial 
+Owner) bahwa yang bersangkutan adalah 
+pemilik sebenarnya dari dana Calo n Nasabah, 
+Nasabah, WIC. 
+c. bagi Pemilik Manfaat ( Beneficial Owner ) dari Calon 
+Nasabah, Nasabah atau WIC perikatan lainnya (legal 
+arrangement) berbentuk trust, berupa:  
+1. identitas penitip harta (settlor);  
+2. identitas penerima dan pengelola harta (trustee); 
+3. identitas penjamin (protector) (jika ada); 
+4. identitas penerima manfaat ( beneficiary) atau 
+kelas penerima manfaat ( class of beneficiary ); 
+dan 
+5. orang perseorangan ( natural person ) yang 
+mengendalikan trust. 
+d. bagi Pemilik Manfaat ( Beneficial Owner ) dari Calon 
+Nasabah, Nasabah atau WIC perikatan lainnya (legal 
+arrangement) dalam bentuk lainnya, berupa identitas 
+orang perseorangan (natural person) yang mempunyai 
+posisi yang sama atau setara dengan pihak dalam 
+trust sebagaimana dimaksud dalam huruf c. 
+(2) Dalam hal PJK ragu mengenai apakah pihak yang menjadi 
+pengendali melalui kepemilikan adalah Pemilik Manfaat 
+(Beneficial Owner ) sebagaimana dimaksud pada ayat (1) 
+huruf b, atau dalam hal tidak ada orang perseorangan 
+yang memiliki pengendalian melalui kepemi likan, PJK 
+wajib melakukan identifikasi dan verifikasi atas identitas 
+- 29 - 
+ 
+dari orang perseorangan (jika ada) yang mengendalikan 
+Korporasi atau legal arrangements melalui bentuk lain. 
+(3) Dalam hal tidak ada orang perseorangan yang 
+teridentifikasi sebagai Pemilik M anfaat (Beneficial Owner) 
+sebagaimana dimaksud pada ayat (1) huruf b dan ayat (2), 
+PJK wajib melakukan identifikasi dan verifikasi atas 
+identitas dari orang perseorangan yang releva n yang 
+memegang posisi sebagai direksi atau yang dipersamakan 
+dengan jabatan tersebut. 
+(4) Dalam hal Calon Nasabah, Nasabah, atau WIC merupakan 
+PJK lain di dalam  negeri yang bertindak untuk dan atas 
+nama Pemilik Manfaat ( Beneficial Owner ), dokumen 
+mengenai Pemilik Manfaat (Beneficial Owner) dapat berupa 
+pernyataan tertulis dari Calon  Nasabah, Nasabah, atau 
+WIC. 
+(5) Dalam hal Calon Nasabah, Nasabah, atau WIC merupakan 
+PJK lain di luar negeri yang menerapkan program APU dan 
+PPT yang paling kurang setara dengan Peraturan OJK ini 
+yang mewakili Pemilik Manfaat ( Beneficial Owner), maka 
+dokumen mengenai Pemilik Manfaat ( Beneficial Owner ) 
+berupa pernyataan tertulis dari PJK di luar negeri bahwa 
+identitas Pemilik Manfaat ( Beneficial Owner ) telah 
+dilakukan verifikasi oleh PJK di luar negeri tersebut. 
+(6) Dalam hal penerapan program APU dan PPT sebagaimana 
+dimaksud pada ayat (3) , yang dilakukan oleh PJK di luar 
+negeri tidak setara dengan Peraturan OJK ini, PJK 
+dimaksud wajib menerapkan program APU dan PPT 
+berdasarkan Peraturan OJK ini. 
+(7) Dalam hal PJK meragukan atau tidak dapat meyakini 
+identitas Pemilik Ma nfaat ( Beneficial Owner ), PJK wajib 
+menolak untuk melakukan hubungan usaha atau 
+transaksi dengan Calon Nasabah, Nasabah, atau WIC. 
+ 
+Pasal 29 
+Kewajiban penyampaian dokumen dan/atau informasi 
+identitas pemilik atau pengendali akhir Pemilik Manfaat 
+(Beneficial Owner) sebagaimana yang dimaksud dalam Pasal 28 
+- 30 - 
+ 
+ayat (1) huruf b angka 2 tidak berlaku bagi Pemilik Manfaat 
+(Beneficial Owner) berupa: 
+a. Lembaga Negara atau Instansi Pemerintah; 
+b. perusahaan yang mayoritas sahamnya dimiliki oleh 
+negara; atau 
+c. perusahaan publik atau emiten. 
+ 
+Bagian Ketiga 
+Identifikasi dan Verifikasi  
+Calon Nasabah dan Nasabah Berisiko Tinggi 
+ 
+Pasal 30 
+(1) PJK wajib memiliki sistem manajemen risiko yang 
+memadai untuk menentukan apakah Calon Nasabah, 
+Nasabah, Pemilik Manfaat ( Beneficial Owner), atau WIC 
+termasuk kriteria berisiko tinggi. 
+(2) Kriteria berisiko tinggi dari Calon Nasabah, Nasabah, 
+Pemilik Manfaat (Beneficial Owner), atau WIC sebagaimana 
+dimaksud pada ayat (1) dapat dilihat dari: 
+a. latar belakang atau profil Calon Nasabah, Nasabah 
+Pemilik Manfaat ( Beneficial Owner ), atau WIC 
+termasuk Nasabah Berisiko Tinggi ( High Risk 
+Customers); 
+b. produk sektor jasa keuangan yang berisiko tinggi 
+untuk digunakan sebagai sarana Pencucian Uang 
+dan/atau Pendanaan Terorisme; 
+c. transaksi dengan pihak yang be rasal dari Negara 
+Berisiko Tinggi (High Risk Countries); 
+d. transaksi tidak sesuai dengan profil; 
+e. termasuk dalam kategori PEP; 
+f. bidang usaha Calon Nasabah, Nasabah, Pemilik 
+Manfaat ( Beneficial Owner ), atau WIC termasuk 
+usaha yang berisiko tinggi (High Risk Business);  
+g. negara atau teritori asal, domisili, atau dilakukannya 
+transaksi Calon Nasabah, Nasabah, Pemilik Manfaat 
+(Beneficial Owner ), atau WIC termasuk Negara 
+Berisiko Tinggi (High Risk Countries);  
+- 31 - 
+ 
+h. tercantumnya Calon Nasabah, Nasabah, Pemilik 
+Manfaat ( Beneficial Owner ), atau WIC dalam daftar 
+terduga teroris dan organisasi teroris; atau 
+i. transaksi yang dilakukan Calon Nasabah, Nasabah, 
+Pemilik Manfaat (Beneficial Owner), atau WIC diduga 
+terkait dengan tindak pidana di sektor jasa keuangan, 
+tindak pidana P encucian Uang, dan/atau tindak 
+pidana Pendanaan Terorisme. 
+ 
+Pasal 31 
+(1) PJK wajib melakukan penilaian untuk menentukan 
+Nasabah, Pemilik Manfaat ( Beneficial Owner ), atau WIC 
+adalah PEP.  
+(2) Dalam hal Calon Nasabah,  Nasabah, Pemilik Manfaat 
+(Beneficial Owner ), ata u WIC  tergolong berisiko tinggi, 
+termasuk PEP, PJK wajib melakukan EDD. 
+ 
+Pasal 32 
+(1) Terhadap PEP Asing, selain menerapkan proses CDD 
+sebagaimana diatur dalam Pasal 20, PJK wajib memenuhi 
+ketentuan sebagai berikut: 
+a. memiliki sistem manajemen risiko untuk 
+menentukan apakah Nasabah atau Pemilik Manfaat 
+(Beneficial Owner) memenuhi kriteria PEP; 
+b. menunjuk pejabat senior yang bertanggung jawab 
+atas hubungan usaha dengan Nasabah, Pemilik 
+Manfaat (Beneficial Owner), atau WIC tersebut;  
+c. melakukan EDD secara berkala paling kurang berupa 
+analisis terhadap informasi mengenai Nasa bah atau 
+Pemilik Manfaat ( Beneficial Owner ), sumber dana, 
+dan sumber kekayaan; dan 
+d. pemantauan yang lebih ketat atas hubungan usa ha 
+antara lain melalui peningkatan jumlah dan frekuensi 
+pengawasan dan pemilihan pola transaksi.  
+(2) Pejabat senior sebagaimana dimaksud pada ayat (1) huruf 
+b berwenang untuk: 
+- 32 - 
+ 
+a. memberikan persetujuan atau penolakan terhadap 
+Calon Nasabah, Nasabah, Pemilik Manfaat (Beneficial 
+Owner), atau WIC yang tergolong berisiko tinggi; dan 
+b. membuat keputusan untuk meneruskan atau 
+menghentikan hubungan usaha dengan Calon 
+Nasabah, Nasabah, Pemilik Manfaat ( Beneficial 
+Owner), atau WIC yang tergolong berisiko tinggi. 
+ 
+Pasal 33 
+Terhadap PEP domestik atau orang yang diberi kewenangan 
+untuk melakukan fungsi penting ( prominent function ) dalam 
+organisasi internasional, selain menerapkan proses CDD 
+sebagaimana diatur dalam Pasal  20, PJK wajib memenuhi 
+ketentuan sebagai berikut: 
+a. PJK wajib memiliki sistem manajemen risiko untuk 
+menentukan apakah Nasabah atau Pemilik Manfaat 
+(Beneficial Owner) memenuhi kriteria PEP; dan 
+b. dalam hal terdapat risiko yang lebih tinggi atas hubungan 
+usaha antara PJK dengan Nasabah atau Pemilik Manfaat 
+(Beneficial Owner ) tersebut, PJK wajib menerapkan 
+ketentuan sebagaimana dimaksud dalam Pasal 32 ayat (1) 
+huruf b, huruf c, dan huruf d. 
+ 
+Pasal 34 
+Ketentuan yang berlaku bagi Nasabah, Pemilik Manfaat 
+(Beneficial Owner), atau WIC yang berisiko tinggi, sebagaimana 
+dimaksud dalam Pasal 27 ayat (3) dan ayat (4),  serta Pasal 28 
+ayat (1), ayat (2), dan ayat (3) berlaku pula bagi anggota 
+keluarga atau pihak yang terkait (close associates) dari PEP. 
+ 
+Pasal 35 
+Calon Nasabah, Nasabah, Pemilik Manfaat ( Beneficial Owner), 
+atau WIC yang memenuhi kriteria berisiko tinggi d ibuat dalam 
+daftar tersendiri. 
+ 
+ 
+ 
+- 33 - 
+ 
+Pasal 36 
+Dalam hal PJK melakukan hubungan usaha dengan Nasabah 
+dan/atau melakukan transaksi yang berasal dari Negara 
+Berisiko Tinggi (High Risk Countries) yang dipublikasikan oleh 
+FATF untuk dilakukan langkah pencegahan (countermeasures), 
+PJK wajib melakukan EDD dengan meminta konfirmasi dan 
+klarifikasi kepada otoritas terkait. 
+ 
+Bagian Keempat 
+CDD Terhadap Penerima Manfaat (Beneficiary) dari Asuransi 
+Jiwa dan Produk Investasi lain Terkait Polis Asuransi 
+ 
+Pasal 37 
+(1) Selain CDD yang dipersyaratkan bagi Calon Nasabah dan 
+Pemilik Manfaat (Beneficial Owner ) sebagaimana diatur 
+dalam Pasal 15, PJK wajib melakukan CDD terhadap 
+penerima manfaat ( beneficiary) dari asuransi jiwa dan 
+produk investasi lain terkait dengan polis asuransi, segera 
+setelah penerima manfaat ( beneficiary) diidentifikasi atau 
+ditetapkan dengan ketentuan sebagai berikut: 
+a. untuk penerima manfaat ( beneficiary) yang telah 
+diidentifikasi sebagai perorangan atau non 
+perorangan, PJK wajib meminta nama orang 
+perseorangan ( natural person ) atau Korporasi atau 
+perikatan lainnya ( legal arrangement) dari penerima 
+manfaat (beneficiary) tersebut; atau 
+b. untuk penerima manfaat ( beneficiary) yang telah 
+ditunjuk berdasarkan karakteristik atau berdasarkan 
+cara lain, PJK wajib meminta informasi yang 
+memadai mengenai penerima manfaat ( beneficiary) 
+untuk meyakinkan PJK bahwa informasi tersebut 
+dapat digunakan untuk membuktikan identitas dari 
+penerima manfaat ( beneficiary) pada saat 
+pembayaran klaim asuransi. 
+(2) Seluruh informasi sebagaimana dimaksud pada ayat (1), 
+wajib dicatat dan dikelola sesuai dengan ketentuan dalam 
+Peraturan OJK ini.  
+- 34 - 
+ 
+(3) Verifikasi terhadap identitas penerima manfaat 
+(beneficiary) sebagaimana dimaksud pada ayat (1), wajib 
+dilakukan pada saat pembayaran klaim asuransi. 
+ 
+Pasal 38 
+(1) PJK wajib memasukkan penerima manfaat ( beneficiary) 
+dari polis asuransi jiwa sebagai salah satu faktor risiko 
+yang relevan dalam memastikan apakah  EDD perlu 
+diterapkan. 
+(2) Dalam hal PJK menetapkan bahwa penerima manfaat 
+(beneficiary) termasuk dalam k ategori berisiko tinggi atau 
+PEP, PJK wajib melakukan EDD yang mencakup pula 
+identifikasi dan verifikasi terhadap identitas Pemilik 
+Manfaat ( Beneficial Owner ) dari penerima manfaat 
+(beneficiary) pada saat pembayaran klaim asuransi. 
+ 
+Pasal 39 
+Dalam hal pene rima manfaat ( beneficiary) dan/atau Pemilik 
+Manfaat (Beneficial Owner) dari penerima manfaat (beneficiary) 
+pada saat pembayaran klaim asuransi jiwa adalah PEP, PJK 
+wajib menginformasikan kepada pejabat senior sebelum 
+pembayaran klaim asuransi jiwa untuk melakukan 
+pengawasan lebih lanjut terkait hubungan usaha dengan 
+pemegang polis dan melaporkannya sebagai Transaksi 
+Keuangan Mencurigakan. 
+ 
+Bagian Kelima 
+CDD Sederhana 
+ 
+Pasal 40 
+(1) PJK dapat menerapkan prosedur CDD sederhana dari 
+prosedur CDD sebagaimana dimak sud dalam Pasal 20, 
+Pasal 21, Pasal 22, Pasal 23, Pasal 24, dan Pasal 28, 
+terhadap Calon Nasabah atau transaksi yang tingkat risiko 
+terjadinya Pencucian Uang dan/atau Pendanaan 
+Terorisme tergolong rendah dan memenuhi kriteria 
+sebagai berikut: 
+- 35 - 
+ 
+a. tujuan pembukaan rekening untuk pembayaran atau 
+penerimaan gaji; 
+b. Calon Nasabah berupa emiten atau perusahaan 
+publik yang tunduk pada ketentuan peraturan 
+perundang-undangan tentang kewajiban untuk 
+mengungkapkan kinerjanya; 
+c. Calon Nasabah perusahaan yang mayoritas 
+sahamnya dimiliki oleh pemerintah; 
+d. Calon Nasabah merupakan Lembaga Negara atau 
+Instansi Pemerintah; 
+e. tujuan pembukaan rekening terkait dengan program 
+pemerintah dalam rangka peningkatan kesejahteraan 
+masyarakat dan/atau pengentasan kemiskinan; 
+dan/atau 
+f. Calon Nasabah yang berdasarkan penilaian risiko 
+terjadinya Pencucian Uang dan/atau Pendanaan 
+Terorisme tergolong rendah dan memenuhi kriteria 
+Calon Nasabah dengan profil dan karakteristik 
+sederhana. 
+(2) Terhadap Calon Nasabah yang memenuhi ketentuan 
+sebagaimana dimaksud pada ayat (1), PJK wajib meminta 
+informasi dengan ketentuan sebagai berikut: 
+a. bagi Calon Nasabah orang perseorangan ( natural 
+person) yang memenuhi ketentuan sebagaimana 
+dimaksud pada ayat (1) huruf a, PJK wajib meminta 
+informasi sebagaimana dimaksud d alam Pa sal 20 
+ayat (1) huruf a angka 1  huruf a), huruf b), huruf c), 
+dan huruf d);  
+b. bagi Calon Nasabah Korporasi, Lembaga Negara atau 
+Instansi Pemerintah  yang memenuhi ketentuan 
+sebagaimana dimaksud pada ayat (1) huruf a, huruf 
+b, dan/atau huruf c, PJK wajib meminta informasi 
+sebagaimana dimaksud dalam Pasal 20 ayat (1) huruf 
+b angka 1 dan angka 4; 
+c. bagi Calon Nasabah perikatan lainnya ( legal 
+arrangement) yang memenuhi ketentuan 
+sebagaimana dimaksud pada ayat (1) huruf a, huruf 
+- 36 - 
+ 
+b, dan/atau huruf c, PJK wa jib meminta informasi 
+sebagaimana dimaksud dalam Pasal 20 ayat (1) huruf 
+c angka 1 dan angka 3; dan 
+d. bagi Calon Nasabah yang memenuhi ketentuan 
+sebagaimana dimaksud pada ayat (1) huruf e, PJK 
+wajib meminta informasi sebagaimana dimaksud 
+dalam Pasal 20 aya t (1) huruf a angka 1  huruf a), 
+huruf c), huruf d), dan huruf f). 
+(3) Informasi sebagaimana dimaksud pada ayat (2) wajib 
+didukung dengan: 
+a. dokumen identitas sebagaimana dimaksud dalam 
+Pasal 21, bagi Calon Nasabah orang perseorangan 
+(natural person) sebagaimana dimaksud pada ayat (1) 
+huruf a; 
+b. dokumen identitas perusahaan ditambah dengan 
+spesimen tanda tangan dan kuasa kepada pihak yang 
+ditunjuk mempunyai wewenang bertindak untuk dan 
+atas nama perusahaan, bagi Calon Nasabah 
+Korporasi berupa perusahaan yang tergolong  usaha 
+mikro dan usaha kecil yang memenuhi ketentuan 
+sebagaimana dimaksud pada ayat (1) huruf a; 
+c. dokumen identitas perusahaan dan dokumen 
+identitas anggota Direksi atau pemegang kuasa dari 
+anggota Direksi yang berwenang mewakili 
+perusahaan, bagi Calon Nasa bah Korporasi berupa 
+perusahaan yang tidak tergolong usaha mikro dan 
+usaha kecil yang memenuhi ketentuan sebagaimana 
+dimaksud pada ayat (1) huruf a, huruf b, dan/atau 
+huruf c; atau 
+d. dokumen lainnya sebagai pengganti dokumen 
+identitas yang dapat memberikan keyakinan kepada 
+PJK tentang profil Calon Nasabah tersebut, dan 
+spesimen tanda tangan, bagi Calon Nasabah yang 
+memenuhi ketentuan sebagaimana dimaksud pada 
+ayat (1) huruf e. 
+(4) PJK dapat menerapkan prosedur CDD sederhana 
+tersendiri sesuai dengan penilaian ris iko atas Calon 
+- 37 - 
+ 
+Nasabah yang memenuhi ketentuan sebagaimana 
+dimaksud pada ayat (1) huruf f. 
+(5) Dalam hal PJK menerapkan prosedur CDD sederhana 
+tersendiri sebagaimana dimaksud pada ayat (4), PJK wajib 
+memberitahukan hal tersebut kepada OJK dimana 
+pemberitahuan tersebut meliputi informasi mengenai: 
+a. kriteria identifikasi Nasabah dan transaksi berisiko 
+rendah konsisten dengan penilaian risiko yang 
+dilakukan oleh PJK; 
+b. persyaratan CDD sederhana mampu mengelola 
+tingkat ancaman Pencucian Uang dan/atau 
+Pendanaan Terorisme terhadap Calon Nasabah dan 
+transaksinya yang telah diidentifikasi dengan tingkat 
+risiko rendah terhadap Pencucian Uang dan/atau 
+Pendanaan Terorisme;  
+c. persyaratan CDD sederhana tidak mencakup 
+Nasabah yang berdasarkan peraturan perundang -
+undangan dikategorikan sebagai Nasabah atau 
+transaksi yang berisiko tinggi; dan  
+d. waktu dimulainya penerapan prosedur CDD 
+sederhana.  
+(6) PJK wajib mengimplementasikan dan bertangg ung jawab 
+terhadap pelaksanaan prosedur CDD sederhana tersendiri 
+sebagaimana dimaksud pada ayat (4). 
+(7) Prosedur CDD sederhana sebagaimana dimaksud pada 
+ayat (1) tidak berlaku apabila terdapat dugaan terjadi 
+transaksi Pencucian Uang dan/atau Pendanaan Terorisme 
+atau tingkat risikonya meningkat. 
+(8) PJK wajib membuat dan menyimpan daftar Nasabah yang 
+mendapat perlakuan CDD sederhana. 
+(9) Dalam hal penggunaan rekening tidak sesuai dengan 
+tujuan sebagaimana dimaksud pada ayat (1) huruf a, 
+maka PJK wajib melakukan prosedu r CDD sebagaimana 
+dimaksud dalam Pasal 20 ayat (1) huruf a dan Pasal 21 
+terhadap Nasabah yang bersangkutan. 
+ 
+ 
+- 38 - 
+ 
+Bagian Keenam 
+Pelaksanaan CDD oleh Pihak Ketiga 
+ 
+Pasal 41 
+(1) PJK dapat menggunakan hasil CDD yang telah dilakukan 
+oleh pihak ketiga terhadap Calon Nasabahnya yang telah 
+menjadi Nasabah pada pihak ketiga tersebut. 
+(2) Dalam hal PJK menggunakan hasil CDD pihak ketiga 
+sebagaimana dimaksud pada ayat (1), PJK wajib: 
+a. memahami maksud dan tujuan hubungan usaha 
+sebagaimana dimaksud dalam Pasal 26; dan 
+b. mengidentifikasi dan memverifikasi Nasabah dan 
+Pemilik Manfaat ( Beneficial Owner ) sebagaimana 
+dimaksud dalam Pasal 27, Pasal 28 dan Pasal 29. 
+(3) Dalam hal PJK menggunakan hasil CDD yang telah 
+dilakukan oleh pihak ketiga, tanggung jawab CDD tetap 
+berada pada PJK tersebut.  
+(4) Dalam hal PJK menggunakan hasil CDD pihak ketiga:  
+a. PJK wajib sesegera mungkin mendapatkan informasi 
+yang diperlukan terkait deng an prosedur CDD 
+sebagaimana dimaksud dalam Pasal 19 dan Pasal 28; 
+b. PJK wajib memiliki kerja sama dengan pihak ketiga 
+dalam bentuk kesepakatan tertulis; 
+c. PJK wajib mengambil langkah yang memadai untuk 
+memastikan bahwa pihak ketiga bersedia memenuhi 
+permintaan informasi dan salinan dokumen 
+pendukung segera apabila di butuhkan oleh PJK 
+dalam rangka penerapan program APU dan PPT;  
+d. PJK wajib memastikan bahwa pihak ketiga 
+merupakan lembaga keuangan dan penyedia barang 
+dan/atau jasa dan profesi tertentu yang memiliki  
+prosedur CDD dan tunduk pada pengawasan dari 
+otoritas berwenang sesuai dengan ketentuan 
+peraturan perundang-undangan; dan 
+e. PJK wajib me mperhatikan informasi terkait r isiko 
+negara tempat pihak ketiga tersebut berasal. 
+- 39 - 
+ 
+(5) Dalam hal pihak ketiga sebagaimana dimaksud pada ayat 
+(3) berkedudukan di Negara Berisiko Tinggi (High Risk 
+Countries), maka pihak ketiga tersebut wajib memenuhi 
+kriteria:  
+a. berada dalam Konglomerasi Keuangan  (financial 
+group) yang sama dengan PJK;  
+b. Konglomerasi Keuangan (financial group ) tersebut 
+telah menerapkan CDD, penatausahaan dokumen, 
+dan program APU dan PPT secara efektif sesuai 
+dengan Rekomendasi FATF; dan 
+c. Konglomerasi Keuangan  (financial group ) tersebut 
+diawasi oleh otoritas yang berwenang.  
+(6) Dalam hal PJK menggunakan hasil CDD yang dilakukan 
+oleh pihak ketiga yang merupakan Konglomerasi 
+Keuangan (financial group ) yang sama maka PJK atau 
+perusahaan induk harus mempertimbangkan persyaratan 
+sebagaimana dimaksud pada ayat (4) dan (5) dengan 
+ketentuan sebagai berikut: 
+a. Konglomerasi Keuangan (financial group) menerapkan 
+ketentuan CDD, penatausahaan dokumen, dan 
+program APU dan PPT sebagai mana diatur dalam 
+Peraturan OJK ini; 
+b. terhadap implementasi atas CDD, penatausahaan 
+dokumen, dan program APU dan PPT dilakukan 
+pengawasan Konglomerasi Keuangan (financial group) 
+oleh otoritas yang berwenang; dan 
+c. terhadap Negara Berisiko Tinggi (High Risk Countries) 
+telah dilakukan mitigasi risiko secara memadai oleh 
+unit APU dan PPT berdasarkan kebijakan program 
+APU dan PPT di tingkat Konglomerasi Keuangan  
+(financial group). 
+ 
+ 
+ 
+ 
+ 
+ 
+- 40 - 
+ 
+Bagian Ketujuh 
+Penolakan Transaksi dan Penutupan Hubungan Usaha 
+ 
+Pasal 42 
+(1) PJK wajib menolak melakukan hubungan usaha dengan 
+Calon Nasabah dan/atau melaksanakan transaksi dengan 
+WIC, dalam hal Calon Nasabah atau WIC:  
+a. tidak memenuhi ketentuan sebagaimana dimaksud 
+dalam Pasal 17,  Pasal 20, Pasal 21, Pasal 22, Pasal 
+23, Pasal 24, dan Pasal 28; 
+b. diketahui dan/atau patut diduga menggunakan 
+dokumen palsu; 
+c. menyampaikan informasi yang diragukan 
+kebenarannya; dan/atau 
+d. berbentuk shell bank  atau bank umum atau bank 
+umum syariah yang mengizinkan rekeningnya 
+digunakan oleh shell bank. 
+(2) PJK wajib menolak transaksi, membatalkan transaksi, 
+dan/atau menutup hubungan usaha dengan Nasabah 
+dalam hal: 
+a. kriteria seb agaimana dimaksud pada ayat (1) 
+terpenuhi;  
+b. memiliki sumber dana transaksi yang diketahui 
+dan/atau patut diduga berasal dari hasil tindak 
+pidana; dan/atau 
+c. Calon Nasabah atau Nasabah terdapat dalam daftar 
+terduga teroris dan organisasi teroris. 
+(3) PJK tetap wa jib menyelesaikan proses identifikasi dan 
+verifikasi terhadap identitas Calon Nasabah atau WIC dan 
+Pemilik Manfaat  (Beneficial Owner ), dalam hal terdapat 
+penolakan hubungan usaha dengan Calon Nasabah 
+dan/atau penolakan transaksi dengan WIC berdasarkan 
+ketentuan sebagaimana dimaksud pada ayat (1) huruf b 
+dan huruf c. 
+(4) Dalam hal PJK menduga adanya transaksi keuangan 
+terkait dengan tindak pidana Pencucian Uang dan 
+Pendanaan Terorisme, dan PJK meyakini bahwa proses 
+- 41 - 
+ 
+CDD akan melanggar ketentuan anti tipping-off, PJK wajib 
+tidak melanjutkan prosedur CDD dan wajib melaporkan 
+Transaksi Keuangan Mencurigakan tersebut kepada 
+PPATK. 
+(5) PJK wajib mendokumentasikan Calon Nasabah, Nasabah 
+atau WIC yang memenuhi kriteria sebagaimana dimaksud 
+pada ayat (1) dan ayat (2). 
+(6) PJK wajib melaporkan Calon Nasabah, Nasabah atau WIC 
+sebagaimana dimaksud pada ayat (1), ayat (2) dan ayat (3) 
+dalam laporan Transaksi Keuangan Mencurigakan apabila 
+transaksinya mencurigakan. 
+(7) Kewajiban PJK untuk menolak, membatalkan dan/atau 
+menutup hubungan usaha dengan Nasabah sebagaimana 
+dimaksud pada ayat (2) wajib dicantumkan dalam 
+perjanjian pembukaan rekening dan diberitahukan 
+kepada Nasabah.  
+ 
+Pasal 43 
+(1) Dalam hal dilakukan penutupan hubungan usaha 
+sebagaimana dimaksud dalam Pasal 42 ayat (2), PJK wajib 
+memberitahukan secara tertulis kepada Nasabah 
+mengenai penutupan hubungan usaha tersebut. 
+(2) Dalam hal setelah dilakukan pemberitahuan sebagaimana 
+dimaksud pada ayat (1), Nasabah tidak mengambil sisa 
+dana yang tersimpan di PJK maka penyelesaian terhadap 
+sisa dana Nasabah yang tersimpan di PJK dilakukan 
+sesuai dengan ketentuan peraturan perundang-undangan 
+yang berlaku. 
+ 
+Bagian Kedelapan 
+Pengkinian dan Pemantauan 
+ 
+Pasal 44 
+(1) PJK wajib melakukan pemantauan terhadap hubungan 
+usaha dengan Nasabah dengan cara memantau transaksi 
+Nasabah untuk memastikan bahwa transaksi yang 
+dilakukan sejalan dengan pemahaman PJK atas Nasabah, 
+- 42 - 
+ 
+kegiatan usaha dan profil risiko Nasabah, termasuk 
+sumber dananya. 
+(2) PJK wajib melakukan upaya pengkinian data, informasi, 
+dan/atau dokumen pendukung sebagaimana dimaksud 
+dalam Pasal 20, Pasal 21, Pasal 22, Pasal 23, Pasal 24, dan 
+Pasal 28 dalam hal terdapat perubahan yang diketahui 
+dari pemantauan PJK terhadap N asabah atau informasi 
+lain yang dapat dipertanggungjawabkan. 
+(3) PJK wajib mendokumentasikan upaya pengkinian data 
+sebagaimana dimaksud pada ayat (2).  
+(4) Dalam melakukan pengk inian data sebagaimana 
+dimaksud pada ayat (2), PJK wajib: 
+a. melakukan pemantauan terhadap  informasi dan 
+dokumen Nasabah; 
+b. menyusun laporan rencana pengkinian data; dan 
+c. menyusun laporan realisasi pengkinian data. 
+(5) Laporan sebagaimana dimaksud pada ayat (4) huruf b dan 
+huruf c wajib mendapat persetujuan dari Direksi. 
+ 
+Pasal 45 
+(1) PJK wajib melakukan analisis terhadap seluruh transaksi 
+yang tidak sesuai dengan profil Nasabah. 
+(2) PJK dapat meminta informasi tentang latar belakang dan 
+tujuan transaksi terhadap transaksi yang tidak sesuai 
+dengan profil Nasabah, dengan memperhatikan ketentuan 
+anti tipping -off sebagaimana dimaksud  dalam Undang-
+Undang yang mengatur mengenai pencegahan dan 
+pemberantasan tindak pidana Pencucian Uang. 
+(3) Dalam melaksanakan pemantauan sebagaimana 
+dimaksud dalam Pasal 44 ayat (1) PJK wajib memiliki 
+sistem yang dapat: 
+a. mengidentifikasi, m enganalisis, memantau, dan 
+menyediakan laporan secara efektif mengenai profil, 
+karakteristik dan/atau kebiasaan pola transaksi yang 
+dilakukan oleh Nasabah; dan 
+b. menelusuri setiap transaksi, apabila diperlukan, 
+termasuk penelusuran atas identitas Nasabah, 
+- 43 - 
+ 
+bentuk transaksi, tanggal transaksi, jumlah dan 
+denominasi transaksi, serta sumber dana yang 
+digunakan untuk transaksi. 
+(4) Dalam hal data dan/atau informasi yang disampaikan 
+Nasabah tidak memberikan penjelasan yang meyakinkan, 
+maka PJK wajib melaporkan Transaks i Keuangan 
+Mencurigakan tersebut kepada PPATK. 
+(5) PJK wajib melakukan pemantauan yang 
+berkesinambungan terhadap hubungan usaha/transaksi 
+dengan: 
+a. Nasabah yang berasal dari Negara Berisiko Tinggi 
+(High Risk Countries); dan 
+b. PJK yang berkedudukan di Negara Berisi ko Tinggi 
+(High Risk Countries). 
+ 
+Pasal 46 
+(1) PJK wajib memelihara daftar terduga teroris dan 
+organisasi teroris. 
+(2) PJK wajib melakukan identifikasi dan memastikan secara 
+berkala nama Nasabah yang memiliki kesamaan nama dan 
+informasi lain atas Nasabah dengan nama dan informasi 
+yang tercantum dalam daftar terduga teroris dan 
+organisasi teroris sebagaimana dimaksud pada ayat (1). 
+(3) Dalam hal terdapat kemiripan nama Nasabah dengan 
+nama yang tercant um dalam daftar terduga teroris dan 
+organisasi teroris sebagaimana dimaksud pada ayat (1), 
+PJK wajib memastikan kesesuaian identitas Nasabah 
+tersebut dengan informasi lain yang terkait. 
+(4) Dalam hal terdapat kesamaan nama Nasabah dan 
+kesamaan informasi lainnya dengan nama yang tercantum 
+dalam daftar terduga teroris dan organisasi teroris 
+sebagaimana dimaksud pada ayat (1), PJK wajib segera 
+melakukan pemblokiran secara serta merta dan 
+melaporkannya sebagai laporan Transaksi Keuangan 
+Mencurigakan. 
+ 
+ 
+- 44 - 
+ 
+Bagian Kesembilan 
+Cross Border Correspondent Banking 
+ 
+Pasal 47 
+(1) Sebelum menyediakan jasa Cross Border Correspondent 
+Banking, Bank wajib memahami kegiatan usaha Bank 
+Penerima dan/atau Bank Penerus dengan meminta 
+informasi mengenai: 
+a. profil calon Bank Penerima dan/atau Bank Penerus;  
+b. reputasi Bank Penerima dan/atau Bank Penerus 
+berdasarkan informasi yang dapat 
+dipertanggungjawabkan; 
+c. tingkat penerapan program APU dan PPT di negara 
+tempat kedudukan Bank Penerima dan/atau Bank 
+Penerus; dan 
+d. informasi relevan l ain yang diperluk an Bank untuk 
+mengetahui profil calon Bank Penerima dan/ata u 
+Bank Penerus. 
+(2) Informasi sebagaimana dimaksud pada ayat (1) wajib 
+didasarkan pada informasi publik yang memadai yang 
+dikeluarkan dan ditetapkan oleh otoritas yang berwenang. 
+(3) Bank wajib menunjuk p ejabat senior yang bertanggung 
+jawab atas hubungan usaha dengan calon Bank Penerima 
+dan/atau Bank Penerus. 
+(4) Bank wajib melakukan penilaian terhadap penerapan 
+program APU dan PPT pada Bank Penerima dan/atau 
+Bank Penerus. 
+(5) Bank wajib memahami tanggung  jawab pe nerapan 
+program APU  dan PPT dari masing -masing pihak yang 
+terkait dengan kegiatan Cross Border Corespondent 
+Banking. 
+ 
+Pasal 48 
+Bank wajib melakukan CDD terhadap Bank Penerima 
+dan/atau Bank Penerus yang disesuaikan dengan pendekatan 
+berdasarkan risiko (risk based approach) apabila: 
+- 45 - 
+ 
+a. terdapat perubahan profil Bank Penerima dan/atau Bank 
+Penerus yang bersifat substansial; dan/atau 
+b. informasi pada profil Bank Penerima dan/atau Bank 
+Penerus yang tersedia belum dilengkapi dengan informasi 
+sebagaimana dimaksud dalam Pasal 47 ayat (1). 
+ 
+Pasal 49 
+Dalam hal terdapat Nasabah yang mempunyai akses terhadap 
+payable through account dalam jasa Cross Border Correspondent 
+Banking, Bank Pengirim wajib memastikan:  
+a. Bank Penerima dan/atau Bank Penerus telah 
+melaksanakan proses CDD dan pemantauan yang 
+memadai yang paling kurang sama dengan yang diatur 
+dalam Peraturan OJK ini; dan 
+b. Bank Penerima dan/atau Bank Penerus bersedia untuk 
+menyediakan data identifikasi Nasab ah y ang terkait 
+apabila diminta oleh Bank Pengirim. 
+ 
+Pasal 50 
+Bank Pengirim yang menyediakan jasa Cross Border 
+Correspondent Banking wajib: 
+a. mendokumentasikan seluruh transaksi Cross Border 
+Correspondent Banking; 
+b. menolak untuk berhubungan dan/atau meneruskan 
+hubungan Cross Border Correspondent Banking  dengan 
+shell bank; dan 
+c. memastikan bahwa Bank Penerima dan/atau Bank 
+Penerus tidak mengijinkan rekeningnya digunakan oleh 
+shell bank pada saat mengadakan hubungan usaha terkait 
+dengan Cross Border Correspondent Banking. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 46 - 
+ 
+Bagian Kesepuluh 
+Transfer Dana 
+ 
+Pasal 51 
+(1) Bagi Bank yang melakukan kegiatan Transfer Dana baik 
+di dalam wilayah Indonesia maupun secara lintas negara 
+berlaku ketentuan sebagai berikut: 
+a. Bank Pengirim wajib:  
+1. memperoleh informasi dan melakukan 
+identifikasi serta verifikasi terhadap 
+Nasabah/WIC pengirim dan/atau Nasabah/WIC 
+penerima, paling kurang meliputi: 
+a) nama Nasabah atau WIC pengirim; 
+b) nomor rekening Nasabah pengirim; 
+c) alamat Nasabah atau WIC pengirim; 
+d) nomor dokumen identitas, nomor 
+identifikasi, atau tempat dan tanggal lahir 
+dari Nasabah atau WIC pengirim; 
+e) sumber dana Nasabah atau WIC pengirim; 
+f) nama Nasabah atau WIC penerima; 
+g) nomor rekening Nasabah penerima; 
+h) alamat WIC penerima; 
+i) jumlah uang dan jenis mata uang; dan 
+j) tanggal transaksi; 
+2. menyampaikan informasi sebagaimana 
+dimaksud pada angka 1 kepada Bank Penerima; 
+dan 
+3. mendokumentasikan seluruh transaksi Transfer 
+Dana; 
+b. Bank Penerus wajib meneruskan pesan dan perintah 
+Transfer Dana, serta menatausahakan informasi yang 
+diterima dari Bank Pengirim; 
+c. Bank Penerima wajib memastikan kelengkapan 
+informasi Nasabah pengirim dan WIC pengirim 
+sebagaimana dimaksud dalam huruf a angka 1; 
+(2) Untuk kegiatan Transfer Dana di dalam wilayah Indonesia, 
+Bank Pengirim wajib menyampaikan secara tertulis 
+- 47 - 
+ 
+informasi yang dibutuhkan dalam waktu 3 (tiga) hari kerja 
+berdasarkan permint aan tertulis  dari Bank Penerima, 
+dan/atau dari otoritas yang berwenang apabila Bank 
+Penerima hanya memperoleh informasi nomor rekening 
+atau nomor referensi transaksi. 
+ 
+Pasal 52 
+(1) Dalam hal terdapat beberapa Transfer Dana dari satu 
+Nasabah atau WIC pengirim yang tergabung dalam satu 
+dokumen yang ditujukan kepada beberapa Nasabah atau 
+WIC penerima, dokumen tersebut wajib memuat informasi 
+mengenai Nasabah atau WIC pengirim dan informasi 
+mengenai Nasabah atau WIC penerima secara lengkap. 
+(2) Informasi sebagaimana dimaksud pada ayat (1) wajib 
+dapat ditelusuri di negara Nasabah atau WIC penerima. 
+(3) Bank wajib mencantumkan nomor rekening atau nomor 
+referensi transaksi Nasabah atau WIC pengirim. 
+ 
+Pasal 53 
+Ketentuan sebagaimana dimaksud  dalam Pasal 51 
+dikecualikan terhadap: 
+a. Transfer Dana yang menggunakan kartu debit, kartu ATM 
+maupun kartu kredit; atau 
+b. Transfer Dana yang dilakukan antar PJK dan untuk 
+kepentingan PJK dimaksud. 
+ 
+Pasal 54 
+(1) Dalam hal informasi sebagaimana dimaksud dalam  Pasal 
+51 ayat (1) huruf a angka 1  tidak dipenuhi maka Bank 
+Pengirim wajib menolak untuk melaksanakan Transfer 
+Dana. 
+(2) Dalam hal Bank Penerus dan/atau Bank Penerima 
+menerima perintah transfer dari Bank Pengirim di luar 
+negeri yang tidak dilengkapi dengan informasi 
+sebagaimana dimaksud dalam Pasal 51 ayat (1) huruf a 
+angka 1  maka Bank Penerus dan/atau Bank Penerima 
+dapat:  
+- 48 - 
+ 
+a. melaksanakan Transfer Dana; 
+b. menolak untuk melaksanakan Transfer Dana; atau 
+c. menunda transaksi Transfer Dana,  
+disertai dengan tindak lanjut yang memadai. 
+(3) Dalam menentukan tindakan sebagaimana dimaksud 
+pada ayat (2), Bank Penerus dan/atau Bank Penerima 
+wajib memiliki kebijakan dan prosedur berbasis risiko. 
+ 
+Pasal 55 
+Dalam hal terdapat Transfer Dana yang memenuhi kr iteria 
+Transaksi Keuangan Mencurigakan sebagaimana dimaksud 
+dalam ketentuan peraturan perundang -undangan yang 
+mengatur mengenai pencegahan dan pemberantasan tindak 
+pidana Pencucian Uang dan/atau Pendanaan Terorisme, Bank 
+wajib melaporkan Transfer Dana ters ebut sebagai laporan 
+Transaksi Keuangan Mencurigakan kepada PPATK. 
+ 
+Bagian Kesebelas 
+Penatausahaan Dokumen 
+ 
+Pasal 56 
+(1) PJK wajib menatausahakan: 
+a. dokumen yang terkait dengan data Nasabah atau WIC 
+dengan jangka waktu paling kurang 5 (lima) tahun 
+sejak:  
+1. berakhirnya hubungan usaha atau transaksi 
+dengan Nasabah atau WIC; atau 
+2. ditemukannya ketidaksesuaian transaksi 
+dengan tujuan  ekonomis dan/atau tujuan 
+usaha; 
+b. dokumen Nasabah atau WIC yang terkait dengan 
+transaksi keuangan dengan jangka waktu 
+sebagaimana diatur dalam Undang-Undang 
+mengenai dokumen perusahaan.  
+(2) Dokumen yang terkait dengan data Nasabah atau WIC 
+sebagaimana yang dimaksud pada ayat (1) paling kurang  
+meliputi: 
+- 49 - 
+ 
+a. identitas Nasabah atau WIC termasuk dokumen 
+pendukungnya;  
+b. informasi transaksi yang antara lain meliputi jenis 
+dan jumlah mata uang yang digunakan, tanggal 
+perintah transaksi, asal dan tujuan transaksi, se rta 
+nomor rekening yang terkait dengan transaksi; 
+c. hasil analisis yang telah dilakukan; dan 
+d. korespondensi dengan Nasabah atau WIC. 
+(3) PJK wajib menyimpan catatan dan dokumen mengenai 
+seluruh proses identifikasi Transaksi Keuangan 
+Mencurigakan sesuai dengan ketentuan peraturan 
+perundang-undangan.  
+(4) PJK wajib memberikan data, informasi, dan/atau 
+dokumen yang ditatausahakan apabila diminta oleh OJK 
+dan/atau otoritas lain yang berwenang. 
+ 
+BAB V 
+PENGENDALIAN INTERN 
+ 
+Pasal 57 
+(1) PJK wajib memiliki s istem pengendalian intern yang 
+efektif.  
+(2) Pelaksanaan sistem pengendalian intern yang efektif 
+antara lain dibuktikan dengan: 
+a. dimilikinya kebijakan, prosedur, dan pemantauan 
+internal yang memadai; 
+b. adanya batasan wewenang dan tanggung jawab 
+satuan kerja terkait dengan penerapan program APU 
+dan PPT; dan 
+c. dilakukannya pemeriksaan secara independen untuk 
+memastikan efektivitas penerapan program APU dan 
+PPT.  
+ 
+ 
+ 
+ 
+ 
+- 50 - 
+ 
+BAB VI 
+PENERAPAN PROGRAM APU DAN PPT DI JARINGAN KANTOR 
+DAN ANAK PERUSAHAAN 
+ 
+Pasal 58 
+(1) Konglomerasi Keuangan (financial group ) wajib 
+menerapkan program APU dan PPT ke seluruh jaringan 
+kantor dan anak perusahaan di dalam dan di luar negeri, 
+serta memantau pelaksanaannya termasuk: 
+a. kebijakan dan prosedur pertukaran informasi untuk 
+tujuan CDD dan manajemen risiko terhadap 
+pencucian uang dan pendanaan terorisme;  
+b. pengaturan, pada fungsi kepatuhan, fungsi audit, 
+dan fungsi APU dan PPT pada level grup harus 
+mendapatkan informasi mengenai nasabah, rekening, 
+dan transaksi untuk tujuan APU dan PPT dari 
+seluruh jaringan kantor dan anak perusahaan; dan 
+c. dalam melaksanakan pertukaran informasi tersebut, 
+Konglomerasi Keuangan (financial group ) wajib 
+memiliki ketentuan yang memadai mengenai 
+keamanan informasi. 
+(2) Seluruh jaringan kantor dan anak perusahaan di dalam 
+dan di luar negeri wajib mengimplementasikan kebijakan 
+dan prosedu r program APU dan PPT sebagaimana 
+dimaksud pada ayat (1). 
+(3) Dalam hal di negara tempat kedudukan kantor dan anak 
+perusahaan di luar negeri sebagaimana dimaksud pada 
+ayat (1) memiliki peraturan APU dan PPT yang lebih ketat 
+dari yang diatur dalam Peraturan OJK ini, kantor dan 
+anak perusahaan dimaksud wajib tunduk pada ketentuan 
+yang dikeluarkan oleh otoritas negara dimaksud. 
+(4) Dalam hal di negara tempat kedudukan kantor dan anak 
+perusahaan sebagaimana dimaksud pada ayat (1) belum 
+mematuhi Rekomendasi FATF atau sudah mematuhi 
+namun standar program APU dan PPT yang dimiliki lebih 
+longgar dari yang diatur dalam Peraturan OJK ini, kantor 
+dan anak perusahaan dimaksud wajib menerapkan 
+- 51 - 
+ 
+program APU dan PPT sebagaimana diatur dalam 
+Peraturan OJK ini. 
+(5) Dalam hal penerapan program APU dan PPT sebagaimana 
+diatur dalam Peraturan OJK ini men gakibatkan 
+pelanggaran terhadap  ketentuan peraturan perundang-
+undangan yang berlaku di negara tempat kedudukan 
+kantor dan anak perusahaan berada, maka pejabat kantor 
+PJK di luar negeri tersebut wajib menginformasikan 
+kepada kantor pusat PJK dan OJK bahwa kantor PJK 
+dimaksud tidak dapat menerapkan program APU dan PPT 
+sebagaimana diatur dalam Peraturan OJK ini. 
+ 
+BAB VII 
+SISTEM INFORMASI MANAJEMEN 
+ 
+Pasal 59 
+(1) PJK wajib memiliki sistem informasi yang dapat 
+mengidentifikasi, menganalisa, memantau dan 
+menyediakan laporan secara efektif mengenai 
+karakteristik transaksi yang dilakukan oleh Nasabah. 
+(2) PJK wajib memiliki dan memelihara profil Nasabah secara 
+terpadu (single customer identification file ), paling kurang 
+meliputi informasi sebagaimana dimaksud dalam Pasal 20 
+dan Pasal 24 ayat (1). 
+(3) PJK wajib memiliki dan memelihar a profil WIC 
+sebagaimana dimaksud dalam Pasal 20 ayat (2) huruf a. 
+(4) Kebijakan dan prosedur sebagaimana dimaksud dalam 
+Pasal 13 ayat (2) wajib mempertimbangkan faktor 
+teknologi informasi yang berpotensi disalahgunakan oleh 
+pelaku Pencucian Uang atau Pendanaan Terorisme. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+- 52 - 
+ 
+BAB VIII 
+SUMBER DAYA MANUSIA DAN PELATIHAN 
+ 
+Pasal 60 
+Untuk mencegah digunakannya PJK sebagai media atau tujuan 
+Pencucian Uang dan/atau Pendanaan Terorisme yang 
+melibatkan pihak intern PJK, PJK wajib melakukan:  
+a. prosedur penyaringan da lam rangka penerimaan 
+karyawan baru (pre employee screening); dan 
+b. pengenalan dan pemantauan terhadap profil karyawan. 
+ 
+Pasal 61 
+PJK wajib menyelenggarakan pelatihan yang 
+berkesinambungan tentang: 
+a. penerapan ketentuan peraturan perundang -undangan 
+yang terkait dengan program APU dan PPT; 
+b. teknik, metode, dan tipologi Pencucian Uang dan/atau 
+Pendanaan Terorisme; dan 
+c. kebijakan dan prosedur penerapan program APU dan PPT 
+serta peran dan tanggung jawab pegawai dalam mencegah 
+dan memberantas Pencucian Uang dan/atau Pendanaan 
+Terorisme. 
+ 
+BAB IX 
+PELAPORAN 
+ 
+Pasal 62 
+(1) PJK wajib menyampaikan kepada OJK:  
+a. action plan penerapan program APU dan PPT paling 
+lambat pada akhir bulan Mei 2017;  
+b. penyesuaian kebijakan dan prosedur penerapan 
+program APU dan PPT sebagaimana dimaksud dalam 
+Pasal 11 paling lambat 6 (enam) bulan sejak 
+diberlakukannya Peraturan OJK ini; 
+c. laporan rencana kegiatan pengkinian data 
+sebagaimana dimaksud dalam Pasal 44 ayat (4) huruf 
+- 53 - 
+ 
+b disampaikan setiap tahun paling lambat akhir 
+bulan Desember; dan  
+d. laporan realisasi pengkinian data sebagaimana 
+dimaksud dalam Pasal 44 ayat (4) huruf c 
+disampaikan setiap tahun paling lambat akhir bulan 
+Desember. 
+(2) Dalam hal tanggal pelaporan jatuh  pada hari libur, 
+penyampaian laporan dilakukan pada hari berikutnya. 
+(3) Dalam hal terdapat perubahan atas action plan, kebijakan 
+dan prosedur penerapan program APU dan PPT, laporan 
+rencana kegiatan pengkinian data, yang telah 
+disampaikan kepada OJK sebagaimana dimaksud pada 
+ayat (1) huruf a, huruf b dan huruf c, PJK wajib 
+menyampaikan perubahan tersebut paling lambat 7 
+(tujuh) hari kerja sejak perubahan dilakukan. 
+(4) Kewajiban PJK untuk menyampaikan laporan kepada OJK 
+sebagaimana dimaksud pada ayat (1) dan ayat (2), dapat 
+menjadi bagian dari laporan pelaksanaan tugas Direktur 
+yang membawahkan fungsi kepatuhan. 
+ 
+Pasal 63 
+(1) PJK wajib menyampaikan laporan Transaksi Keuangan 
+Mencurigakan, laporan Transaksi Keuangan Tunai dan 
+laporan lain kepada PPATK sebagaimana diatur  dalam 
+ketentuan peraturan perundang -undangan yang 
+mengatur mengenai pencegahan dan pemberantasan 
+tindak pidana Pencucian Uang. 
+(2) Kewajiban PJK untuk melaporkan Transaksi Keuangan 
+Mencurigakan juga berlaku untuk transaksi yang diduga 
+terkait dengan kegiatan terorisme atau pendanaan 
+terorisme. 
+(3) Penyampaian laporan sebagaimana dimaksud pada ayat 
+(1) dilakukan dengan berpedoman pada ketentuan yang 
+dikeluarkan oleh PPATK. 
+ 
+ 
+ 
+- 54 - 
+ 
+BAB X 
+KETENTUAN LAIN-LAIN 
+ 
+Pasal 64 
+PJK wajib bekerja sama dengan penegak hukum dan otoritas 
+yang berwenang dalam rangka memberantas tindak pidana 
+Pencucian Uang dan/atau tindak pidana Pendanaan 
+Terorisme. 
+ 
+BAB XI 
+SANKSI 
+ 
+Pasal 65 
+(1) PJK yang terlambat menyampaikan laporan sebagaimana 
+dimaksud dalam Pasal 62 dan Pasal 63 dikenakan sanksi 
+administratif berupa denda yaitu kewajiban membayar 
+sejumlah uang dengan rincian sebagai berikut: 
+a. sebesar Rp100.000,00 (seratus ribu rupiah) per hari 
+keterlambatan per laporan dan paling banyak sebesar 
+Rp10.000.000,00 (sepuluh juta rupiah) bagi PJK 
+berupa bank umum, perusahaan efek, perusahaan 
+asuransi, perusahaan asuransi syariah, perusahaan 
+pialang asuransi , DPLK, perusahaan pembiayaan 
+infrastruktur, LPEI, perusahaan pergadaian dan 
+manajer investasi; atau 
+b. sebesar Rp50.000,00 (lima puluh ribu rupiah) per 
+hari keterlambatan per laporan dan paling banyak 
+sebesar Rp5.000.000,00 (lima juta rupiah) bagi PJK 
+berupa BPR, BPRS, perusahaan pembiayaan , dan 
+PMV. 
+(2) LKM dan penyelenggara layanan pinjam meminjam uang 
+berbasis teknologi informasi yang terlambat 
+menyampaikan laporan sebagaimana dimaksud dalam 
+Pasal 62 dan Pasal 63 dikenakan sanksi administratif 
+berupa peringatan tertulis.  
+ 
+ 
+- 55 - 
+ 
+Pasal 66 
+(1) Pelanggaran terhadap ketentuan sebagaimana dimaksud 
+dalam Peraturan OJK ini se lain pelanggaran atas 
+keterlambatan penyampaian laporan, dikenakan sanksi 
+administratif berupa:  
+a. peringatan atau teguran tertulis; 
+b. denda dalam bentuk kewajiban membayar sejumlah 
+uang; 
+c. penurunan dalam penilaian tingkat kesehatan; 
+d. pembatasan kegiatan usaha tertentu; 
+e. pembekuan kegiatan usaha tertentu; 
+f. pemberhentian pengurus Bank dan selanjutnya 
+menunjuk dan mengangkat pengganti sementara 
+sampai rapat umum pemegang saham atau rapat 
+anggota koperasi mengangkat pengganti yang tetap 
+dengan persetujuan OJK; dan/atau 
+g. pencantuman anggota Direksi dan anggota Dewan 
+Komisaris, pegawai PJK, pemegang saham dalam 
+daftar orang tercela di sektor jasa keuangan. 
+(2) Sanksi sebagaimana dimaksud pada ayat (1) huruf b, 
+huruf c, huruf d, huruf e, huruf f, atau huruf g dapat 
+dikenakan dengan atau tanpa didahului pengenaan sanksi 
+peringatan tertulis sebagaimana dimaksud pada ayat (1) 
+huruf a. 
+(3) Sanksi denda sebagaimana dimaksud pada ayat (1) huruf 
+b dapat dikenakan secara tersendiri atau bersama -sama 
+dengan pengenaan sanksi sebagaimana dim aksud pada 
+ayat (1) huruf c, huruf d, huruf e, huruf f, atau huruf g. 
+(4) OJK dapat mengumumkan pengenaan sanksi 
+administratif sebagaimana dimaksud pada ayat (1) kepada 
+publik/masyarakat. 
+ 
+ 
+ 
+ 
+ 
+ 
+- 56 - 
+ 
+BAB XII 
+KETENTUAN PERALIHAN 
+ 
+Pasal 67 
+(1) PJK yang telah memiliki kebijakan dan prosedur 
+penerapan program APU dan PPT wajib menyesuaikan 
+kebijakan dan prosedur dimaksud sesuai Peraturan OJK 
+ini, paling lambat 6 (enam) bulan sejak Peraturan OJK ini 
+diundangkan. 
+(2) Bagi LKM dan penyelenggara layanan pinjam meminjam 
+uang berbasis teknologi informasi , ketentuan pada 
+Peraturan OJK ini dinyatakan berlaku setelah 4 (empat) 
+tahun terhitung sejak Peraturan OJK ini diundangkan. 
+ 
+BAB XIII 
+KETENTUAN PENUTUP 
+ 
+Pasal 68 
+Ketentuan lebih lanjut mengenai penerapan program APU dan 
+PPT di sektor jasa keuangan diatur dalam Surat Edaran OJK. 
+ 
+Pasal 69 
+Pada saat Peraturan OJK ini mulai berlaku, ketentuan yang 
+mengatur penerapan APU dan PPT sebagaimana dimaksud 
+dalam: 
+a. Peraturan Bank Indonesia Nomo r 12/20/PBI/2010 
+tentang Penerapan Program Anti Pencucian Uang dan 
+Pencegahan Pendanaan Terorisme bagi Bank Perkreditan 
+Rakyat dan Bank Pembiayaan Rakyat Syariah  (Lembaran 
+Negara Republik Indonesia Tahun 2012 Nomor 290, 
+Tambahan Lembaran Negara Republik Indonesia Nomor 
+5385); 
+  
+- 57 - 
+ 
+b. Peraturan Bank Indonesia Nomor 14/27/PBI/2012 
+tentang Penerapan Program Anti Pencucian Uang dan 
+Pencegahan Pendanaan Terorisme bagi Bank U mum 
+(Lembaran Negara Republik Indonesia Tahun 2012 Nomor 
+290, Tambahan Lembaran Negara Republik Indonesia 
+Nomor 5385);  
+c. Peraturan OJK Nomor 22/POJK.04/2014 tentang Prinsip 
+Mengenal Nasabah oleh Penyedia Jasa Keuangan di Sektor 
+Pasar Modal (Lembaran Negara Republik Indonesia Tahun 
+2014 Nomor 353, Tambahan Lembaran Negara Republik 
+Indonesia Nomor 5631); dan 
+d. Peraturan OJK Nomor 39/POJK.05/2015 tentang 
+Penerapan program Anti Pencucian Uang dan Pencegahan 
+Pendanaan Terorisme oleh Penyedia Jasa Keuangan di 
+Sektor Industri Keuangan Non -Bank (Lembaran Negara 
+Republik Indonesia Tahun 2015 Nomor 320, Tambahan 
+Lembaran Negara Republik Indonesia Nomor 5790), 
+dicabut dan dinyatakan tidak berlaku. 
+  
+Pasal 70 
+Peraturan OJK ini mulai berlaku pada tanggal diundangkan. 
+  
+- 58 - 
+ 
+Salinan ini sesuai dengan aslinya 
+Direktur Hukum 1 
+Departemen Hukum 
+ 
+ 
+ttd 
+ 
+Yuliana 
+ 
+Agar setiap oran g mengetahuinya, memerintahkan 
+pengundangan Peraturan OJK ini dengan penempatannya 
+dalam Lembaran Negara Republik   Indonesia. 
+ 
+ 
+Ditetapkan di Jakarta      
+pada tanggal 16 Maret 2017                         
+ 
+KETUA DEWAN KOMISIONER  
+OTORITAS JASA KEUANGAN, 
+ 
+  ttd 
+ 
+MULIAMAN D. HADAD 
+ 
+Diundangkan di Jakarta 
+pada tanggal 21 Maret 2017                     
+ 
+MENTERI HUKUM DAN HAK ASASI MANUSIA 
+REPUBLIK INDONESIA, 
+ 
+ttd 
+ 
+YASONNA H. LAOLY  
+ 
+ 
+LEMBARAN NEGARA REPUBLIK INDONESIA TAHUN 2017 NOMOR 57 
